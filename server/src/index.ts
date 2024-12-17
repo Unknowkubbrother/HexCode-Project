@@ -1,6 +1,7 @@
 import { Elysia } from "elysia";
 import { cors } from '@elysiajs/cors'
 import router from "./router";
+import './database/db.setup'
 
 const app = new Elysia();
 export type ElysiaType = typeof app;
