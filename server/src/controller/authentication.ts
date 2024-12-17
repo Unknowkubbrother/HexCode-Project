@@ -136,7 +136,96 @@ const register = async ({ body , set , error} : Context & { body : RegisterBody}
     }
 }
 
+/**
+ * @comment login check by session token 
+ **/
+
+const loginBySessionToken = async ({ set , error, cookie} : Context) =>{
+    try{
+        const sessionToken = cookie['HEXCODE_AUTH'];
+
+        if (!sessionToken){
+            return error(401, 'Unauthorized');
+        }
+        //@ts-ignore
+        const user = await getUserBySessionToken(sessionToken);
+
+        if (!user){
+            return error(401, 'Unauthorized');
+        }
+
+        set.status = 200;
+        return getUserResponse(user);
+
+    }catch(e){
+        console.log(e);
+        return error(500, 'Internal Server Error');
+    }
+}
+
+/**
+ * @comment logout clearAll cookie
+ */
+
+const logout = async ({ body , set , error, cookie } : Context) =>{
+    try{
+        const sessionToken = cookie['HEXCODE_AUTH'];
+
+        if (!sessionToken){
+            return error(401, 'Unauthorized');
+        }
+
+        //@ts-ignore
+        const user = await getUserBySessionToken(sessionToken);
+        if (!user){
+            return error(401, 'Unauthorized');
+        }
+
+        //@ts-ignore
+        user.authentication.sessionToken = "";
+
+        await user.save();
+
+        set.cookie = {
+            'HEXCODE_AUTH': {
+            value: '',
+            sameSite: 'none',
+            secure: true,
+            domain: process.env.DOMAIN,
+            expires: new Date(0),
+            },
+            'HEXCODE_DATA': {
+            value: '',
+            sameSite: 'none',
+            secure: true,
+            domain: process.env.DOMAIN,
+            expires: new Date(0),
+            },
+            'logged_in': {
+            value: '',
+            sameSite: 'none',
+            secure: true,
+            domain: process.env.DOMAIN,
+            expires: new Date(0),
+            }
+        }
+
+        set.status = 200;
+
+        return { message : 'Logout success'};
+
+    }catch(e){
+        console.log(e);
+        return error(500, 'Internal Server Error');
+    }
+}
+
+
+
+
 export {
     login,
-    register
+    register,
+    loginBySessionToken,
+    logout
 }
