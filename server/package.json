@@ -7,7 +7,9 @@
   },
   "dependencies": {
     "@elysiajs/cors": "^1.1.1",
+    "@types/lodash": "^4.17.13",
     "elysia": "latest",
+    "lodash": "^4.17.21",
     "mongoose": "^8.9.1"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 enum Roles {
-    STAFF = 'staff',
+    ADMIN = 'admin',
     USER = 'user',
 }
 

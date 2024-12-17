@@ -25,11 +25,11 @@ export const getUserResponse = (user: any) => {
         }
     }
 
-    // I use role to check if user is staff or not
+    // I use role to check if user is admin or not
     // the way that more secure is using another frontend of dashboard
     // Or make a website is server side rendering by hex <3
-    if (user.role && user.role === 'staff') {
-        responseUser.role = 'staff';
+    if (user.role && user.role === 'admin') {
+        responseUser.role = 'admin';
     }
 
     return responseUser;
