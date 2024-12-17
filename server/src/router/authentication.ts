@@ -1,5 +1,6 @@
 import { ElysiaType} from "../index";
 import { login , register , loginBySessionToken, logout} from "../controller/authentication";
+// import { isAuthenicated } from "../middlewares/auth";
 
 export default async (router : ElysiaType) => {
     router.post("/auth/login", login);

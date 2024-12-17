@@ -3,7 +3,6 @@ import Roles from '../enum/roles';
 import { getUserById, getUserBySessionToken } from '../models/accounts';
 import {get , merge } from 'lodash';
 
-
 const isAdmin = async ({request , error} : Context) =>{
     try{
         const currentUserId = get(request, 'identity._id');
@@ -32,7 +31,10 @@ const isAdmin = async ({request , error} : Context) =>{
 
 const isAuthenicated = async ({body, cookie , request , error} : Context & { body : { username : string }}) =>{
     try{
+
         const sessionToken = cookie['HEXCODE_AUTH'];
+
+        console.log(sessionToken);
 
         if (!sessionToken){
             return error(401, 'Unauthorized');
@@ -44,8 +46,8 @@ const isAuthenicated = async ({body, cookie , request , error} : Context & { bod
         if (!user){
             return error(401, 'Unauthorized');
         }
-
-        //body.username = user.username;
+        
+        body.username = user.username;
         merge(request, { identity: user});
 
         return true;
