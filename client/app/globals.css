@@ -51,10 +51,12 @@ body {
 }
 
 [data-theme="dark"] .navbar-theme {
+  border-color: var(--dark-bg-secondary);
   color: white
 }
 
 [data-theme="light"] .navbar-theme {
+  border-color: var(--light-bg-secondary);
   color: black
 }
 
