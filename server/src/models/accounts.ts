@@ -1,5 +1,5 @@
 import {  Schema, model } from "mongoose";
-import Roles from "../enum/roles";
+import Roles from "@/enum/roles";
 
 export interface AccountInterface {
     username: string;
