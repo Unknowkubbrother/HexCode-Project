@@ -1,6 +1,5 @@
 import { createUser,getUserByUsername,getUserBySessionToken,getUserByEmail,AccountModel } from '@/models/accounts';
 import { random, authentication,getUserResponse } from '@/utils/auth';
-import { isAuthenicated } from '@/middlewares/auth';
 import { Elysia , t } from "elysia";
 
 export const AuthRoute = new Elysia({'prefix':'/auth'})
