@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Avatar from "@/assets/avatar.webp";
+import Avatar from "@/assets/avatar.jpg";
 import React from "react";
 
 function ButtonUserProfile() {
@@ -21,7 +21,7 @@ function ButtonUserProfile() {
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu rounded-box z-[1] w-52 shadow-lg"
+          className="dropdown-content menu rounded-box z-[1] w-52 shadow-lg mt-2"
         >
           <li className="bg-primary w-full rounded-md">
             <a>Item 1</a>
