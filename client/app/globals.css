@@ -57,7 +57,7 @@ body {
 
 [data-theme="light"] .navbar-theme {
   border-color: var(--light-bg-secondary);
-  color: black
+  color: #0000008C
 }
 
 
