@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme={theme}>
       <head>
-          <link rel="icon" href="/logo.svg" type="image/svg" sizes="32x32" />
+        <link rel="icon" href="/logo.svg" type="image/svg" sizes="32x32" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>HEXCODE</title>
         <link
@@ -28,10 +28,8 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <header>
-          <Navbar setTheme={setTheme} theme={theme} />
-        </header>
-        <main>{children}</main>
+        <Navbar setTheme={setTheme} theme={theme} />
+        <main className="mt-3">{children}</main>
       </body>
     </html>
   );
