@@ -11,16 +11,16 @@ interface NavbarProps {
 
 export default function Navbar({ setTheme, theme }: NavbarProps) {
   return (
-    <nav className="w-full h-[50px] flex justify-around items-center border-b-2 border-b-darkbgsecondary bg-bgprimary text-white py-7 top-0 z-50 sticky backdrop-blur">
-      <ul className="flex justify-center items-center gap-3">
+    <nav className="w-full h-[50px] flex justify-around items-center border-b-2 border-b-darkbgsecondary bg-bgprimary py-7 top-0 z-50 sticky backdrop-blur navbar-theme">
+      <Link href="/" className="flex justify-center items-center gap-3">
         <Image src="/logo.svg" alt="logo" width={40} height={40} />
         <span className="text-lg font-bold drop-shadow-lg">HEX
           <span className="text-primary">CODE</span>
         </span>
-      </ul>
+      </Link>
       <ul className="flex justify-center items-center gap-5 text-md font-semibold">
         <li>
-          <Link href="/home" className="hover:text-primary duration-300">Home</Link>
+          <Link href="/" className="hover:text-primary duration-300">Home</Link>
         </li>
         <li>
           <Link href="/problem" className="hover:text-primary duration-300">Problems</Link>

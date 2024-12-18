@@ -50,4 +50,12 @@ body {
   background: var(--light-bg-secondary);
 }
 
+[data-theme="dark"] .navbar-theme {
+  color: white
+}
+
+[data-theme="light"] .navbar-theme {
+  color: black
+}
+
 

@@ -21,7 +21,7 @@ function ButtonUserProfile() {
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bgSecondary rounded-box z-[1] w-52 shadow-lg"
+          className="dropdown-content menu rounded-box z-[1] w-52 shadow-lg"
         >
           <li className="bg-primary w-full rounded-md">
             <a>Item 1</a>
