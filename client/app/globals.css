@@ -13,7 +13,7 @@
 }
 
 *{
-   font-family: 'Itim', cursive;
+  font-family: 'Itim', cursive;
   font-family: 'Mitr', sans-serif;
   margin: 0;
   padding: 0;
@@ -41,3 +41,13 @@ body {
   background: var(--light-bg-primary);
   color: black;
 }
+
+[data-theme="dark"] .bgSecondary {
+  background: var(--dark-bg-secondary);
+}
+
+[data-theme="light"] .bgSecondary {
+  background: var(--light-bg-secondary);
+}
+
+

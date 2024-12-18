@@ -29,36 +29,17 @@ export default {
     themeRoot: ':root', // The element that receives theme color CSS variables,
     themes: [
       {
-        mytheme: {
-          "primary": 'rgb(77, 181, 255)',
-  
-          "secondary": 'rgb(40, 139, 209)',
-  
-          "accent": '#0069a9',
-  
-          "neutral": '#3d4451',
-  
-          'base-100': '#262626',
-  
-          "info": '#00e2ff',
-  
-          "success": '#00cc99',
-  
-          "warning": '#f47000',
-  
-          "error": '#d2004e'
-        },
         dark : {
-          primary: 'var(--color-primary)',
-          secondary: 'var(--color-secondary)',
-          bgprimary: 'var(--dark-bg-primary)',
-          bgsecondary: 'var(--dark-bg-secondary)',
+          primary: '#0ea5e9',
+          secondary: '#2a2a2a',
+          bgprimary: '#1a1a1a',
+          bgsecondary: '#2a2a2a',
         },
         light :{
-          primary: 'var(--color-primary)',
-          secondary: 'var(--color-secondary)',
-          bgprimary: 'var(--light-bg-primary)',
-          bgsecondary: 'var(--light-bg-secondary)',
+          primary: '#0ea5e9',
+          secondary: '#2a2a2a',
+          bgprimary: '#ffffff',
+          bgsecondary: '#eeeeee',
         }
       },
     ],
