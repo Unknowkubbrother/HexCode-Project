@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "daisyui": "^4.12.22",
     "next": "15.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
