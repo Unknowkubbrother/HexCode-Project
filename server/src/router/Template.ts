@@ -13,7 +13,6 @@ export const TemplateRoute = new Elysia({'prefix':'/template'})
     }
 })
 
-//@ts-ignore
 .get('/get', async ({clerk , auth, error}) =>{
     try{
         // console.log(auth)
