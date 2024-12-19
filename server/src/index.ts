@@ -2,9 +2,12 @@ import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 import "@/database/db.setup";
 import { AuthRoute } from "@/router/authentication";
+import { logger } from "@chneau/elysia-logger";
+// import { clerkPlugin } from "elysia-clerk";
 import { TemplateRoute } from "@/router/Template";
 
 const app = new Elysia()
+  .use(logger())
   .use(AuthRoute)
   .use(TemplateRoute)
   .get("/", "Hello, Elysia!")

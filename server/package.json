@@ -6,10 +6,12 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@chneau/elysia-logger": "^1.0.10",
     "@elysiajs/cors": "^1.1.1",
     "@types/js-cookie": "^3.0.6",
     "@types/lodash": "^4.17.13",
     "elysia": "latest",
+    "elysia-clerk": "^0.8.8",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "mongoose": "^8.9.1"

@@ -1,13 +1,12 @@
 import { Elysia , Context } from "elysia";
 import { isAuthenicated } from "@/middlewares/auth";
+import { clerkPlugin } from "elysia-clerk";
 
 export const TemplateRoute = new Elysia({'prefix':'/template'})
-.use(isAuthenicated)
-.post('/post', async ({isAuth , error}) =>{
+.use(clerkPlugin())
+.post('/post', async ({error}) =>{
     try{
-        if (!isAuth){
-            return error(401, 'Unauthorized')
-        }
+       
         return { message: 'Hello Post Elysia!'}
 
     }catch(e){
@@ -15,12 +14,17 @@ export const TemplateRoute = new Elysia({'prefix':'/template'})
     }
 })
 
-.get('/get', async ({isAuth , error}) =>{
+//@ts-ignore
+.get('/get', async ({clerk , auth, error}) =>{
     try{
-        if (!isAuth){
+        // console.log(auth)
+        if (!auth?.userId){
             return error(401, 'Unauthorized')
         }
-        return { message: 'Hello Get Elysia!'}
+
+        const user = await clerk.users.getUser(auth.userId)
+
+        return { user }
 
     }catch(e){
         return error(500, 'Internal Server Error')
