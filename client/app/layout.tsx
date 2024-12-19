@@ -1,4 +1,11 @@
 "use client";
+
+import {
+  ClerkProvider,
+  SignedIn
+} from '@clerk/nextjs';
+import { dark } from '@clerk/themes';
+
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
@@ -14,6 +21,12 @@ export default function RootLayout({
   const [theme, setTheme] = useState("dark");
 
   return (
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+        variables: {colorPrimary: "#2887c7"}
+      }}
+    >
     <html lang="en" data-theme={theme}>
       <head>
         <link rel="icon" href="/logo.svg" type="image/svg" sizes="32x32" />
@@ -29,8 +42,11 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Navbar setTheme={setTheme} theme={theme} />
-        <main className="mt-3">{children}</main>
+        <SignedIn>
+          <main className="mt-3">{children}</main>
+        </SignedIn>
       </body>
     </html>
+    </ClerkProvider>
   );
 }

@@ -1,5 +1,4 @@
 import { Elysia , Context } from "elysia";
-import { isAuthenicated } from "@/middlewares/auth";
 import { clerkPlugin } from "elysia-clerk";
 
 export const TemplateRoute = new Elysia({'prefix':'/template'})

@@ -2,8 +2,15 @@
 import React from "react";
 import SwitchTheme from "@/components/ui/SwitchTheme";
 import Image from "next/image";
-import ButtonUserProfile from "../ButtonUserProfile";
 import Link from "next/link";
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/nextjs';
+
+
 interface NavbarProps {
   theme: string;
   setTheme: (theme: string) => void;
@@ -35,7 +42,12 @@ export default function Navbar({ setTheme, theme }: NavbarProps) {
           <SwitchTheme setTheme={setTheme} theme={theme} className="hover:text-primary duration-300"/>
         </li>
         <li>
-          <ButtonUserProfile />
+          <SignedIn>
+            <UserButton/>
+          </SignedIn>
+          <SignedOut>
+            <SignInButton mode="modal"/>
+          </SignedOut>
         </li>
       </ul>
     </nav>
