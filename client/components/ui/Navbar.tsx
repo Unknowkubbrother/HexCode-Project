@@ -3,13 +3,7 @@ import React from "react";
 import { ModeToggle } from "@/components/ui/ModeToggle";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  SignUpButton,
-  UserButton,
-} from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 
@@ -17,15 +11,13 @@ interface NavbarProps {
   setTheme: (theme: string) => void;
 }
 
-export default function Navbar({setTheme} : NavbarProps) {
+export default function Navbar({ setTheme }: NavbarProps) {
+  const { theme } = useTheme();
 
-    const { theme } = useTheme();
-  
-    useEffect(() => {
-      setTheme(theme || "dark");
+  useEffect(() => {
+    setTheme(theme || "dark");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [theme]);
-  
+  }, [theme]);
 
   return (
     <nav className="w-full h-[50px] flex justify-around items-center border-b-2 bg-bgprimary py-7 top-0 z-50 sticky backdrop-blur">
@@ -55,22 +47,17 @@ export default function Navbar({setTheme} : NavbarProps) {
           </Link>
         </SignedIn>
 
-        <ModeToggle/>
+        <ModeToggle />
 
         <li>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-        <SignedOut>
-          <div className="flex gap-3">
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          <SignedOut>
             <span className="hover:text-primary duration-300">
-              <SignUpButton />
+              <SignInButton />
             </span>
-            <span className="hover:text-primary duration-300">
-              <SignInButton/>
-            </span>
-          </div>
-        </SignedOut>
+          </SignedOut>
         </li>
       </ul>
     </nav>

@@ -1,4 +1,4 @@
-import { Elysia , Context } from "elysia";
+import { Elysia } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 
 export const TemplateRoute = new Elysia({'prefix':'/template'})
@@ -17,8 +17,8 @@ export const TemplateRoute = new Elysia({'prefix':'/template'})
     try{
         // console.log(auth)
         if (!auth?.userId){
-            return error(401, 'Unauthorized')
-        }
+           return error(401, 'Unauthorized')
+        } 
 
         const user = await clerk.users.getUser(auth.userId)
 

@@ -9,7 +9,7 @@ const page = () => {
           HEX<span className="text-primary">CODE</span>
         </h1>
         <h3>
-            Development by <span className="text-primary">Team hex code</span>
+          Developed  by <span className="text-primary">Hex code team</span>
         </h3>
       </div>
         <SignUp routing="hash" />
