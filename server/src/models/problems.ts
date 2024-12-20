@@ -13,6 +13,7 @@ const ProblemSchema = new Schema({
 
 export const ProblemModel = model("problems", ProblemSchema);
 
+export const createProblem = (values: object) => ProblemModel.create(values);
 export const getProblemsByType = (type: string) => ProblemModel.find({ type: type })
 export const getProblems = () => ProblemModel.find();
 export const getProblemById = (id :string) => ProblemModel.findById(id);
