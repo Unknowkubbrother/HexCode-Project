@@ -1,3 +1,4 @@
+import { file } from "bun";
 import { Schema, model } from "mongoose";
 
 const ProblemSchema = new Schema({
@@ -8,8 +9,34 @@ const ProblemSchema = new Schema({
     description: {
         type: String,
         required: true
-    }
-});
+    },difficulty:{
+        type:Number,
+        required : true
+    },clerkId:{
+        type:String,
+        required : true
+    },submissions:{
+        type:Number,
+        required : true,
+        default : 0
+    },accpet:{
+        type:Number,
+        required : true,
+        default : 0
+    },point:{
+        type:Number,
+        required : true,
+        default : 10
+    },status:{
+        type:Number,
+        required : true,
+        default : Status.NORMAL
+    },file:{
+        type:file,
+        required : false,
+        default : null
+    },hint:[]
+},{timestamps:true});
 
 export const ProblemModel = model("problems", ProblemSchema);
 
