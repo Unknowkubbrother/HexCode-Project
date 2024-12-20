@@ -6,6 +6,7 @@ import Link from "next/link";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
+import { usePathname  } from "next/navigation";
 
 interface NavbarProps {
   setTheme: (theme: string) => void;
@@ -13,6 +14,7 @@ interface NavbarProps {
 
 export default function Navbar({ setTheme }: NavbarProps) {
   const { theme } = useTheme();
+  const pathname = usePathname()
 
   useEffect(() => {
     setTheme(theme || "dark");
@@ -29,20 +31,20 @@ export default function Navbar({ setTheme }: NavbarProps) {
         </span>
       </Link>
       <ul className="flex justify-center items-center gap-5 text-md font-semibold">
-        <Link href="/" className="hover:text-primary duration-300">
+        <Link href="/" className={`${pathname == '/' ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
           Home
         </Link>
 
-        <Link href="/problems" className="hover:text-primary duration-300">
+        <Link href="/problems" className={`${pathname == '/problems' ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
           Problems
         </Link>
 
-        <Link href="/challenges" className="hover:text-primary duration-300">
+        <Link href="/challenges" className={`${pathname == '/challenges' ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
           Challenges
         </Link>
 
         <SignedIn>
-          <Link href="/dashboard" className="hover:text-primary duration-300">
+          <Link href="/dashboard" className={`${pathname == '/dashboard' ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
             Dashboard
           </Link>
         </SignedIn>
