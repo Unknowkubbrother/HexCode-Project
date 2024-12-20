@@ -2,9 +2,12 @@
 
 import {
   ClerkProvider,
-  SignedIn
-} from '@clerk/nextjs';
-import { dark } from '@clerk/themes';
+  // SignedIn,
+  ClerkLoaded,
+  ClerkLoading,
+} from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
+import Loader from "@/components/ui/Loader";
 
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -24,29 +27,31 @@ export default function RootLayout({
     <ClerkProvider
       appearance={{
         baseTheme: theme === "dark" ? dark : undefined,
-        variables: {colorPrimary: "#2887c7"}
+        variables: { colorPrimary: "#2887c7" },
       }}
     >
-    <html lang="en" data-theme={theme}>
-      <head>
-        <link rel="icon" href="/logo.svg" type="image/svg" sizes="32x32" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>HEXCODE</title>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
-          integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
-      </head>
-      <body className={inter.className}>
-        <Navbar setTheme={setTheme} theme={theme} />
-        <SignedIn>
+      <html lang="en" data-theme={theme}>
+        <head>
+          <link rel="icon" href="/logo.svg" type="image/svg" sizes="32x32" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+          <title>HEXCODE</title>
+        </head>
+        <body className={inter.className}>
+          <ClerkLoading>
+            <Loader/>
+          </ClerkLoading>
+          <ClerkLoaded>
+            <Navbar setTheme={setTheme} theme={theme} />
+            {children}
+          </ClerkLoaded>
+          {/* <SignedIn>
           <main className="mt-3">{children}</main>
-        </SignedIn>
-      </body>
-    </html>
+        </SignedIn> */}
+        </body>
+      </html>
     </ClerkProvider>
   );
 }

@@ -27,43 +27,44 @@ export default function Navbar({ setTheme, theme }: NavbarProps) {
         </span>
       </Link>
       <ul className="flex justify-center items-center gap-5 text-md font-semibold">
-        <li>
-          <Link href="/" className="hover:text-primary duration-300">
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link href="/problem" className="hover:text-primary duration-300">
-            Problems
-          </Link>
-        </li>
-        <li>
-          <Link href="/challenges" className="hover:text-primary duration-300">
-            Challenges
-          </Link>
-        </li>
-        <li>
-          <Link href="/docs" className="hover:text-primary duration-300">
+        <Link href="/" className="hover:text-primary duration-300">
+          Home
+        </Link>
+
+        <Link href="/problems" className="hover:text-primary duration-300">
+          Problems
+        </Link>
+
+        <Link href="/challenges" className="hover:text-primary duration-300">
+          Challenges
+        </Link>
+
+        <SignedIn>
+          <Link href="/dashboard" className="hover:text-primary duration-300">
             Dashboard
           </Link>
-        </li>
+        </SignedIn>
+
+        <SwitchTheme
+          setTheme={setTheme}
+          theme={theme}
+          className="hover:text-primary duration-300"
+        />
+
         <li>
-          <SwitchTheme
-            setTheme={setTheme}
-            theme={theme}
-            className="hover:text-primary duration-300"
-          />
-        </li>
-        <li>
-          <SignedIn>
-            <UserButton/>
-          </SignedIn>
-          <SignedOut>
-            <div className="flex gap-3">
-              <span className="hover:text-primary duration-300"><SignUpButton mode="modal" /></span>
-              <span className="hover:text-primary duration-300"><SignInButton mode="modal"/></span>
-            </div>
-          </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+        <SignedOut>
+          <div className="flex gap-3">
+            <span className="hover:text-primary duration-300">
+              <SignUpButton />
+            </span>
+            <span className="hover:text-primary duration-300">
+              <SignInButton/>
+            </span>
+          </div>
+        </SignedOut>
         </li>
       </ul>
     </nav>
