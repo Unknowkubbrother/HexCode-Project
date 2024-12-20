@@ -10,10 +10,25 @@ import {
   SignUpButton,
   UserButton,
 } from "@clerk/nextjs";
+import { useTheme } from "next-themes";
+import { useEffect } from "react";
 
-export default function Navbar() {
+interface NavbarProps {
+  setTheme: (theme: string) => void;
+}
+
+export default function Navbar({setTheme} : NavbarProps) {
+
+    const { theme } = useTheme();
+  
+    useEffect(() => {
+      setTheme(theme || "dark");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [theme]);
+  
+
   return (
-    <nav className="w-full h-[50px] flex justify-around items-center border-b-2 bg-bgprimary py-7 top-0 z-50 sticky backdrop-blur navbar-theme">
+    <nav className="w-full h-[50px] flex justify-around items-center border-b-2 bg-bgprimary py-7 top-0 z-50 sticky backdrop-blur">
       <Link href="/" className="flex justify-center items-center gap-3">
         <Image src="/logo.svg" alt="logo" width={40} height={40} />
         <span className="text-lg font-bold drop-shadow-lg">

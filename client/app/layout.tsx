@@ -1,16 +1,13 @@
-import {
-  ClerkProvider,
-  ClerkLoaded,
-  ClerkLoading,
-} from "@clerk/nextjs";
+"use client";
+import { ClerkProvider, ClerkLoaded, ClerkLoading } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { ThemeProvider } from "@/components/theme-provider"
+import Providers from "@/app/Providers";
 import Loader from "@/components/ui/Loader";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
-
 const inter = Inter({ subsets: ["latin"] });
+import { useState } from "react";
 
 export default function RootLayout({
   children,
@@ -18,10 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
+  const [theme, setTheme] = useState<string>("dark")
+
+
   return (
     <ClerkProvider
       appearance={{
-        baseTheme: dark,
+        baseTheme: theme == "dark" ? dark : undefined,
         variables: { colorPrimary: "#2887c7" },
       }}
     >
@@ -35,20 +35,17 @@ export default function RootLayout({
           <title>HEXCODE</title>
         </head>
         <body className={inter.className}>
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-          <ClerkLoading>
-            <Loader/>
-          </ClerkLoading>
-          <ClerkLoaded>
-            <Navbar/>
-            {children}
-          </ClerkLoaded>
-          </ThemeProvider>
+          <Providers>
+            <ClerkLoading>
+              <Loader />
+            </ClerkLoading>
+            <ClerkLoaded>
+              <Navbar setTheme={setTheme}/>
+              <main className="mt-2">
+              {children}
+              </main>
+            </ClerkLoaded>
+          </Providers>
         </body>
       </html>
     </ClerkProvider>
