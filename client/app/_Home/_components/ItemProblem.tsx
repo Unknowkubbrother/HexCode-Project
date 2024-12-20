@@ -27,7 +27,7 @@ const ItemProblem = ({ value }: { value: ItemProblemProps }) => {
       className="w-full bg-bgsecondary h-fit rounded-lg p-3 flex flex-col gap-1 relative"
     >
       <span className="flex gap-2 justify-start items-center">
-        <h1 className="text-lg">{value.title}</h1>
+        <span className="text-lg font-mono">{value.title}</span>
         <span
           className={`${ColorProblem[value.difficulty]} rounded-md p-1 text-xs`}
         >
