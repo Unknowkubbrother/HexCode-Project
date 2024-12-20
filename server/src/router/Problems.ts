@@ -7,7 +7,7 @@ export const TemplateRoute = new Elysia({'prefix':'/template'})
 .post('/addpromblem', async ({ body,clerk, auth, error }) =>{
 
     try{
-        const {title,description,difficulty,point} = body;
+        const {title,description,difficulty,point,file,hint} = body;
         if (!auth?.userId){
            return error(401, 'Unauthorized')
         } 
@@ -26,7 +26,9 @@ export const TemplateRoute = new Elysia({'prefix':'/template'})
     title: t.String(),
     description: t.String(),
     difficulty: t.Number(),
-    point : t.Number()
+    point : t.Number(),
+    file: t.Optional(t.File()),
+    hint: t.Optional(t.Array(t.String()))
 })})
 
 .get('/get', async ({clerk , auth, error}) =>{
