@@ -1,10 +1,7 @@
-import { Button } from "@/components/ui/button"
-
-export default function Home() {
+import Home from "@/app/_Home/Home";
+export default function Page() {
   return (
-    <main className="w-full h-screen">
-      <Button>Click me</Button>
-    </main>
+    <Home />
   );
 }
 

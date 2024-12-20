@@ -41,7 +41,7 @@ export default function RootLayout({
             </ClerkLoading>
             <ClerkLoaded>
               <Navbar setTheme={setTheme}/>
-              <main className="mt-2">
+              <main className="mt-2 w-full h-screen">
               {children}
               </main>
             </ClerkLoaded>

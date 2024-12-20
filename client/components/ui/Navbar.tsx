@@ -24,7 +24,7 @@ export default function Navbar({ setTheme }: NavbarProps) {
       <Link href="/" className="flex justify-center items-center gap-3">
         <Image src="/logo.svg" alt="logo" width={40} height={40} />
         <span className="text-lg font-bold drop-shadow-lg">
-          <span className="text-black">HEX</span>
+          <span>HEX</span>
           <span className="text-primary">CODE</span>
         </span>
       </Link>

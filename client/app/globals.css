@@ -48,6 +48,7 @@ body {
   @layer base {
     :root {
       --background: var(--light-bg-primary);
+      --bg-secondary: var(--light-bg-secondary);
       --foreground: black;
       --nav-text-color: #0000008c;
       --card: 0 0% 100%;
@@ -77,6 +78,7 @@ body {
 
     .dark {
       --background: var(--dark-bg-primary);
+      --bg-secondary: var(--dark-bg-secondary);
       --foreground: #ffffff;
       --nav-text-color: ##ffffff;
       --card: 222.2 84% 4.9%;

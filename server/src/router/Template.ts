@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
+import { ProblemModel } from "@/models/problems";
 
 export const TemplateRoute = new Elysia({'prefix':'/template'})
 .use(clerkPlugin())
@@ -21,6 +22,7 @@ export const TemplateRoute = new Elysia({'prefix':'/template'})
         } 
 
         const user = await clerk.users.getUser(auth.userId)
+
 
         return { user }
 
