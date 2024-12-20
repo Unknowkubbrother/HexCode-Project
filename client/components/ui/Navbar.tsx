@@ -20,11 +20,11 @@ export default function Navbar({ setTheme }: NavbarProps) {
   }, [theme]);
 
   return (
-    <nav className="w-full h-[50px] flex justify-around items-center border-b-2 bg-bgprimary py-7 top-0 z-50 sticky backdrop-blur">
+    <nav className="w-full h-[50px] flex justify-around items-center border-b-2 bg-bgprimary py-7 top-0 z-50 sticky backdrop-blur text-navtextcolor">
       <Link href="/" className="flex justify-center items-center gap-3">
         <Image src="/logo.svg" alt="logo" width={40} height={40} />
         <span className="text-lg font-bold drop-shadow-lg">
-          HEX
+          <span className="text-black">HEX</span>
           <span className="text-primary">CODE</span>
         </span>
       </Link>

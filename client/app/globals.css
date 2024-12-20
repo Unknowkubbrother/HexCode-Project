@@ -48,7 +48,8 @@ body {
   @layer base {
     :root {
       --background: var(--light-bg-primary);
-      --foreground: #0000008c;
+      --foreground: black;
+      --nav-text-color: #0000008c;
       --card: 0 0% 100%;
       --card-foreground: 222.2 84% 4.9%;
       --popover: var(--light-bg-primary);
@@ -77,6 +78,7 @@ body {
     .dark {
       --background: var(--dark-bg-primary);
       --foreground: #ffffff;
+      --nav-text-color: ##ffffff;
       --card: 222.2 84% 4.9%;
       --card-foreground: 210 40% 98%;
       --popover: var(--dark-bg-secondary);
