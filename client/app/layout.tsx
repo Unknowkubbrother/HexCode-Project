@@ -1,18 +1,14 @@
-"use client";
-
 import {
   ClerkProvider,
-  // SignedIn,
   ClerkLoaded,
   ClerkLoading,
 } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { ThemeProvider } from "@/components/theme-provider"
 import Loader from "@/components/ui/Loader";
-
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
-import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,16 +17,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [theme, setTheme] = useState("dark");
 
   return (
     <ClerkProvider
       appearance={{
-        baseTheme: theme === "dark" ? dark : undefined,
+        baseTheme: dark,
         variables: { colorPrimary: "#2887c7" },
       }}
     >
-      <html lang="en" data-theme={theme}>
+      <html lang="en" suppressHydrationWarning>
         <head>
           <link rel="icon" href="/logo.svg" type="image/svg" sizes="32x32" />
           <meta
@@ -40,16 +35,20 @@ export default function RootLayout({
           <title>HEXCODE</title>
         </head>
         <body className={inter.className}>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
           <ClerkLoading>
             <Loader/>
           </ClerkLoading>
           <ClerkLoaded>
-            <Navbar setTheme={setTheme} theme={theme} />
+            <Navbar/>
             {children}
           </ClerkLoaded>
-          {/* <SignedIn>
-          <main className="mt-3">{children}</main>
-        </SignedIn> */}
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

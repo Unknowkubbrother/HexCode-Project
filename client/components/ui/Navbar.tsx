@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import SwitchTheme from "@/components/ui/SwitchTheme";
+import { ModeToggle } from "@/components/ui/ModeToggle";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -11,12 +11,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 
-interface NavbarProps {
-  theme: string;
-  setTheme: (theme: string) => void;
-}
-
-export default function Navbar({ setTheme, theme }: NavbarProps) {
+export default function Navbar() {
   return (
     <nav className="w-full h-[50px] flex justify-around items-center border-b-2 bg-bgprimary py-7 top-0 z-50 sticky backdrop-blur navbar-theme">
       <Link href="/" className="flex justify-center items-center gap-3">
@@ -45,11 +40,7 @@ export default function Navbar({ setTheme, theme }: NavbarProps) {
           </Link>
         </SignedIn>
 
-        <SwitchTheme
-          setTheme={setTheme}
-          theme={theme}
-          className="hover:text-primary duration-300"
-        />
+        <ModeToggle/>
 
         <li>
         <SignedIn>
