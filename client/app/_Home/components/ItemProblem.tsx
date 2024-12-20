@@ -55,8 +55,8 @@ const ItemProblem = ({ value }: { value: ItemProblemProps }) => {
         <span> {value.author}</span>
       </span>
 
-      <Button variant="default" size="sm" asChild className="absolute top-1/2 right-0 transform -translate-x-1/2 -translate-y-1/2 hover:scale-105 duration-300 cursor-pointer">
-        <span>Solve</span>
+      <Button variant="default" size="sm" asChild className="absolute top-1/2 right-0 transform -translate-x-1/4 -translate-y-1/2 hover:scale-105 duration-300 cursor-pointer">
+        <span>Solve problem</span>
       </Button>
     </div>
   );
