@@ -14,8 +14,8 @@ const Challenges = () => {
     <section className="w-full flex flex-col mt-10">
       <header className="w-full flex justify-between items-center">
         <h1 className="text-xl">Challenges</h1>
-        <Link href="/challenges" className="flex justify-center items-center gap-1 font-semibold text-md hover:text-primary duration-300">
-          More <ArrowRight />
+        <Link href="/challenges" className="hover:text-primary duration-300">
+          <ArrowRight size={20}/>
         </Link>
       </header>
       <Carousel className="w-full mt-5">
