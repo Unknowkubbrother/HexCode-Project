@@ -1,3 +1,4 @@
+import Status from "@/enum/status";
 import { file } from "bun";
 import { Schema, model } from "mongoose";
 
@@ -31,15 +32,27 @@ const ProblemSchema = new Schema({
         type:Number,
         required : true,
         default : Status.NORMAL
-    },file:{
-        type:file,
+    },filedocs:{
+        type:String,
         required : false,
         default : null
     },hint:[]
 },{timestamps:true});
 
+interface IProblem{
+    title: string,
+    description : string,
+    difficulty : number,
+    clerkId : string
+    point : number,
+    filedocs?:string,
+    hint?: Array<string>
+}
+
 export const ProblemModel = model("problems", ProblemSchema);
 
+export const createProblem = (values:IProblem) =>
+    new ProblemModel(values).save().then((problem) => problem.toObject());
 export const getProblemsByType = (type: string) => ProblemModel.find({ type: type })
 export const getProblems = () => ProblemModel.find();
 export const getProblemById = (id :string) => ProblemModel.findById(id);

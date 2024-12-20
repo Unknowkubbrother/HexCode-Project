@@ -4,10 +4,12 @@ import "@/database/db.setup";
 import { logger } from "@chneau/elysia-logger";
 // import { clerkPlugin } from "elysia-clerk";
 import { TemplateRoute } from "@/router/Template";
+import { ProblemRoute } from "./router/Problems";
 
 const app = new Elysia()
   .use(logger())
   .use(TemplateRoute)
+  .use(ProblemRoute)
   .get("/", "Hello, Elysia!")
   .use(cors())
   .listen(process.env.SERVER_PORT || 3000);

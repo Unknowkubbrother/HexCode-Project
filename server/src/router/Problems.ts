@@ -1,21 +1,27 @@
 import { Elysia,t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { ProblemModel } from "@/models/problems";
+import { createProblem, ProblemModel } from "@/models/problems";
 
-export const TemplateRoute = new Elysia({'prefix':'/template'})
+export const ProblemRoute = new Elysia({'prefix':'/problem'})
 .use(clerkPlugin())
-.post('/addpromblem', async ({ body,clerk, auth, error }) =>{
+.post('/add', async ({ body,clerk, auth, error }) =>{
 
     try{
-        const {title,description,difficulty,point,file,hint} = body;
-        if (!auth?.userId){
-           return error(401, 'Unauthorized')
-        } 
+        // if (!auth?.userId){
+        //    return error(401, 'Unauthorized')
+        // } 
 
-        const user = await clerk.users.getUser(auth.userId)
-        ProblemModel.create({title:body.title})
-
-        return { user }
+        //const user = await clerk.users.getUser(auth.userId)
+        
+        const value = createProblem({
+            title:body.title,
+            description:body.description,
+            difficulty:body.difficulty,
+            clerkId:"user.id",
+            point:body.point,
+            filedocs:body.filedocs,
+            hint:body.hint})
+        return { msg:"success" }
 
     }catch(e){
         return error(500, 'Internal Server Error')
@@ -27,7 +33,7 @@ export const TemplateRoute = new Elysia({'prefix':'/template'})
     description: t.String(),
     difficulty: t.Number(),
     point : t.Number(),
-    file: t.Optional(t.File()),
+    filedocs: t.Optional(t.String()),
     hint: t.Optional(t.Array(t.String()))
 })})
 
