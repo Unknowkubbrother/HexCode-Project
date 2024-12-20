@@ -1,6 +1,6 @@
 import React from "react";
-import Challenges from "./components/Challenges";
-import Problems from "./components/Problems";
+import Challenges from "./_components/Challenges";
+import Problems from "./_components/Problems";
 
 const Home = () => {
   return (
