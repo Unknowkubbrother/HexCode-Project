@@ -12,6 +12,7 @@ const example = [
     accpted: 1000,
     submissions: 2000,
     author: "Shadab",
+    point: 10,
   },
   {
     id: "2",
@@ -21,6 +22,7 @@ const example = [
     accpted: 800,
     submissions: 1000,
     author: "Shadab",
+    point: 20,
   },
   {
     id: "3",
@@ -30,6 +32,7 @@ const example = [
     accpted: 60,
     submissions: 100,
     author: "unknowkubbrother",
+    point: 30,
   },
   {
     id: "4",
@@ -39,6 +42,7 @@ const example = [
     accpted: 500,
     submissions: 900,
     author: "Alice",
+    point: 20,
   },
   {
     id: "5",
@@ -48,6 +52,7 @@ const example = [
     accpted: 1200,
     submissions: 1600,
     author: "Bob",
+    point: 10,
   },
   {
     id: "6",
@@ -57,6 +62,7 @@ const example = [
     accpted: 1500,
     submissions: 1800,
     author: "Charlie",
+    point: 10,
   },
   {
     id: "7",
@@ -66,6 +72,7 @@ const example = [
     accpted: 700,
     submissions: 1100,
     author: "David",
+    point: 20,
   },
   {
     id: "8",
@@ -75,6 +82,7 @@ const example = [
     accpted: 2000,
     submissions: 2200,
     author: "Eve",
+    point: 10,
   },
   {
     id: "9",
@@ -84,6 +92,7 @@ const example = [
     accpted: 300,
     submissions: 800,
     author: "Frank",
+    point: 30,
   },
   {
     id: "10",
@@ -93,6 +102,7 @@ const example = [
     accpted: 400,
     submissions: 900,
     author: "Grace",
+    point: 30,
   },
   {
     id: "11",
@@ -102,6 +112,7 @@ const example = [
     accpted: 600,
     submissions: 1200,
     author: "Heidi",
+    point: 20,
   },
   {
     id: "12",
@@ -111,6 +122,7 @@ const example = [
     accpted: 650,
     submissions: 1300,
     author: "Ivan",
+    point: 20,
   },
   {
     id: "13",
@@ -120,6 +132,7 @@ const example = [
     accpted: 250,
     submissions: 700,
     author: "Judy",
+    point: 30,
   },
   {
     id: "14",
@@ -129,6 +142,7 @@ const example = [
     accpted: 1100,
     submissions: 1400,
     author: "Mallory",
+    point: 10,
   },
   {
     id: "15",
@@ -138,6 +152,7 @@ const example = [
     accpted: 800,
     submissions: 1500,
     author: "Niaj",
+    point: 20,
   },
   {
     id: "16",
@@ -147,6 +162,7 @@ const example = [
     accpted: 350,
     submissions: 900,
     author: "Olivia",
+    point: 30,
   },
   {
     id: "17",
@@ -156,6 +172,7 @@ const example = [
     accpted: 500,
     submissions: 1000,
     author: "Peggy",
+    point: 20,
   },
   {
     id: "18",
@@ -165,6 +182,7 @@ const example = [
     accpted: 280,
     submissions: 800,
     author: "Sybil",
+    point: 30,
   },
   {
     id: "19",
@@ -174,6 +192,7 @@ const example = [
     accpted: 320,
     submissions: 850,
     author: "Trent",
+    point: 30,
   },
   {
     id: "20",
@@ -183,6 +202,7 @@ const example = [
     accpted: 600,
     submissions: 1100,
     author: "Victor",
+    point: 20,
   },
 ];
 

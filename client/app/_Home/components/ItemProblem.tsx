@@ -9,6 +9,7 @@ export interface ItemProblemProps {
   accpted: number;
   submissions: number;
   author: string;
+  point: number;
 }
 
 const ColorProblem: {
@@ -25,13 +26,17 @@ const ItemProblem = ({ value }: { value: ItemProblemProps }) => {
       key={value.id}
       className="w-full bg-bgsecondary h-fit rounded-lg p-3 flex flex-col gap-1 relative"
     >
-      <span className="flex gap-3 justify-start items-center">
+      <span className="flex gap-2 justify-start items-center">
         <h1 className="text-lg">{value.title}</h1>
         <span
           className={`${ColorProblem[value.difficulty]} rounded-md p-1 text-xs`}
         >
           {value.difficulty}
         </span>
+        <span className="flex justify-center items-center gap-1 text-sm">
+           <span>{value.point}</span>
+           <span>Points</span>
+          </span>
       </span>
       <div className="w-full flex gap-3 justify-start items-center">
         <span>
