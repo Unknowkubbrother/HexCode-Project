@@ -13,7 +13,7 @@ const ProblemSchema = new Schema({
     },difficulty:{
         type:Number,
         required : true
-    },clerkId:{
+    },type:[],clerkId:{
         type:String,
         required : true
     },submissions:{
@@ -28,7 +28,8 @@ const ProblemSchema = new Schema({
         type:Number,
         required : true,
         default : 10
-    },status:{
+    },testcase:[]
+    ,status:{
         type:Number,
         required : true,
         default : Status.NORMAL
@@ -43,8 +44,10 @@ interface IProblem{
     title: string,
     description : string,
     difficulty : number,
-    clerkId : string
+    type : Array<number>
+    clerkId : string,
     point : number,
+    testcase : Array<object>,
     filedocs?:string,
     hint?: Array<string>
 }
