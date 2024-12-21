@@ -4,13 +4,9 @@ import { PaginationWithLinks } from "@/components/ui/pagination-with-links";
 import FilterProblems from "./FilterProblems";
 import { getProblem } from "@/app/action";
 import { ProblemInterface } from "@/interface/problems";
-import { useAuth } from '@clerk/nextjs';
-
 
 const Problems = async () => {
-  const { getToken } = useAuth();
-  const token = await getToken();
-  const { result } = await getProblem(token);
+  const { result } = await getProblem();
 
   return (
     <main className="w-full h-full flex flex-col">

@@ -66,8 +66,6 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         const user = await clerk.users.getUser(auth.userId)
         const sizepage = 10;
 
-        console.log(user)
-
         // let query: any = {};
         // if (query.difficulty) {
         //   query.difficulty = { $in: query.difficulty };
