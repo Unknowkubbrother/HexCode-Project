@@ -1,16 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-export interface ItemProblemProps {
-  id: string;
-  title: string;
-  difficulty: string;
-  successRate: number;
-  accpted: number;
-  submissions: number;
-  author: string;
-  point: number;
-}
+import { ProblemInterface } from "@/interface/problems";
 
 const ColorProblem: {
   [key: string]: string;
@@ -20,7 +11,7 @@ const ColorProblem: {
   Hard: "bg-red-500",
 };
 
-const ItemProblem = ({ value }: { value: ItemProblemProps }) => {
+const ItemProblem = ({ value }: { value: ProblemInterface }) => {
   return (
     <div
       key={value.id}
@@ -45,7 +36,7 @@ const ItemProblem = ({ value }: { value: ItemProblemProps }) => {
         </span>
         <span>
           <span className="text-green-500">Accpted</span>
-          <span> : {value.accpted}</span>
+          <span> : {value.accepted}</span>
         </span>
         <span>
           <span className="text-yellow-500">Submissions</span>
@@ -57,7 +48,7 @@ const ItemProblem = ({ value }: { value: ItemProblemProps }) => {
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-        <span> {value.author}</span>
+        <span> {value.author.name}</span>
       </span>
 
       <Link href={`/problem/${value.id}`} passHref>

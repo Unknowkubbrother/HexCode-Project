@@ -1,10 +1,17 @@
-import ItemProblem, { ItemProblemProps } from "./ItemProblem";
-import { example } from "./datatest";
-import {PaginationWithLinks} from "@/components/ui/pagination-with-links";
+import ItemProblem from "./ItemProblem";
+// import { example } from "./datatest";
+import { PaginationWithLinks } from "@/components/ui/pagination-with-links";
 import FilterProblems from "./FilterProblems";
+import { getProblem } from "@/app/action";
+import { ProblemInterface } from "@/interface/problems";
+import { useAuth } from '@clerk/nextjs';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Problems = ({pageSize , page} : {pageSize?: number , page? : number}) => {
+
+const Problems = async () => {
+  const { getToken } = useAuth();
+  const token = await getToken();
+  const { result } = await getProblem(token);
+
   return (
     <main className="w-full h-full flex flex-col">
       <header className="w-full flex justify-between items-center">
@@ -14,22 +21,18 @@ const Problems = ({pageSize , page} : {pageSize?: number , page? : number}) => {
         <div className="w-[75%] h-fit">
           <div className="w-full h-[2000px] overflow-y-auto">
             <div className="w-full h-fit grid grid-cols-1 gap-3">
-              {example.map((value: ItemProblemProps) => (
-                <ItemProblem value={value} key={value.id} />
+              {result.map((value : ProblemInterface ) => (
+                <ItemProblem value={value} key={value.id}/>
               ))}
             </div>
           </div>
           <div className="mt-5">
-          <PaginationWithLinks
-            page={1}
-            pageSize={10}
-            totalCount={100}
-          />
+            <PaginationWithLinks page={1} pageSize={10} totalCount={100} />
           </div>
         </div>
 
         <div className="w-[25%] h-fit bg-bgsecondary rounded-2xl">
-            <FilterProblems/>
+          <FilterProblems />
         </div>
       </section>
     </main>
