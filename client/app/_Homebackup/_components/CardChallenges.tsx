@@ -7,9 +7,9 @@ import Link from "next/link";
 
 const CardChallenges = () => {
   return (
-    <Link href="/" className="w-[250px] h-[360px] bg-bgsecondary rounded-lg flex flex-col overflow-hidden shadow-lg duration-300 transform hover:scale-105">
+    <Link href="/" className="w-[250px] h-[360px] bg-bgsecondary rounded-2xl flex flex-col overflow-hidden shadow-lg duration-300 transform hover:scale-105">
       <div className="w-full h-full m-auto p-2">
-        <div className="w-full h-[50%] rounded-lg overflow-hidden object-cover">
+        <div className="w-full h-[50%] rounded-2xl overflow-hidden object-cover">
           <Image
             src={TemplateImage}
             alt="avatar"

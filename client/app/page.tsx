@@ -1,7 +1,9 @@
-import Home from "@/app/_Home/Home";
+import Home from "@/app/_home/page";
 export default function Page() {
   return (
-    <Home />
+    <main className="w-full h-full mb-5">
+      <Home />
+    </main>
   );
 }
 

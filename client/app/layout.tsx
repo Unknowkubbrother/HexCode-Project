@@ -8,15 +8,14 @@ import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 import { useState } from "react";
+import { Spotlight } from "@/components/ui/Spotlight";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  const [theme, setTheme] = useState<string>("dark")
-
+  const [theme, setTheme] = useState<string>("dark");
 
   return (
     <ClerkProvider
@@ -40,10 +39,16 @@ export default function RootLayout({
               <Loader />
             </ClerkLoading>
             <ClerkLoaded>
-              <Navbar setTheme={setTheme}/>
-              <main className="mt-2 w-full mb-5">
+              <Navbar setTheme={setTheme} />
+              <Spotlight
+                  className="-top-40 left-0 md:left-[70%] md:-top-20 absolute"
+                  fill="#0ea5e9"
+                />
+                <Spotlight
+                  className="-top-40 left-0 md:left-1/2 md:-top-20 absolute"
+                  fill="#9c7cd6"
+                />
                 {children}
-              </main>
             </ClerkLoaded>
           </Providers>
         </body>

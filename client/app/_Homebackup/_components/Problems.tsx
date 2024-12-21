@@ -226,7 +226,7 @@ const Problems = () => {
           </div>
         </div>
 
-        <div className="w-[25%] h-[500px] bg-bgsecondary rounded-lg"></div>
+        <div className="w-[25%] h-[500px] bg-bgsecondary rounded-2xl"></div>
       </section>
     </main>
   );
