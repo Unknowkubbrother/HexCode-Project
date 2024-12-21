@@ -24,7 +24,7 @@ const ItemProblem = ({ value }: { value: ItemProblemProps }) => {
   return (
     <div
       key={value.id}
-      className="w-full bg-bgsecondary h-fit rounded-2xl p-3 flex flex-col gap-1 relative bg-opacity-25"
+      className="w-full bg-stone-100 dark:bg-bgsecondary h-fit rounded-2xl p-3 flex flex-col gap-1 relative"
     >
       <span className="flex gap-2 justify-start items-center">
         <span className="text-lg font-mono">{value.title}</span>

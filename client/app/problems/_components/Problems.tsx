@@ -13,7 +13,7 @@ const Problems = ({pageSize , page} : {pageSize?: number , page? : number}) => {
       <section className="w-full gap-5 mt-5 flex">
         <div className="w-[75%] h-fit">
           <div className="w-full h-[2000px] overflow-y-auto">
-            <div className="w-full h-fit rounded-lg grid grid-cols-1 gap-3">
+            <div className="w-full h-fit grid grid-cols-1 gap-3">
               {example.map((value: ItemProblemProps) => (
                 <ItemProblem value={value} key={value.id} />
               ))}

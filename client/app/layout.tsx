@@ -1,14 +1,16 @@
 "use client";
 import { ClerkProvider, ClerkLoaded, ClerkLoading } from "@clerk/nextjs";
+import "./globals.css";
 import { dark } from "@clerk/themes";
 import Providers from "@/app/Providers";
 import Loader from "@/components/ui/Loader";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/ui/Navbar";
-const inter = Inter({ subsets: ["latin"] });
 import { useState } from "react";
 import { Spotlight } from "@/components/ui/Spotlight";
+import Navbar from "@/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -49,6 +51,7 @@ export default function RootLayout({
                   fill="#9c7cd6"
                 />
                 {children}
+                <Footer />
             </ClerkLoaded>
           </Providers>
         </body>
