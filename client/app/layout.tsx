@@ -41,11 +41,11 @@ export default function RootLayout({
             <ClerkLoaded>
               <Navbar setTheme={setTheme} />
               <Spotlight
-                  className="-top-40 left-0 md:left-[70%] md:-top-20 absolute"
+                  className="-top-40 left-0 md:left-2/3 md:-top-20 fixed"
                   fill="#0ea5e9"
                 />
                 <Spotlight
-                  className="-top-40 left-0 md:left-1/2 md:-top-20 absolute"
+                  className="-top-40 left-0 md:left-2/4 md:-top-20 fixed"
                   fill="#9c7cd6"
                 />
                 {children}
