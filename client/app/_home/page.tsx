@@ -1,13 +1,12 @@
 import React from "react";
 import Header from "./_components/Header";
+import Introduction from "./_components/Introduction";
+
 const page = () => {
   return (
-    <main className="w-[95%] m-auto flex flex-col gap-10">
+    <main className="w-[70%] m-auto flex flex-col gap-10 select-none">
       <Header/>
-
-      <section id="why" className="w-full h-lvh">
-        why
-      </section>
+      <Introduction/>
     </main>
   );
 };

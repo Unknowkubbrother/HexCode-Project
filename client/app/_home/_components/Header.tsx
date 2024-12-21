@@ -20,19 +20,19 @@ const Header = () => {
         A platform to learn and practice programming for everyone
       </h2>
       <div className="flex gap-5 mt-5 text-white">
-        <Link href="/problems" className="bg-primary px-5 py-2 rounded-2xl shadow-lg hover:bg-bgsecondary duration-300">
+        <Link href="/problems" className="bg-primary px-5 py-2 rounded-2xl shadow-lg hover:bg-secondary hover:shadow-lg hover:shadow-primary duration-300">
           Problems
         </Link>
-        <Link href="/challenges" className="bg-primary px-5 py-2 rounded-2xl shadow-lg hover:bg-bgsecondary duration-300">
+        <Link href="/challenges" className="bg-primary px-5 py-2 rounded-2xl shadow-lg hover:bg-secondary hover:shadow-lg hover:shadow-primary duration-300">
           Challengs
         </Link>
       </div>
-      <a className="flex mt-10 gap-5 text-[#9CA3AF]" href="#why">
+      <Link className="flex mt-10 gap-5 text-[#9CA3AF]" href="#introduction">
         See why you should learn hex code
         <span className="animate-bounce p-2 bg-bgsecondary rounded-full text-sm">
           <ArrowDown />
         </span>
-      </a>
+      </Link>
     </header>
   );
 };
