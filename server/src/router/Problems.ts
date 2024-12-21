@@ -15,7 +15,7 @@ export const ProblemRoute = new Elysia({'prefix':'/problem'})
 
         const user = await clerk.users.getUser(auth.userId)
         
-        const value = createProblem({
+        const value = await createProblem({
             title:body.title,
             description:body.description,
             difficulty:body.difficulty,
@@ -25,7 +25,11 @@ export const ProblemRoute = new Elysia({'prefix':'/problem'})
             testcase : body.testcase,
             filedocs:body.filedocs,
             hint:body.hint})
-        return { msg:"success" }
+
+        if(!value){
+            return error(404, 'Error')
+        }
+        return { msg:value }
 
     }catch(e){
         return error(500, 'Internal Server Error')
@@ -55,18 +59,28 @@ export const ProblemRoute = new Elysia({'prefix':'/problem'})
 
         // const user = await clerk.users.getUser(auth.userId)
         const sizepage = 10
-        const problems = await getProblems()
+
+        let query:any = {};
+        if(body.difficulty){
+            query.difficulty = { $in: body.difficulty };
+        }
+        if(body.type){
+            query.type = { $in: body.type };
+        }
+        const problems = await ProblemModel.find(query)
         const numberpage = round(problems.length/sizepage)
-        const problem = problems.map((v,i)=>{
+        const problem = problems.map((v,_)=>{
             return({
                 id:v.id,
                 title:v.title,
+                clerkId:v.clerkId,
                 difficulty:v.difficulty,
                 submissions:v.submissions,
                 accpet:v.accpet,
+                successrate:v.accpet/v.submissions*100||0,
                 point:v.point
             })
-        }).slice(body.page?2*(body.page-1):0,body.page?2*body.page:2)
+        }).slice(body.page?sizepage*(body.page-1):0,body.page?sizepage*body.page:sizepage)
         return { problems:problem,numberpage:{
             page:body.page?body.page:1,
             all:numberpage
@@ -78,6 +92,10 @@ export const ProblemRoute = new Elysia({'prefix':'/problem'})
 
 
 },{body: t.Object({
-    page:t.Optional(t.Number())
+    page:t.Optional(t.Number()),
+    slove:t.Optional(t.Boolean()),
+    unslove:t.Optional(t.Boolean()),
+    type:t.Optional(t.Array(t.String())),
+    difficulty:t.Optional(t.Array(t.Number()))
 })})
 
