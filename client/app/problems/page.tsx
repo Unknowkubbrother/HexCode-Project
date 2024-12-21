@@ -1,8 +1,10 @@
-import React from 'react'
+import Problems from "./_components/Problems"
 
 const page = () => {
   return (
-    <div>problems</div>
+    <main className="w-[70%] m-auto flex flex-col gap-10 my-10">
+      <Problems/>
+    </main>
   )
 }
 

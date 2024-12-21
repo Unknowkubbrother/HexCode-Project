@@ -24,7 +24,7 @@ const Introduction = () => {
   return (
     <section
       id="introduction"
-      className="w-full flex justify-between items-start h-screen"
+      className="w-full flex justify-between items-start mb-[10rem]"
     >
       <div className="flex flex-col gap-5">
         <h2 className="text-2xl text-[#9CA3AF] font-semibold">INTRODUCTION</h2>

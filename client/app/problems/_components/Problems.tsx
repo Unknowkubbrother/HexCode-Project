@@ -208,9 +208,9 @@ const example = [
 
 const Problems = () => {
   return (
-    <main className="w-full flex flex-col">
+    <main className="w-full h-full flex flex-col">
       <header className="w-full flex justify-between items-center">
-        <h1 className="text-xl">Problems</h1>
+        <h1 className="text-2xl font-bold">Problems</h1>
         <span>
         <Link href="/problems" className="hover:text-primary duration-300">
           <ArrowRight size={20}/>
@@ -218,7 +218,7 @@ const Problems = () => {
         </span>
       </header>
       <section className="w-full gap-5 mt-5 flex">
-        <div className="w-[75%] h-[700px] overflow-y-auto">
+        <div className="w-[75%] overflow-y-auto">
           <div className="w-full h-fit rounded-lg grid grid-cols-1 gap-3">
             {example.map((value : ItemProblemProps ) => (
               <ItemProblem value={value} key={value.id} />
@@ -226,7 +226,9 @@ const Problems = () => {
           </div>
         </div>
 
-        <div className="w-[25%] h-[500px] bg-bgsecondary rounded-2xl"></div>
+        <div className="w-[25%] h-[500px] bg-bgsecondary rounded-2xl p-3">
+          
+        </div>
       </section>
     </main>
   );
