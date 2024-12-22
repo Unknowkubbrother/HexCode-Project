@@ -80,17 +80,13 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           .limit(sizepage);
         const totalCounts = (await ProblemModel.find()).length;
 
-        const submissions = SubmissionModel.find({clerkId:user.id});
+        const submissions = await SubmissionModel.find({clerkId:user.id});
 
         const resultProblem = await Promise.all(
           problems.map(async (value, idx) => {
             const userbyid = await clerk.users.getUser(value.clerkId);
-            const result = await submissions.find({problemId:value._id.toString()})
-            console.log()
-            if(result.length>0){
-             
-            }
-            return {
+            const result = submissions.find(submission => submission.problemId === value._id.toString());
+            const bodyresult = {
               id: value._id.toString(),
               title: value.title,
               difficulty: value.difficulty,
@@ -105,10 +101,21 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
               },
               point: value.point,
             };
+            if(query.slove==true&&(query.unslove==false||!query.unslove)){
+              if(result?.success==true){
+                return bodyresult
+              }
+            }else if((query.slove==false||!query.slove)&&query.unslove==true){
+              if(!(result?.success==true)){
+                return bodyresult
+              }
+            }else{
+              return bodyresult
+            }
           })
         );
         return {
-          result: resultProblem,
+          result: resultProblem.filter(item => item !== null && item !== undefined),
           totalCounts: totalCounts,
         };
       } catch (e) {
