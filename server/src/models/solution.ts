@@ -23,7 +23,7 @@ const SubmissionSchema = new Schema(
 );
 
 interface ISubmission {
-  title: string;
+  problemId: string;
   clerkId: string;
   success: boolean;
   score: Number;

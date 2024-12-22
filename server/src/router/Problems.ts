@@ -1,8 +1,7 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { createProblem, ProblemModel } from "@/models/problems";
-import { ceil, round } from "mathjs";
-import { SubmissionModel } from "@/models/Solution";
+import { SubmissionModel } from "@/models/solution";
 
 export const ProblemRoute = new Elysia({ prefix: "/problem" })
   .use(clerkPlugin())
@@ -97,7 +96,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
               submissions: value.submissions,
               accepted: value.accepted,
               successRate: (value.accepted / value.submissions) * 100 || 0,
-              clid: value.clerkId,
+              clerkId: value.clerkId,
               type: value.type,
               author: {
                 name: `${userbyid.username}`,
