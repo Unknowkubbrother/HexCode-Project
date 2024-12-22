@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { createProblem, ProblemModel } from "@/models/problems";
-import { round } from "mathjs";
+import { ceil, round } from "mathjs";
 
 export const ProblemRoute = new Elysia({ prefix: "/problem" })
   .use(clerkPlugin())
@@ -59,45 +59,95 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
     async ({ query, clerk, auth, error }) => {
       try {
         
-        if (!auth?.userId){
-           return error(401, 'Unauthorized')
-        }
-
-        const user = await clerk.users.getUser(auth.userId)
-        const sizepage = 10;
-
-        // let query: any = {};
-        // if (query.difficulty) {
-        //   query.difficulty = { $in: query.difficulty };
+        // if (!auth?.userId){
+        //    return error(401, 'Unauthorized')
         // }
-        // if (query.type) {
-        //   query.type = { $in: query.type };
-        // }
-        const problems = await ProblemModel.find(query);
-        const numberpage: number = round(problems.length / sizepage);
-        const resultProblem = problems.map((value,idx) => {
-            return {
-              id: value._id.toString(),
-              title: value.title,
-              difficulty: value.difficulty,
-              submissions: value.submissions,
-              accepted: value.accepted,
-              successRate: (value.accepted / value.submissions) * 100 || 0,
-              author: {
-                name: `test${idx}`,
-                avatar: "https://github.com/shadcn.png"
-              },
-              point: value.point,
-            };
-          })
-        //   .slice(
-        //     query.page ? sizepage * (query.page - 1) : 0,
-        //     query.page ? sizepage * query.page : sizepage
-        //   );
+
+        // const user = await clerk.users.getUser(auth.userId)
+
+        const sizepage = Number(query.pagesize)||10;
+        const page = Number(query.page)||1;
+
+        const problems = await ProblemModel.find().skip(sizepage*(page-1)).limit(sizepage);
+
+        const countpage = await ProblemModel.countDocuments({})
+        const numberpage: number = ceil(countpage / sizepage);
+
+        const resultProblem = await Promise.all(problems.map(async (value, idx) => {
+          const userbyid = await clerk.users.getUser(value.clerkId)
+          return {
+            id: value._id.toString(),
+            title: value.title,
+            difficulty: value.difficulty,
+            submissions: value.submissions,
+            accepted: value.accepted,
+            successRate: (value.accepted / value.submissions) * 100 || 0,
+            clid: value.clerkId,
+            author: {
+              name: `${userbyid.username}`,
+              avatar: userbyid.imageUrl
+            },
+            point: value.point,
+          };
+        }))
         return {
           result: resultProblem,
           numberpage: {
-            // page: query.page ? query.page : 1,
+            page: page,
+            all: numberpage,
+          },
+        };
+      } catch (e) {
+        return error(500, "Internal Server Error");
+      }
+    }
+  )
+
+  .post(
+    "/get",
+    async ({ body, clerk, auth, error }) => {
+      try {
+        
+        // if (!auth?.userId){
+        //    return error(401, 'Unauthorized')
+        // }
+
+        // const user = await clerk.users.getUser(auth.userId)
+
+        const sizepage = body?.pagesize?body.pagesize:10;
+        const page = body?.page?body.page:1;
+
+        const problems = await ProblemModel.find(
+          body?.difficulty?{difficulty:{$in:body.difficulty}}:{},
+          body?.type?{type:{$in:body.difficulty}}:{}
+        ).skip(sizepage*(page-1)).limit(sizepage);
+
+        const countpage = await ProblemModel.countDocuments(
+          body?.difficulty?{difficulty:{$in:body.difficulty}}:{},
+          body?.type?{type:{$in:body.difficulty}}:{})
+        const numberpage: number = ceil(countpage / sizepage);
+
+        const resultProblem = await Promise.all(problems.map(async (value, idx) => {
+          const userbyid = await clerk.users.getUser(value.clerkId)
+          return {
+            id: value._id.toString(),
+            title: value.title,
+            difficulty: value.difficulty,
+            submissions: value.submissions,
+            accepted: value.accepted,
+            successRate: (value.accepted / value.submissions) * 100 || 0,
+            clid: value.clerkId,
+            author: {
+              name: `${userbyid.username}`,
+              avatar: userbyid.imageUrl
+            },
+            point: value.point,
+          };
+        }))
+        return {
+          result: resultProblem,
+          numberpage: {
+            page: page,
             all: numberpage,
           },
         };
@@ -106,13 +156,14 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
       }
     },
     {
-      query: t.Optional(
+      body: t.Optional(
         t.Object({
-          page: t.Number(),
-          slove: t.Boolean(),
-          unslove: t.Boolean(),
-          type: t.Array(t.String()),
-          difficulty: t.Array(t.Number()),
+          page: t.Optional(t.Number()),
+          pagesize: t.Optional(t.Number()),
+          slove: t.Optional(t.Boolean()),
+          unslove: t.Optional(t.Boolean()),
+          type: t.Optional(t.Array(t.String())),
+          difficulty: t.Optional(t.Array(t.Number())),
         })
       ),
     }
