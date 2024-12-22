@@ -2,7 +2,7 @@ import ItemProblem from "./ItemProblem";
 // import { example } from "./datatest";
 import { PaginationWithLinks } from "@/components/ui/pagination-with-links";
 import FilterProblems from "./FilterProblems";
-import { getProblem } from "@/app/action";
+import { getProblem } from "@/actions/problemAction";
 import { ProblemInterface } from "@/interface/problems";
 
 const Problems = async () => {
@@ -15,7 +15,7 @@ const Problems = async () => {
       </header>
       <section className="w-full gap-5 mt-5 flex">
         <div className="w-[75%] h-fit">
-          <div className="w-full h-[2000px] overflow-y-auto">
+          <div className="w-full h-fit max:h-[2000px] overflow-y-auto">
             <div className="w-full h-fit grid grid-cols-1 gap-3">
               {result.map((value : ProblemInterface ) => (
                 <ItemProblem value={value} key={value.id}/>

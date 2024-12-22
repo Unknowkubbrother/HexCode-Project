@@ -45,7 +45,7 @@ const ItemProblem = ({ value }: { value: ProblemInterface }) => {
       </div>
       <span className="flex justify-start items-center gap-2">
         <Avatar className="h-5 w-5">
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src={value.author.avatar} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <span> {value.author.name}</span>

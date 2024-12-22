@@ -1,8 +1,8 @@
-import Home from "@/app/_home/page";
+import Main from "./_components/Main";
 export default function Page() {
   return (
     <main className="w-full h-full mb-5">
-      <Home />
+      <Main />
     </main>
   );
 }

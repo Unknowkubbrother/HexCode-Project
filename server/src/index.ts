@@ -8,10 +8,10 @@ import { ProblemRoute } from "./router/Problems";
 
 const app = new Elysia()
   .use(logger())
+  .use(cors())
   .use(TemplateRoute)
   .use(ProblemRoute)
   .get("/", "Hello, Elysia!")
-  .use(cors())
   .listen(process.env.SERVER_PORT || 3000);
 
 console.log(
