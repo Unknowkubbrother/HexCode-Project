@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { createProblem, ProblemModel } from "@/models/problems";
-import { SubmissionModel } from "@/models/Solution";
+import { SubmissionModel } from "@/models/solution";
 
 export const ProblemRoute = new Elysia({ prefix: "/problem" })
   .use(clerkPlugin())
@@ -58,11 +58,11 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
     "/get",
     async ({ query, clerk, auth, error }) => {
       try {
-        if (!auth?.userId){
-           return error(401, 'Unauthorized')
+        if (!auth?.userId) {
+          return error(401, "Unauthorized");
         }
 
-        const user = await clerk.users.getUser(auth.userId)
+        const user = await clerk.users.getUser(auth.userId);
 
         const sizepage = query?.pagesize ? query.pagesize : 10;
         const page = query?.page ? query.page : 1;
@@ -74,17 +74,21 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
             difficulty ? { difficulty: { $in: difficulty } } : {},
             type != "" ? { type: { $in: type } } : {},
           ],
-        })
-          .skip(sizepage * (page - 1))
-          .limit(sizepage);
-        const totalCounts = (await ProblemModel.find()).length;
+        });
 
-        const submissions = await SubmissionModel.find({clerkId:user.id});
+        const filterProblems = problems.slice(
+          (page - 1) * sizepage,
+          page * sizepage
+        );
+
+        const submissions = await SubmissionModel.find({ clerkId: user.id });
 
         const resultProblem = await Promise.all(
-          problems.map(async (value, idx) => {
+          filterProblems.map(async (value, idx) => {
             const userbyid = await clerk.users.getUser(value.clerkId);
-            const result = submissions.find(submission => submission.problemId === value._id.toString());
+            const result = submissions.find(
+              (submission) => submission.problemId === value._id.toString()
+            );
             const bodyresult = {
               id: value._id.toString(),
               title: value.title,
@@ -100,22 +104,30 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
               },
               point: value.point,
             };
-            if(query.slove==true&&(query.unslove==false||!query.unslove)){
-              if(result?.success==true){
-                return bodyresult
+            if (
+              query.solve == true &&
+              (query.unsolve == false || !query.unsolve)
+            ) {
+              if (result?.success == true) {
+                return bodyresult;
               }
-            }else if((query.slove==false||!query.slove)&&query.unslove==true){
-              if(!(result?.success==true)){
-                return bodyresult
+            } else if (
+              (query.solve == false || !query.solve) &&
+              query.unsolve == true
+            ) {
+              if (!(result?.success == true)) {
+                return bodyresult;
               }
-            }else{
-              return bodyresult
+            } else {
+              return bodyresult;
             }
           })
         );
         return {
-          result: resultProblem.filter(item => item !== null && item !== undefined),
-          totalCounts: totalCounts,
+          result: resultProblem.filter(
+            (item) => item !== null && item !== undefined
+          ),
+          totalCounts: problems.length,
         };
       } catch (e) {
         return error(500, "Internal Server Error");
@@ -126,8 +138,8 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         t.Object({
           page: t.Optional(t.Number()),
           pagesize: t.Optional(t.Number()),
-          slove: t.Optional(t.Boolean()),
-          unslove: t.Optional(t.Boolean()),
+          solve: t.Optional(t.Boolean()),
+          unsolve: t.Optional(t.Boolean()),
           type: t.Optional(t.String()),
           difficulty: t.Optional(t.String()),
         })

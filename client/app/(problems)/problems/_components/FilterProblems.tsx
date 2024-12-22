@@ -15,12 +15,13 @@ const SolutionType: {
 };
 
 const FilterProblems = () => {
-  const [selectedSolved, setselectedSolved] = useState<string[]>([]);
+  const searchParams = useSearchParams();
+  const [selectedSolve, setselectedSolve] = useState<boolean | undefined>(undefined);
+  const [selectedUnSolve, setselectedUnSolve] = useState<boolean | undefined>(undefined);
   const [selectedDifficulty, setselectedDifficulty] = useState<number[]>([]);
   const [selectedSolutionType, setselectedSolutionType] = useState<number[]>(
     []
   );
-  const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -34,8 +35,11 @@ const FilterProblems = () => {
     if (pageSize) {
       params.set("pageSize", pageSize);
     }
-    if (selectedSolved.length > 0) {
-      params.set("solved", selectedSolved.join(","));
+    if (selectedSolve !== undefined) {
+      params.set("solve", selectedSolve.toString());
+    }
+    if (selectedUnSolve !== undefined) {
+      params.set("unsolve", selectedUnSolve.toString());
     }
     if (selectedDifficulty.length > 0) {
       params.set("difficulty", selectedDifficulty.join(","));
@@ -47,10 +51,31 @@ const FilterProblems = () => {
   };
 
   useEffect(() => {
+    const solve = searchParams.get("solve");
+    const unsolve = searchParams.get("unsolve");
+    const difficulty = searchParams.get("difficulty");
+    const type = searchParams.get("type");
+
+    if (solve) {
+      setselectedSolve(solve === "true");
+    }
+    if (unsolve) {
+      setselectedUnSolve(unsolve === "true");
+    }
+    if (difficulty) {
+      setselectedDifficulty(difficulty.split(",").map((v) => Number(v)));
+    }
+    if (type) {
+      setselectedSolutionType(type.split(",").map((v) => Number(v)));
+    }
+
+  }, []);
+
+  useEffect(() => {
     const search = createQueryParams();
     router.push(pathname + "?" + search);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedSolved, selectedDifficulty, selectedSolutionType]);
+  }, [selectedSolve,selectedUnSolve, selectedDifficulty, selectedSolutionType]);
 
   return (
     <div className="w-full flex flex-col gap-3 p-6">
@@ -63,13 +88,11 @@ const FilterProblems = () => {
           <li className="flex justify-start items-center gap-2">
             <Checkbox
               id="solved"
-              checked={selectedSolved.includes("sovled")}
+              checked={selectedSolve}
               onCheckedChange={(checked) =>
                 checked
-                  ? setselectedSolved([...selectedSolved, "sovled"])
-                  : setselectedSolved(
-                      selectedSolved.filter((v) => v !== "sovled")
-                    )
+                  ? setselectedSolve(true)
+                  : setselectedSolve(undefined)
               }
             />
             <label
@@ -83,13 +106,11 @@ const FilterProblems = () => {
           <li className="flex justify-start items-center gap-2">
             <Checkbox
               id="unsolved"
-              checked={selectedSolved.includes("unsolved")}
+              checked={selectedUnSolve}
               onCheckedChange={(checked) =>
                 checked
-                  ? setselectedSolved([...selectedSolved, "unsolved"])
-                  : setselectedSolved(
-                      selectedSolved.filter((v) => v !== "unsolved")
-                    )
+                  ? setselectedUnSolve(true)
+                  : setselectedUnSolve(undefined)
               }
             />
             <label

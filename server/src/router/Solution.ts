@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { getSubmitById,SubmissionModel } from "@/models/Solution";
+import { getSubmitById,SubmissionModel } from "@/models/solution";
 import { ProblemModel,getProblemById } from "@/models/problems";
 import { isNumber } from "lodash";
 

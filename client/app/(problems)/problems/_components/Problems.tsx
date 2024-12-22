@@ -12,8 +12,6 @@ interface Props {
 const Problems = async ({searchParams} : Props) => {
   const { result , totalCounts} = await getProblem(searchParams);
 
-  console.log(totalCounts)
-
   return (
     <main className="w-full h-full flex flex-col">
       <header className="w-full flex flex-col">

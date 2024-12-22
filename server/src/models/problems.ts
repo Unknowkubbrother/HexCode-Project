@@ -48,6 +48,7 @@ const ProblemSchema = new Schema(
       default: null,
     },
     hint: [],
+    submited: [],
   },
   { timestamps: true }
 );
