@@ -104,18 +104,12 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
               },
               point: value.point,
             };
-            if (
-              query.solve == true &&
-              (query.unsolve == false || !query.unsolve)
-            ) {
-              if (result?.success == true) {
+            if (query.solve === true) {
+              if (result?.success === true) {
                 return bodyresult;
               }
-            } else if (
-              (query.solve == false || !query.solve) &&
-              query.unsolve == true
-            ) {
-              if (!(result?.success == true)) {
+            } else if (query.unsolve === true) {
+              if (!result || result.success !== true) {
                 return bodyresult;
               }
             } else {
