@@ -1,7 +1,6 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { createProblem, ProblemModel } from "@/models/problems";
-import { ceil, round } from "mathjs";
 
 export const ProblemRoute = new Elysia({ prefix: "/problem" })
   .use(clerkPlugin())
@@ -58,12 +57,10 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
     "/get",
     async ({ query, clerk, auth, error }) => {
       try {
-        // if (!auth?.userId){
-        //    return error(401, 'Unauthorized')
-        // }
-
-        // const user = await clerk.users.getUser(auth.userId)
-
+        if (!auth?.userId) {
+          return error(401, "Unauthorized");
+        }
+        
         const sizepage = query?.pagesize ? query.pagesize : 10;
         const page = query?.page ? query.page : 1;
         const difficulty = query.difficulty ? JSON.parse(query.difficulty) : "";
@@ -79,7 +76,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           .limit(sizepage);
         const totalCounts = (await ProblemModel.find()).length;
         const resultProblem = await Promise.all(
-          problems.map(async (value, idx) => {
+          problems.map(async (value) => {
             const userbyid = await clerk.users.getUser(value.clerkId);
             return {
               id: value._id.toString(),
@@ -88,7 +85,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
               submissions: value.submissions,
               accepted: value.accepted,
               successRate: (value.accepted / value.submissions) * 100 || 0,
-              clid: value.clerkId,
+              clerkId: value.clerkId,
               type: value.type,
               author: {
                 name: `${userbyid.username}`,
