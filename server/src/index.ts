@@ -5,12 +5,14 @@ import { logger } from "@chneau/elysia-logger";
 // import { clerkPlugin } from "elysia-clerk";
 import { TemplateRoute } from "@/router/Template";
 import { ProblemRoute } from "./router/Problems";
+import { SolutionRoute } from "./router/Solution";
 
 const app = new Elysia()
   .use(logger())
   .use(cors())
   .use(TemplateRoute)
   .use(ProblemRoute)
+  .use(SolutionRoute)
   .get("/", "Hello, Elysia!")
   .listen(process.env.SERVER_PORT || 3000);
 
