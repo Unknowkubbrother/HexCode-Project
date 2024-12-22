@@ -11,7 +11,7 @@ const app = new Elysia()
   .use(cors())
   .use(TemplateRoute)
   .use(ProblemRoute)
-  .get("/", "Hello, Elysia!")
+  .get("/", "Hello, Elysia!!")
   .listen(process.env.SERVER_PORT || 3000);
 
 console.log(

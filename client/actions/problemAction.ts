@@ -1,18 +1,16 @@
 'use server';
 import axios from 'axios';
-import {cookies} from "next/headers";
+import getSession from "@/hooks/use-session";
 
-export const getProblem = async () => {
+export const getProblem = async (searchParams?: {[key: string]: string | string[] | undefined })  => {
     try{
-        const cookieStore = await cookies()
-        const token = cookieStore.get('__session')
+        const token = await getSession();
 
-        if (!token) {
-            throw new Error('Unauthorized');
-        }
+        const search = `?page=${searchParams?.page ?? 1}&pagesize=${searchParams?.pageSize ?? 10}${searchParams?.solved ? `&solved=[${searchParams?.solved}]` : ''}${searchParams?.difficulty ? `&difficulty=[${searchParams?.difficulty}]` : ''}${searchParams?.type ? `&type=[${searchParams?.type}]` : ''}
+        `;
 
-        const response = await axios.get('http://localhost:4000/problem/get', {
-            headers: { Authorization: `Bearer ${token?.value}` },
+        const response = await axios.get(`http://localhost:4000/problem/get${search}`, {
+            headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!response) {
@@ -21,6 +19,6 @@ export const getProblem = async () => {
 
         return response.data;
     }catch(error){
-        console.error(error)
+        console.error(error);
     }
 };

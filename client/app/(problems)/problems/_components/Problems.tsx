@@ -1,29 +1,31 @@
-import ItemProblem from "./ItemProblem";
-// import { example } from "./datatest";
-import { PaginationWithLinks } from "@/components/ui/pagination-with-links";
+import PaginationBar from "./PaginationBar";
 import FilterProblems from "./FilterProblems";
+import { Suspense } from "react";
+import ListProblems from "./ListProblems";
+import { SkeletonListProblem } from "@/components/ui/SkeletonTemplate";
 import { getProblem } from "@/actions/problemAction";
-import { ProblemInterface } from "@/interface/problems";
 
-const Problems = async () => {
-  const { result } = await getProblem();
+interface Props {
+  searchParams : {[key: string]: string | string[] | undefined }
+}
+
+const Problems = async ({searchParams} : Props) => {
+  const { result , totalCounts} = await getProblem(searchParams);
+
+  console.log(totalCounts)
 
   return (
     <main className="w-full h-full flex flex-col">
-      <header className="w-full flex justify-between items-center">
+      <header className="w-full flex flex-col">
         <h1 className="text-2xl font-bold">Problems</h1>
       </header>
       <section className="w-full gap-5 mt-5 flex">
         <div className="w-[75%] h-fit">
-          <div className="w-full h-fit max:h-[2000px] overflow-y-auto">
-            <div className="w-full h-fit grid grid-cols-1 gap-3">
-              {result.map((value : ProblemInterface ) => (
-                <ItemProblem value={value} key={value.id}/>
-              ))}
-            </div>
-          </div>
+          <Suspense fallback={<SkeletonListProblem/>}>
+             <ListProblems result={result}/>
+          </Suspense>
           <div className="mt-5">
-            <PaginationWithLinks page={1} pageSize={10} totalCount={100} />
+            <PaginationBar totalCounts={totalCounts}/>
           </div>
         </div>
 

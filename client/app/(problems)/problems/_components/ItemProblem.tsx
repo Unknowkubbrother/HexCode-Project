@@ -3,15 +3,17 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ProblemInterface } from "@/interface/problems";
 
-const ColorProblem: {
-  [key: string]: string;
-} = {
-  Easy: "bg-green-500",
-  Medium: "bg-yellow-500",
-  Hard: "bg-red-500",
-};
+export default function ItemProblem ({ value }: { value: ProblemInterface }) {
 
-const ItemProblem = ({ value }: { value: ProblemInterface }) => {
+  const SchemaProblem: {
+    [key: number]: string[];
+  } = {
+    1: ["Easy","bg-green-500"],
+    2: ["Medium","bg-yellow-500"],
+    3: ["Hard","bg-red-500"],
+    4: ["Expert","bg-rose-500"],
+  };
+
   return (
     <div
       key={value.id}
@@ -20,9 +22,9 @@ const ItemProblem = ({ value }: { value: ProblemInterface }) => {
       <span className="flex gap-2 justify-start items-center">
         <span className="text-lg font-mono">{value.title}</span>
         <span
-          className={`${ColorProblem[value.difficulty]} rounded-md p-1 text-xs`}
+          className={`${SchemaProblem[value.difficulty][1]} rounded-md p-1 text-xs`}
         >
-          {value.difficulty}
+          {SchemaProblem[value.difficulty][0]}
         </span>
         <span className="flex justify-center items-center gap-1 text-sm">
            <span>{value.point}</span>
@@ -59,5 +61,3 @@ const ItemProblem = ({ value }: { value: ProblemInterface }) => {
     </div>
   );
 };
-
-export default ItemProblem;
