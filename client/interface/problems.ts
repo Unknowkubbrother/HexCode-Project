@@ -1,7 +1,7 @@
 export interface ProblemInterface {
     id: string;
     title: string;
-    difficulty: string;
+    difficulty: number;
     successRate: number;
     accepted: number;
     submissions: number;

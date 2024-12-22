@@ -24,11 +24,11 @@ const Header = () => {
           Problems
         </Link>
         <Link href="/challenges" className="bg-primary px-5 py-2 rounded-2xl shadow-lg hover:bg-secondary hover:shadow-lg hover:shadow-primary duration-300">
-          Challengs
+          Challenges
         </Link>
       </div>
-      <Link className="flex mt-10 gap-5 text-[#9CA3AF]" href="#introduction">
-        See why you should learn hex code
+      <span className="text-[#9CA3AF] mt-10">See why you should learn hex code</span>
+      <Link className="flex text-[#9CA3AF] mt-2" href="#introduction">
         <span className="animate-bounce p-2 bg-bgsecondary rounded-full text-sm">
           <ArrowDown />
         </span>

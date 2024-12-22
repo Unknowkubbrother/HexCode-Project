@@ -1,17 +1,57 @@
-import React from "react";
+"use client";
+import { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useRouter } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
-const SolutionType : {
-    [type: number]: string;
+const SolutionType: {
+  [type: number]: string;
 } = {
-    1: "Array",
-    2: "String",
-    3: "Linked List",
-    4: "Tree",
-    5: "Dynamic Programming",
-}
+  1: "Array",
+  2: "String",
+  3: "Linked List",
+  4: "Tree",
+  5: "Dynamic Programming",
+};
 
 const FilterProblems = () => {
+  const [selectedSolved, setselectedSolved] = useState<string[]>([]);
+  const [selectedDifficulty, setselectedDifficulty] = useState<number[]>([]);
+  const [selectedSolutionType, setselectedSolutionType] = useState<number[]>(
+    []
+  );
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const createQueryParams = () => {
+    const page = searchParams.get("page");
+    const pageSize = searchParams.get("pageSize");
+    const params = new URLSearchParams();
+    if (page) {
+      params.set("page", page);
+    }
+    if (pageSize) {
+      params.set("pageSize", pageSize);
+    }
+    if (selectedSolved.length > 0) {
+      params.set("solved", selectedSolved.join(","));
+    }
+    if (selectedDifficulty.length > 0) {
+      params.set("difficulty", selectedDifficulty.join(","));
+    }
+    if (selectedSolutionType.length > 0) {
+      params.set("type", selectedSolutionType.join(","));
+    }
+    return params.toString();
+  };
+
+  useEffect(() => {
+    const search = createQueryParams();
+    router.push(pathname + "?" + search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSolved, selectedDifficulty, selectedSolutionType]);
+
   return (
     <div className="w-full flex flex-col gap-3 p-6">
       <nav
@@ -21,7 +61,17 @@ const FilterProblems = () => {
         <span>STATUS</span>
         <ul className="flex flex-col gap-2">
           <li className="flex justify-start items-center gap-2">
-            <Checkbox id="solved" />
+            <Checkbox
+              id="solved"
+              checked={selectedSolved.includes("sovled")}
+              onCheckedChange={(checked) =>
+                checked
+                  ? setselectedSolved([...selectedSolved, "sovled"])
+                  : setselectedSolved(
+                      selectedSolved.filter((v) => v !== "sovled")
+                    )
+              }
+            />
             <label
               htmlFor="terms"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -31,7 +81,17 @@ const FilterProblems = () => {
           </li>
 
           <li className="flex justify-start items-center gap-2">
-            <Checkbox id="solved" />
+            <Checkbox
+              id="unsolved"
+              checked={selectedSolved.includes("unsolved")}
+              onCheckedChange={(checked) =>
+                checked
+                  ? setselectedSolved([...selectedSolved, "unsolved"])
+                  : setselectedSolved(
+                      selectedSolved.filter((v) => v !== "unsolved")
+                    )
+              }
+            />
             <label
               htmlFor="terms"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -49,7 +109,17 @@ const FilterProblems = () => {
         <span>DIFFICULTY</span>
         <ul className="flex flex-col gap-2">
           <li className="flex justify-start items-center gap-2">
-            <Checkbox id="Easy" />
+            <Checkbox
+              id="Easy"
+              checked={selectedDifficulty.includes(1)}
+              onCheckedChange={(checked) =>
+                checked
+                  ? setselectedDifficulty([...selectedDifficulty, 1])
+                  : setselectedDifficulty(
+                      selectedDifficulty.filter((v) => v !== 1)
+                    )
+              }
+            />
             <label
               htmlFor="terms"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -59,7 +129,17 @@ const FilterProblems = () => {
           </li>
 
           <li className="flex justify-start items-center gap-2">
-            <Checkbox id="Medium" />
+            <Checkbox
+              id="Medium"
+              checked={selectedDifficulty.includes(2)}
+              onCheckedChange={(checked) =>
+                checked
+                  ? setselectedDifficulty([...selectedDifficulty, 2])
+                  : setselectedDifficulty(
+                      selectedDifficulty.filter((v) => v !== 2)
+                    )
+              }
+            />
             <label
               htmlFor="terms"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -69,7 +149,17 @@ const FilterProblems = () => {
           </li>
 
           <li className="flex justify-start items-center gap-2">
-            <Checkbox id="Hard" />
+            <Checkbox
+              id="Hard"
+              checked={selectedDifficulty.includes(3)}
+              onCheckedChange={(checked) =>
+                checked
+                  ? setselectedDifficulty([...selectedDifficulty, 3])
+                  : setselectedDifficulty(
+                      selectedDifficulty.filter((v) => v !== 3)
+                    )
+              }
+            />
             <label
               htmlFor="terms"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -79,7 +169,17 @@ const FilterProblems = () => {
           </li>
 
           <li className="flex justify-start items-center gap-2">
-            <Checkbox id="Expert" />
+            <Checkbox
+              id="Expert"
+              checked={selectedDifficulty.includes(4)}
+              onCheckedChange={(checked) =>
+                checked
+                  ? setselectedDifficulty([...selectedDifficulty, 4])
+                  : setselectedDifficulty(
+                      selectedDifficulty.filter((v) => v !== 4)
+                    )
+              }
+            />
             <label
               htmlFor="terms"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -96,24 +196,34 @@ const FilterProblems = () => {
       >
         <span>SOLUTION TYPES</span>
         <ul className="flex flex-col gap-2">
-
-            {Object.entries(SolutionType).map(([k,v])=> {
-                return (
-                    <li className="flex justify-start items-center gap-2" key={k}>
-                        <Checkbox id={k} />
-                        <label
-                            htmlFor={k}
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                            {v}
-                        </label>
-                    </li>
-                )
-            })}
-
+          {Object.entries(SolutionType).map(([k, v]) => {
+            return (
+              <li className="flex justify-start items-center gap-2" key={k}>
+                <Checkbox
+                  id={k}
+                  checked={selectedSolutionType.includes(Number(k))}
+                  onCheckedChange={(checked) =>
+                    checked
+                      ? setselectedSolutionType([
+                          ...selectedSolutionType,
+                          Number(k),
+                        ])
+                      : setselectedSolutionType(
+                          selectedSolutionType.filter((e) => e !== Number(k))
+                        )
+                  }
+                />
+                <label
+                  htmlFor={k}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {v}
+                </label>
+              </li>
+            );
+          })}
         </ul>
       </nav>
-
     </div>
   );
 };
