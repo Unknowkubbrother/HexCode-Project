@@ -88,7 +88,7 @@ const FilterProblems = () => {
           <li className="flex justify-start items-center gap-2">
             <Checkbox
               id="solved"
-              checked={selectedSolve}
+              checked={selectedSolve == true}
               onCheckedChange={(checked) =>
                 checked
                   ? setselectedSolve(true)
@@ -106,7 +106,7 @@ const FilterProblems = () => {
           <li className="flex justify-start items-center gap-2">
             <Checkbox
               id="unsolved"
-              checked={selectedUnSolve}
+              checked={selectedUnSolve == true}
               onCheckedChange={(checked) =>
                 checked
                   ? setselectedUnSolve(true)
