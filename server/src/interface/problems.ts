@@ -4,6 +4,8 @@ export interface IProblem {
     description: string;
     difficulty: number;
     type: Array<number>;
+    submissions?: number;
+    accepted?: number;
     filedocs?: string;
     hint?: Array<string>;
 }
