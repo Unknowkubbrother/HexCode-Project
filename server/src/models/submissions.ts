@@ -1,5 +1,3 @@
-import Status from "@/enum/status";
-import { file } from "bun";
 import { Schema, model } from "mongoose";
 
 const SubmissionSchema = new Schema(
@@ -21,13 +19,6 @@ const SubmissionSchema = new Schema(
   },
   { timestamps: true }
 );
-
-interface ISubmission {
-  problemId: string;
-  clerkId: string;
-  success: boolean;
-  score: Number;
-}
 
 export const SubmissionModel = model("submissions", SubmissionSchema);
 

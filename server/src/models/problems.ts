@@ -1,9 +1,12 @@
-import Status from "@/enum/status";
-import { file } from "bun";
+import { IProblem } from "@/interface/problems";
 import { Schema, model } from "mongoose";
 
 const ProblemSchema = new Schema(
   {
+    clerkId: {
+      type: String,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -17,10 +20,6 @@ const ProblemSchema = new Schema(
       required: true,
     },
     type: [],
-    clerkId: {
-      type: String,
-      required: true,
-    },
     submissions: {
       type: Number,
       required: true,
@@ -31,39 +30,19 @@ const ProblemSchema = new Schema(
       required: true,
       default: 0,
     },
-    point: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    testcase: [],
-    status: {
-      type: Number,
-      required: true,
-      default: Status.NORMAL,
-    },
     filedocs: {
       type: String,
       required: false,
       default: null,
     },
-    hint: [],
-    submited: [],
+    hint: {
+      type: Array,
+      required: false,
+      default: [],
+    },
   },
   { timestamps: true }
 );
-
-interface IProblem {
-  title: string;
-  description: string;
-  difficulty: number;
-  type: Array<number>;
-  clerkId: string;
-  point: number;
-  testcase: Array<object>;
-  filedocs?: string;
-  hint?: Array<string>;
-}
 
 export const ProblemModel = model("problems", ProblemSchema);
 
@@ -72,7 +51,7 @@ export const createProblem = (values: IProblem) =>
 export const getProblemsByType = (type: string) =>
   ProblemModel.find({ type: type });
 export const getProblems = () => ProblemModel.find();
-export const getProblemById = (id: string) => ProblemModel.findById(id);
+export const getProblemById = (id: string) => ProblemModel.findById(id).then((problem) => problem?.toObject());
 export const updateProblem = (id: string, values: object) =>
   ProblemModel.findByIdAndUpdate(id, values);
 export const deleteProblems = () => ProblemModel.deleteMany({});

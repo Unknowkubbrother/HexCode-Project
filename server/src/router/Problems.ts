@@ -1,37 +1,77 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { createProblem, ProblemModel } from "@/models/problems";
-import { SubmissionModel } from "@/models/solution";
+import { createProblem,updateProblem,getProblemById,ProblemModel} from "@/models/problems";
+import { SubmissionModel } from "@/models/submissions";
+import { createProblemTestcase } from "@/models/problems_testcase";
+import { toArray } from "lodash";
 
+/**
+ * @author ExamUser clerkId
+ */
+const TestuserId = "user_2qRd8EVDei0OGYmRQ6DAI37Vf4L";
+
+/**
+ * @description ProblemRoute
+ */
 export const ProblemRoute = new Elysia({ prefix: "/problem" })
   .use(clerkPlugin())
-  .post(
-    "/add",
-    async ({ body, clerk, auth, error }) => {
+
+  /**
+   * @description create problem
+   */
+  .post("/create", async ({ body, auth, error }) => {
       try {
+
         if (!auth?.userId) {
           return error(401, "Unauthorized");
         }
 
-        const user = await clerk.users.getUser(auth.userId);
+        const { title, description, difficulty, type, filedocs, hint } = body;
 
-        const value = await createProblem({
-          title: body.title,
-          description: body.description,
-          difficulty: body.difficulty,
-          type: body.type,
-          clerkId: user.id,
-          point: body.point,
-          testcase: body.testcase,
-          filedocs: body.filedocs,
-          hint: body.hint,
+        const problemCreated = await createProblem({
+          clerkId: auth.userId,
+          title: title,
+          description: description,
+          difficulty: Number(difficulty),
+          type: toArray(JSON.parse(type)),
+          hint: toArray(JSON.parse(hint)),
         });
 
-        if (!value) {
-          return error(404, "Error");
+        if (!problemCreated) {
+          return error(404, "create problem error");
         }
-        return { msg: value };
+
+        const id = problemCreated._id.toString();
+
+        const pathName = `./uploads/problems/${id}/${filedocs.name}`;
+
+        const FileCreated = await Bun.write(pathName, filedocs);
+
+        if (!FileCreated) {
+          return error(404, "upload file error");
+        }
+
+        const problemUpeateFileDocs = await updateProblem(id, {
+          filedocs: pathName,
+        });
+
+        if (!problemUpeateFileDocs) {
+          return error(404, "update file error");
+        }
+
+        const resultProblem = await getProblemById(id);
+
+        if (!resultProblem) {
+          return error(404, "get problem error");
+        }
+
+        return {
+          result: resultProblem,
+          status: 200,
+          message: "create problem success",
+        };
       } catch (e) {
+        console.log(e);
         return error(500, "Internal Server Error");
       }
     },
@@ -39,30 +79,78 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
       body: t.Object({
         title: t.String(),
         description: t.String(),
-        difficulty: t.Number(),
-        type: t.Array(t.Number()),
-        point: t.Number(),
-        testcase: t.Array(
-          t.Object({
-            input: t.String(),
-            output: t.String(),
-          })
-        ),
-        filedocs: t.Optional(t.String()),
-        hint: t.Optional(t.Array(t.String())),
+        difficulty: t.String(),
+        type: t.String(),
+        filedocs: t.File(),
+        hint: t.String(),
       }),
     }
   )
 
-  .get(
-    "/get",
-    async ({ query, clerk, auth, error }) => {
+  /**
+   * @description add test case to problem
+   */
+  .post("/add-test-case",async ({ body, auth , error }) => {
       try {
         if (!auth?.userId) {
           return error(401, "Unauthorized");
         }
 
-        const user = await clerk.users.getUser(auth.userId);
+        const { problemId, id, input, output, point } = body;
+
+        const problem = await getProblemById(problemId);
+
+        if (!problem) {
+          return error(404, "problem not found");
+        }
+
+        if (problem.clerkId !== auth.userId) {
+          return error(401, "Unauthorized");
+        }
+
+        const result = await createProblemTestcase({
+          problemId: problemId,
+          id: Number(id),
+          input: await input.text(),
+          output: await output.text(),
+          point: Number(point),
+        });
+
+        if (!result) {
+          return error(404, "create problem testcase error");
+        }
+
+        return {
+          result: result,
+          status: 200,
+          message: "create problem testcase success",
+        };
+      } catch (e) {
+        console.log(e);
+        return error(500, "Internal Server Error");
+      }
+    },
+    {
+      body: t.Object({
+        problemId: t.String(),
+        id: t.String(),
+        input: t.File(),
+        output: t.File(),
+        point: t.String(),
+      }),
+    }
+  )
+
+
+  /**
+   * @description get problems and filter problems
+   */
+  .get("/get", async ({ query, clerk, auth, error }) => {
+      try {
+
+        if (!auth?.userId) {
+          return error(401, "Unauthorized");
+        }
 
         const sizepage = query?.pagesize ? query.pagesize : 10;
         const page = query?.page ? query.page : 1;
@@ -81,10 +169,10 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           page * sizepage
         );
 
-        const submissions = await SubmissionModel.find({ clerkId: user.id });
+        const submissions = await SubmissionModel.find({ clerkId: auth?.userId });
 
         const resultProblem = await Promise.all(
-          filterProblems.map(async (value, idx) => {
+          filterProblems.map(async (value) => {
             const userbyid = await clerk.users.getUser(value.clerkId);
             const result = submissions.find(
               (submission) => submission.problemId === value._id.toString()
@@ -96,13 +184,12 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
               submissions: value.submissions,
               accepted: value.accepted,
               successRate: (value.accepted / value.submissions) * 100 || 0,
-              clid: value.clerkId,
               type: value.type,
               author: {
                 name: `${userbyid.username}`,
                 avatar: userbyid.imageUrl,
               },
-              point: value.point,
+              point: 100,
             };
             if (query.solve === true) {
               if (result?.success === true) {
