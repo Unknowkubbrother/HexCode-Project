@@ -167,23 +167,44 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           ...(type.length && { type: { $in: type } }),
         };
 
+        const submissions = await SubmissionModel.find({ clerkId: auth.userId });
+
+        if (query.solve && query.unsolve) {
+          const solvedProblemIds = submissions
+            .filter(sub => sub.success)
+            .map(sub => sub.problemId);
+          const unsolvedProblemIds = submissions
+            .filter(sub => !sub.success)
+            .map(sub => sub.problemId);
+          filter['_id'] = { $in: [...solvedProblemIds, ...unsolvedProblemIds] };
+        } else {
+          if (query.solve) {
+            const solvedProblemIds = submissions
+              .filter(sub => sub.success)
+              .map(sub => sub.problemId);
+            filter['_id'] = { $in: solvedProblemIds };
+          }
+
+          if (query.unsolve) {
+            const unsolvedProblemIds = submissions
+              .filter(sub => !sub.success)
+              .map(sub => sub.problemId);
+            filter['_id'] = { $in: unsolvedProblemIds };
+          }
+        }
+
         const problems = await ProblemModel.find(filter)
           .skip((page - 1) * sizepage)
           .limit(sizepage);
 
         const totalCounts = await ProblemModel.countDocuments(filter);
 
-        const submissions = await SubmissionModel.find({ clerkId: auth.userId });
-
         const resultProblem = await Promise.all(
           problems.map(async (problem) => {
             const userbyid = await clerk.users.getUser(problem.clerkId);
-            const submission = submissions.find(
-              (sub) => sub.problemId === problem._id.toString()
-            );
             const point = await getSumPointByProblemId(problem._id.toString());
 
-            const bodyresult = {
+            return {
               id: problem._id.toString(),
               title: problem.title,
               difficulty: problem.difficulty,
@@ -197,15 +218,11 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
               },
               point: point[0]?.total || 0,
             };
-
-            if (query.solve && submission?.success) return bodyresult;
-            if (query.unsolve && (!submission || !submission.success)) return bodyresult;
-            if (!query.solve && !query.unsolve) return bodyresult;
           })
         );
 
         return {
-          result: resultProblem.filter(Boolean),
+          result: resultProblem,
           totalCounts,
         };
       } catch (e) {
