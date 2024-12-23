@@ -4,7 +4,7 @@ import { getSubmitById,SubmissionModel } from "@/models/submissions";
 import { ProblemModel,getProblemById } from "@/models/problems";
 import { isNumber } from "lodash";
 
-export const SolutionRoute = new Elysia({ prefix: "/solution" })
+export const SubmissionRoute = new Elysia({ prefix: "/solution" })
   .use(clerkPlugin())
   .post(
     "/submit",

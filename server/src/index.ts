@@ -3,16 +3,16 @@ import { cors } from "@elysiajs/cors";
 import "@/database/db.setup";
 import { logger } from "@chneau/elysia-logger";
 // import { clerkPlugin } from "elysia-clerk";
-import { TemplateRoute } from "@/router/Template";
-import { ProblemRoute } from "./router/Problems";
-import { SolutionRoute } from "./router/Solution";
+import { TemplateRoute } from "@/router/template";
+import { ProblemRoute } from "./router/problems";
+import { SubmissionRoute } from "./router/submissions";
 
 const app = new Elysia()
   .use(logger())
   .use(cors())
   .use(TemplateRoute)
   .use(ProblemRoute)
-  .use(SolutionRoute)
+  .use(SubmissionRoute)
   .get("/", "Hello, Elysia!")
   .listen(process.env.SERVER_PORT || 3000);
 
