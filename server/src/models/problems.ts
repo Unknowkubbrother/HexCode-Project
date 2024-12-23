@@ -51,7 +51,7 @@ export const createProblem = (values: IProblem) =>
 export const getProblemsByType = (type: string) =>
   ProblemModel.find({ type: type });
 export const getProblems = () => ProblemModel.find();
-export const getProblemById = (id: string) => ProblemModel.findById(id).then((problem) => problem?.toObject());
+export const getProblemById = (id: string) => ProblemModel.findById(id).then((problem) => problem?.toObject()).catch(() => null);
 export const updateProblem = (id: string, values: object) =>
   ProblemModel.findByIdAndUpdate(id, values);
 export const deleteProblems = () => ProblemModel.deleteMany({});

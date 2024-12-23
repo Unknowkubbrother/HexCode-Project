@@ -2,7 +2,7 @@ import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { createProblem,updateProblem,getProblemById,ProblemModel} from "@/models/problems";
 import { SubmissionModel } from "@/models/submissions";
-import { createProblemTestcase } from "@/models/problems_testcase";
+import { createProblemTestcase , getProblemByIdCaseAndProblemId } from "@/models/problems_testcase";
 import { toArray } from "lodash";
 
 /**
@@ -106,6 +106,12 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
 
         if (problem.clerkId !== auth.userId) {
           return error(401, "Unauthorized");
+        }
+
+        const existCaseId = await getProblemByIdCaseAndProblemId(Number(id), problemId);
+
+        if (existCaseId) {
+          return error(409, "problem testcase id exist");
         }
 
         const result = await createProblemTestcase({
