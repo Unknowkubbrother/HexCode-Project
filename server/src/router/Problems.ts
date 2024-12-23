@@ -2,7 +2,7 @@ import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { createProblem,updateProblem,getProblemById,ProblemModel} from "@/models/problems";
 import { SubmissionModel } from "@/models/submissions";
-import { createProblemTestcase , getProblemByIdCaseAndProblemId } from "@/models/problems_testcase";
+import { createProblemTestcase , getProblemByIdCaseAndProblemId , getSumPointByProblemId} from "@/models/problems_testcase";
 import { toArray } from "lodash";
 
 /**
@@ -153,70 +153,63 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
    */
   .get("/get", async ({ query, clerk, auth, error }) => {
       try {
-
         if (!auth?.userId) {
           return error(401, "Unauthorized");
         }
 
-        const sizepage = query?.pagesize ? query.pagesize : 10;
-        const page = query?.page ? query.page : 1;
-        const difficulty = query.difficulty ? JSON.parse(query.difficulty) : "";
-        const type = query.type ? JSON.parse(query.type) : "";
+        const sizepage = query?.pagesize || 10;
+        const page = query?.page || 1;
+        const difficulty = query.difficulty ? JSON.parse(query.difficulty) : [];
+        const type = query.type ? JSON.parse(query.type) : [];
 
-        const problems = await ProblemModel.find({
-          $and: [
-            difficulty ? { difficulty: { $in: difficulty } } : {},
-            type != "" ? { type: { $in: type } } : {},
-          ],
-        });
+        const filter = {
+          ...(difficulty.length && { difficulty: { $in: difficulty } }),
+          ...(type.length && { type: { $in: type } }),
+        };
 
-        const filterProblems = problems.slice(
-          (page - 1) * sizepage,
-          page * sizepage
-        );
+        const problems = await ProblemModel.find(filter)
+          .skip((page - 1) * sizepage)
+          .limit(sizepage);
 
-        const submissions = await SubmissionModel.find({ clerkId: auth?.userId });
+        const totalCounts = await ProblemModel.countDocuments(filter);
+
+        const submissions = await SubmissionModel.find({ clerkId: auth.userId });
 
         const resultProblem = await Promise.all(
-          filterProblems.map(async (value) => {
-            const userbyid = await clerk.users.getUser(value.clerkId);
-            const result = submissions.find(
-              (submission) => submission.problemId === value._id.toString()
+          problems.map(async (problem) => {
+            const userbyid = await clerk.users.getUser(problem.clerkId);
+            const submission = submissions.find(
+              (sub) => sub.problemId === problem._id.toString()
             );
+            const point = await getSumPointByProblemId(problem._id.toString());
+
             const bodyresult = {
-              id: value._id.toString(),
-              title: value.title,
-              difficulty: value.difficulty,
-              submissions: value.submissions,
-              accepted: value.accepted,
-              successRate: (value.accepted / value.submissions) * 100 || 0,
-              type: value.type,
+              id: problem._id.toString(),
+              title: problem.title,
+              difficulty: problem.difficulty,
+              submissions: problem.submissions,
+              accepted: problem.accepted,
+              successRate: (problem.accepted / problem.submissions) * 100 || 0,
+              type: problem.type,
               author: {
-                name: `${userbyid.username}`,
+                name: userbyid.username,
                 avatar: userbyid.imageUrl,
               },
-              point: 100,
+              point: point[0]?.total || 0,
             };
-            if (query.solve === true) {
-              if (result?.success === true) {
-                return bodyresult;
-              }
-            } else if (query.unsolve === true) {
-              if (!result || result.success !== true) {
-                return bodyresult;
-              }
-            } else {
-              return bodyresult;
-            }
+
+            if (query.solve && submission?.success) return bodyresult;
+            if (query.unsolve && (!submission || !submission.success)) return bodyresult;
+            if (!query.solve && !query.unsolve) return bodyresult;
           })
         );
+
         return {
-          result: resultProblem.filter(
-            (item) => item !== null && item !== undefined
-          ),
-          totalCounts: problems.length,
+          result: resultProblem.filter(Boolean),
+          totalCounts,
         };
       } catch (e) {
+        console.log(e);
         return error(500, "Internal Server Error");
       }
     },

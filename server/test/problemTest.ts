@@ -3,33 +3,46 @@ const { API_END_POINT } = process.env;
 
 export default function runTest() {
   describe("Problems System", () => {
-    // test("Create Problem 1", async () => {
-    //    const title = "Problem One";
-    //     const description = "This is problem one";
-    //     const difficulty = 1;
-    //     const type = [1, 2];
-    //     const filedocs = "test/assets/problemOne/avg_shortest.pdf";
-    //     const hint = ["hint one", "hint two"];
+    test("Create Problem And Add Test case", async () => {
+      const i = 1;
+        const title = `Problem ${i}`;
+        const description = `This is problem ${i}`;
+        const difficulty = ( i % 3 ) + 1; 
+        const type = [(i % 4) + 1, (i % 3) + 1];
+        const filedocs = `test/assets/problemOne/avg_shortest.pdf`;
+        const hint = ["hint one", "hint two"];
 
-    //     const result = await createProblem(
-    //       title,
-    //       description,
-    //       difficulty,
-    //       type,
-    //       filedocs,
-    //       hint
-    //     );
+        const problemResult = await createProblem(
+          title,
+          description,
+          difficulty,
+          type,
+          filedocs,
+          hint
+        );
 
-    //     console.log(result);
-    // });
+        const problemId = problemResult.result._id;
+        const id = 1;
+        const input = `test/assets/problemOne/1.in`;
+        const output = `test/assets/problemOne/1.sol`;
+        const point = 100 + i;
+
+        await addTestCase(
+          problemId,
+          id,
+          input,
+          output,
+          point
+        );
+    });
 
 
     test("Add Test Case", async () => {
-        const problemId = "67697c39883b45d5fd37b51a";
-        const id = 1;
+        const problemId = "67699db8310785f35d1329ab";
+        const id = 2
         const input = "test/assets/problemOne/1.in";
         const output = "test/assets/problemOne/1.sol";
-        const point = 100;
+        const point = 50;
 
         const result = await addTestCase(
           problemId,

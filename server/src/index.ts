@@ -2,7 +2,6 @@ import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 import "@/database/db.setup";
 import { logger } from "@chneau/elysia-logger";
-// import { clerkPlugin } from "elysia-clerk";
 import { TemplateRoute } from "@/router/template";
 import { ProblemRoute } from "./router/problems";
 import { SubmissionRoute } from "./router/submissions";

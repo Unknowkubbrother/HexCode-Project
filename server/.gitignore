@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+# upload problems
+/uploads/problems/*
+
 # next.js
 /.next/
 /out/
