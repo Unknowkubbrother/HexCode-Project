@@ -22,7 +22,7 @@ export default function ItemProblem ({ value }: { value: ProblemInterface }) {
       <span className="flex gap-2 justify-start items-center">
         <span className="text-lg font-mono">{value.title}</span>
         <span
-          className={`${SchemaProblem[value.difficulty][1]} rounded-md p-1 text-xs`}
+          className={`${SchemaProblem[value.difficulty][1]} rounded-md p-1 text-xs text-white`}
         >
           {SchemaProblem[value.difficulty][0]}
         </span>
