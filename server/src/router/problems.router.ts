@@ -1,14 +1,9 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { createProblem,updateProblem,getProblemById,ProblemModel} from "@/models/problems";
-import { SubmissionModel } from "@/models/submissions";
-import { createProblemTestcase , getProblemByIdCaseAndProblemId , getSumPointByProblemId} from "@/models/problems_testcase";
+import { createProblem,updateProblem,getProblemById,ProblemModel} from "@/models/problems.model";
+import { getSubmitbyClerkId } from "@/models/submissions.model";
+import { getSumPointByProblemId} from "@/models/testcases.model";
 import { toArray } from "lodash";
-
-/**
- * @author ExamUser clerkId
- */
-const TestuserId = "user_2qRd8EVDei0OGYmRQ6DAI37Vf4L";
 
 /**
  * @description ProblemRoute
@@ -26,15 +21,20 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           return error(401, "Unauthorized");
         }
 
-        const { title, description, difficulty, type, filedocs, hint } = body;
+        const { title, description, difficulty, type, docs, hint } = body;
+
+
+        if (docs.type !== "application/pdf") {
+          return error(400, "docs must be a pdf file");
+        }
 
         const problemCreated = await createProblem({
-          clerkId: auth.userId,
+          clerkId: auth?.userId,
           title: title,
           description: description,
           difficulty: Number(difficulty),
           type: toArray(JSON.parse(type)),
-          hint: toArray(JSON.parse(hint)),
+          hint: toArray(JSON.parse(hint))
         });
 
         if (!problemCreated) {
@@ -43,16 +43,16 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
 
         const id = problemCreated._id.toString();
 
-        const pathName = `./uploads/problems/${id}/${filedocs.name}`;
+        const pathName = `./uploads/problems/${id}.pdf`;
 
-        const FileCreated = await Bun.write(pathName, filedocs);
+        const FileCreated = await Bun.write(pathName, docs);
 
         if (!FileCreated) {
           return error(404, "upload file error");
         }
 
         const problemUpeateFileDocs = await updateProblem(id, {
-          filedocs: pathName,
+          docs: pathName,
         });
 
         if (!problemUpeateFileDocs) {
@@ -81,72 +81,11 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         description: t.String(),
         difficulty: t.String(),
         type: t.String(),
-        filedocs: t.File(),
+        docs: t.File(),
         hint: t.String(),
       }),
     }
   )
-
-  /**
-   * @description add test case to problem
-   */
-  .post("/add-test-case",async ({ body, auth , error }) => {
-      try {
-        if (!auth?.userId) {
-          return error(401, "Unauthorized");
-        }
-
-        const { problemId, id, input, output, point } = body;
-
-        const problem = await getProblemById(problemId);
-
-        if (!problem) {
-          return error(404, "problem not found");
-        }
-
-        if (problem.clerkId !== auth.userId) {
-          return error(401, "Unauthorized");
-        }
-
-        const existCaseId = await getProblemByIdCaseAndProblemId(Number(id), problemId);
-
-        if (existCaseId) {
-          return error(409, "problem testcase id exist");
-        }
-
-        const result = await createProblemTestcase({
-          problemId: problemId,
-          id: Number(id),
-          input: await input.text(),
-          output: await output.text(),
-          point: Number(point),
-        });
-
-        if (!result) {
-          return error(404, "create problem testcase error");
-        }
-
-        return {
-          result: result,
-          status: 200,
-          message: "create problem testcase success",
-        };
-      } catch (e) {
-        console.log(e);
-        return error(500, "Internal Server Error");
-      }
-    },
-    {
-      body: t.Object({
-        problemId: t.String(),
-        id: t.String(),
-        input: t.File(),
-        output: t.File(),
-        point: t.String(),
-      }),
-    }
-  )
-
 
   /**
    * @description get problems and filter problems
@@ -167,7 +106,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           ...(type.length && { type: { $in: type } }),
         };
 
-        const submissions = await SubmissionModel.find({ clerkId: auth.userId });
+        const submissions = await getSubmitbyClerkId(auth.userId);
 
         if (query.solve && query.unsolve) {
           const solvedProblemIds = submissions
@@ -216,7 +155,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
                 name: userbyid.username,
                 avatar: userbyid.imageUrl,
               },
-              point: point[0]?.total || 0,
+              points: point[0]?.total || 0,
             };
           })
         );

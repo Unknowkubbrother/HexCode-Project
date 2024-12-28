@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { getSubmitById,SubmissionModel } from "@/models/submissions";
-import { ProblemModel,getProblemById } from "@/models/problems";
+import { getSubmitById,SubmissionModel } from "@/models/submissions.model";
+import { ProblemModel,getProblemById } from "@/models/problems.model";
 import { isNumber } from "lodash";
 
 export const SubmissionRoute = new Elysia({ prefix: "/solution" })

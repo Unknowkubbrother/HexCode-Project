@@ -27,7 +27,7 @@ export default function ItemProblem ({ value }: { value: ProblemInterface }) {
           {SchemaProblem[value.difficulty][0]}
         </span>
         <span className="flex justify-center items-center gap-1 text-sm">
-           <span>{value.point}</span>
+           <span>{value.points}</span>
            <span>Points</span>
           </span>
       </span>

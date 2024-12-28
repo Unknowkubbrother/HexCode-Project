@@ -1,14 +1,14 @@
 import { Schema, model } from "mongoose";
-import { IProblemTestCase } from "@/interface/problems";
+import { ITestCase } from "@/interface/testcases.interface";
 
-const ProblemsTestCaseSchema = new Schema(
+const TestCaseSchema = new Schema(
   {
-    problemId: {
-      type: String,
-      required: true,
-    },
     id: {
       type: Number,
+      required: true,
+    },
+    problemId: {
+      type: String,
       required: true,
     },
     input: {
@@ -19,7 +19,7 @@ const ProblemsTestCaseSchema = new Schema(
       type: String,
       required: true,
     },
-    point: {
+    points: {
       type: Number,
       required: true,
     },
@@ -27,24 +27,24 @@ const ProblemsTestCaseSchema = new Schema(
   { timestamps: true }
 );
 
-export const ProblemTestCaseModel = model(
-  "problems_testcase",
-  ProblemsTestCaseSchema
+export const TestCaseModel = model(
+  "testcases",
+  TestCaseSchema
 );
 
-export const createProblemTestcase = (values: IProblemTestCase) =>
-  new ProblemTestCaseModel(values).save().then((problem) => problem.toObject());
+export const createProblemTestcase = (values: ITestCase) =>
+  new TestCaseModel(values).save().then((problem) => problem.toObject());
 
 export const getProblemByIdCaseAndProblemId = (
   idcase: number,
   problemId: string
-) => ProblemTestCaseModel.findOne({
+) => TestCaseModel.findOne({
     problemId: problemId,
     id: idcase,
 }).then((problem) => problem?.toObject()).catch(() => null);
 
 export const getSumPointByProblemId = (problemId: string) =>
-  ProblemTestCaseModel.aggregate([
+  TestCaseModel.aggregate([
     {
       $match: {
         problemId: problemId,
@@ -54,7 +54,7 @@ export const getSumPointByProblemId = (problemId: string) =>
       $group: {
         _id: "$problemId",
         total: {
-          $sum: "$point",
+          $sum: "$points",
         },
       },
     },

@@ -1,0 +1,70 @@
+import { Elysia, t } from "elysia";
+import { clerkPlugin } from "elysia-clerk";
+import { getProblemById} from "@/models/problems.model";
+import { createProblemTestcase , getProblemByIdCaseAndProblemId } from "@/models/testcases.model";
+
+/**
+ * @description TestCaseRoute
+ */
+export const TestCaseRoute = new Elysia({ prefix: "/testcase" })
+  .use(clerkPlugin())
+
+  /**
+   * @description add test case to problem
+   */
+  .post("/add",async ({ body, auth , error }) => {
+      try {
+        // if (!auth?.userId) {
+        //   return error(401, "Unauthorized");
+        // }
+
+        const { problemId, id, input, output, points } = body;
+
+        const problem = await getProblemById(problemId);
+
+        if (!problem) {
+          return error(404, "problem not found");
+        }
+
+        if (problem.clerkId !== auth?.userId) {
+          return error(401, "Unauthorized");
+        }
+
+        const existCaseId = await getProblemByIdCaseAndProblemId(Number(id), problemId);
+
+        if (existCaseId) {
+          return error(409, "problem testcase id exist");
+        }
+
+        const result = await createProblemTestcase({
+          problemId: problemId,
+          id: Number(id),
+          input: await input.text(),
+          output: await output.text(),
+          points: Number(points),
+        });
+
+        if (!result) {
+          return error(404, "create problem testcase error");
+        }
+
+        return {
+          result: result,
+          status: 200,
+          message: "create problem testcase success",
+        };
+      } catch (e) {
+        console.log(e);
+        return error(500, "Internal Server Error");
+      }
+    },
+    {
+      body: t.Object({
+        problemId: t.String(),
+        id: t.String(),
+        input: t.File(),
+        output: t.File(),
+        points: t.String(),
+      }),
+    }
+  );

@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { ProblemModel } from "@/models/problems";
+import { ProblemModel } from "@/models/problems.model";
 
 export const TemplateRoute = new Elysia({'prefix':'/template'})
 .use(clerkPlugin())

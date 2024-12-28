@@ -9,5 +9,5 @@ export interface ProblemInterface {
         name: string;
         avatar: string;
     };
-    point: number;
+    points: number;
   }

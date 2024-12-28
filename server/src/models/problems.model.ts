@@ -1,4 +1,4 @@
-import { IProblem } from "@/interface/problems";
+import { IProblem } from "@/interface/problems.interface";
 import { Schema, model } from "mongoose";
 
 const ProblemSchema = new Schema(
@@ -19,7 +19,11 @@ const ProblemSchema = new Schema(
       type: Number,
       required: true,
     },
-    type: [],
+    type: {
+      type: Array,
+      required: true,
+      default: [],
+    },
     submissions: {
       type: Number,
       required: true,
@@ -30,7 +34,7 @@ const ProblemSchema = new Schema(
       required: true,
       default: 0,
     },
-    filedocs: {
+    docs: {
       type: String,
       required: false,
       default: null,
@@ -40,6 +44,40 @@ const ProblemSchema = new Schema(
       required: false,
       default: [],
     },
+    status: {
+      type: String,
+      required: true,
+      default: "active",
+    },
+    viewer : {
+      type: String,
+      required: true,
+      default: "private",
+    },
+    secret_code: {
+      type: String,
+      required: false,
+    },
+    source_code:{
+      type: String,
+      required: false,
+    },
+    cpu_time_limit: {
+      type: Number,
+      required: false,
+    },
+    memory_limit: {
+      type: Number,
+      required: false,
+    },
+    stack_limit: {
+      type: Number,
+      required: false,
+    },
+    max_file_size: {
+      type: Number,
+      required: false,
+    }
   },
   { timestamps: true }
 );

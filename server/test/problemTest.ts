@@ -4,12 +4,12 @@ const { API_END_POINT } = process.env;
 export default function runTest() {
   describe("Problems System", () => {
     test("Create Problem And Add Test case", async () => {
-      const i = 1;
+      const i = 20;
         const title = `Problem ${i}`;
         const description = `This is problem ${i}`;
         const difficulty = ( i % 3 ) + 1; 
         const type = [(i % 4) + 1, (i % 3) + 1];
-        const filedocs = `test/assets/problemOne/avg_shortest.pdf`;
+        const docs = `test/assets/problemOne/avg_shortest.pdf`;
         const hint = ["hint one", "hint two"];
 
         const problemResult = await createProblem(
@@ -17,7 +17,7 @@ export default function runTest() {
           description,
           difficulty,
           type,
-          filedocs,
+          docs,
           hint
         );
 
@@ -25,34 +25,18 @@ export default function runTest() {
         const id = 1;
         const input = `test/assets/problemOne/1.in`;
         const output = `test/assets/problemOne/1.sol`;
-        const point = 100 + i;
+        const points = 100 + i;
 
-        await addTestCase(
+       const resultTestcase =  await addTestCase(
           problemId,
           id,
           input,
           output,
-          point
-        );
-    });
-
-
-    test("Add Test Case", async () => {
-        const problemId = "67699db8310785f35d1329ab";
-        const id = 2
-        const input = "test/assets/problemOne/1.in";
-        const output = "test/assets/problemOne/1.sol";
-        const point = 50;
-
-        const result = await addTestCase(
-          problemId,
-          id,
-          input,
-          output,
-          point
+          points
         );
 
-        console.log(result);
+        console.log(resultTestcase);
+
     });
   });
 }
@@ -62,7 +46,7 @@ async function createProblem(
   description: string,
   difficulty: number,
   type: number[],
-  filedocs?: string,
+  docs?: string,
   hint?: string[]
 ) { 
   try {
@@ -72,10 +56,10 @@ async function createProblem(
     body.append("difficulty", difficulty.toString());
     body.append("type", JSON.stringify(type));
 
-    if (filedocs) {
-      const BufferFileDocs = await Bun.file(filedocs).arrayBuffer();
-      const fileNameFileDocs = filedocs.split("/")[3];
-      body.append("filedocs", new File([BufferFileDocs], fileNameFileDocs));
+    if (docs) {
+      const BufferFileDocs = await Bun.file(docs).arrayBuffer();
+      const fileNameFileDocs = docs.split("/")[3];
+      body.append("docs", new File([BufferFileDocs], fileNameFileDocs));
     }
 
     if (hint) {
@@ -103,7 +87,7 @@ async function addTestCase(
     id: number,
     input: string,
     output: string,
-    point: number
+    points: number
 ) {
     const inputFile = await Bun.file(input).arrayBuffer();
     const outputFile = await Bun.file(output).arrayBuffer();
@@ -113,9 +97,9 @@ async function addTestCase(
     body.append("id", id.toString());
     body.append("input", new File([inputFile], `${id}.in`));
     body.append('output', new File([outputFile], `${id}.sol`));
-    body.append('point', point.toString());
+    body.append('points', points.toString());
 
-    const response = await fetch(`${API_END_POINT}/problem/add-test-case`,
+    const response = await fetch(`${API_END_POINT}/testcase/add`,
         {
             method: 'POST',
             body,
