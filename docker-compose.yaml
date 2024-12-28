@@ -22,6 +22,8 @@ services:
       - MONGODB_URL=mongodb://mongo_db:27017/HEXCODE_DB
       - NODE_ENV=production
     restart: always
+    volumes:
+      - ./data/uploads/problems:/app/uploads/problems
     depends_on:
       - mongo_db
 
