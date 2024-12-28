@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test";
-const { API_END_POINT } = process.env;
+const API_END_POINT = "http://localhost:4000";
 
 export default function runTest() {
   describe("Problems System", () => {
     test("Create Problem And Add Test case", async () => {
-      const i = 20;
+      const i = 1;
         const title = `Problem ${i}`;
         const description = `This is problem ${i}`;
         const difficulty = ( i % 3 ) + 1; 

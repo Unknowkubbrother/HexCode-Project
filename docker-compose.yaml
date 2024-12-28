@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mongo_db:
+    container_name: database
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo_db:/data/db
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    env_file:
+      - ./server/.env
+    container_name: hexcode_server
+    image: hexcode_server_image
+    ports:
+      - 4000:4000
+    environment:
+      - MONGODB_URL=mongodb://mongo_db:27017/HEXCODE_DB
+      - NODE_ENV=production
+    restart: always
+    depends_on:
+      - mongo_db
+
+volumes:
+  mongo_db: {}

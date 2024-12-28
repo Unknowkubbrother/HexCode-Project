@@ -14,9 +14,9 @@ export const TestCaseRoute = new Elysia({ prefix: "/testcase" })
    */
   .post("/add",async ({ body, auth , error }) => {
       try {
-        // if (!auth?.userId) {
-        //   return error(401, "Unauthorized");
-        // }
+        if (!auth?.userId) {
+          return error(401, "Unauthorized");
+        }
 
         const { problemId, id, input, output, points } = body;
 
