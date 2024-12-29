@@ -9,7 +9,7 @@ export const getProblem = async (searchParams?: {[key: string]: string | string[
         const search = `?page=${searchParams?.page ?? 1}&pagesize=${searchParams?.pageSize ?? 10}${searchParams?.solve !== undefined ? `&solve=${searchParams?.solve}` : ''}${searchParams?.unsolve !== undefined ? `&unsolve=${searchParams?.unsolve}` : ''}${searchParams?.difficulty ? `&difficulty=[${searchParams?.difficulty}]` : ''}${searchParams?.type ? `&type=[${searchParams?.type}]` : ''}
         `;
 
-        const response = await axios.get(`http://localhost:4000/problem/get${search}`, {
+        const response = await axios.get(`https://hexcode.unknowkubbrother.net/api/problem/get${search}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
 
