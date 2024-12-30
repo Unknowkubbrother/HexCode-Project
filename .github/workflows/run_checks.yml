@@ -1,0 +1,13 @@
+name: Checking
+on:
+  push:
+    braches:
+      - main
+  workflow-directory: ./client
+
+jobs:
+  eslint:
+    name: Checking Client
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
