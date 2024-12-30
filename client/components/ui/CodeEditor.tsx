@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import customLanguages from "@/config/languages";
 import { Code } from "lucide-react";
 import { ChevronDown } from "lucide-react";
+import { useTheme } from "next-themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export default function CodeEditor(props: {
   code: string;
@@ -21,6 +23,9 @@ export default function CodeEditor(props: {
   language: string;
   setLanguage: (language: string) => void;
 }) {
+
+  const { theme } = useTheme();
+
   const LineNumbers = () => {
     return (
       <Highlight code={props.code} language={props.language}>
@@ -65,8 +70,10 @@ export default function CodeEditor(props: {
   };
 
   return (
-    <div className={cn("w-full h-full overflow-auto relative", props.className)}>
-      <header className="w-full p-2 gap-2 border-b-[1px] border-primary flex items-center justify-between px-5 sticky top-0 bg-slate-800 text-white z-10">
+    <div
+      className={cn("w-full h-full overflow-auto relative", props.className)}
+    >
+      <header className="w-full p-2 gap-2 border-b-[1px] border-primary flex items-center justify-between px-5 sticky top-0 bg-bgsecondary  dark:text-white z-10">
         <div className="flex items-center gap-2">
           <span className="text-primary">
             <Code size={20} />
@@ -75,14 +82,18 @@ export default function CodeEditor(props: {
         </div>
         <SelectMeuLanguage />
       </header>
-      <div className="w-full flex p-3">
+      <div className="w-full h-fit flex p-3">
         <LineNumbers />
         <Editor
           className="w-full text-sm"
           value={props.code}
           onValueChange={(code) => props.setCode(code)}
           highlight={(code) => (
-            <Highlight code={code} language={props.language} theme={themes.nightOwl}>
+            <Highlight
+              code={code}
+              language={props.language}
+              theme={theme == "dark" ? themes.nightOwl: themes.nightOwlLight}
+            >
               {({ tokens, getLineProps, getTokenProps }) =>
                 tokens.map((line, i) => (
                   <div {...getLineProps({ line, key: i })} key={i}>
@@ -96,6 +107,10 @@ export default function CodeEditor(props: {
           )}
           placeholder="Write your code here..."
         />
+      </div>
+      <div className="fixed bottom-10 right-0 z-10 p-5 flex gap-3">
+        <Button variant="default" size='sm'>Run Code</Button>
+        <Button variant="default" size='sm' className="bg-green-400">Submit</Button>
       </div>
     </div>
   );

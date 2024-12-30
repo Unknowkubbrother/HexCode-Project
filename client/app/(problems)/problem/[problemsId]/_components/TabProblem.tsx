@@ -6,6 +6,7 @@ import customLanguages from "@/config/languages";
 
 export default function TabProblem({ problemsId }: { problemsId: string }) {
   const [language, setLanguage] = useState<string>("javascript");
+
   const [code, setCode] = useState<string>(customLanguages[language].template);
 
 
