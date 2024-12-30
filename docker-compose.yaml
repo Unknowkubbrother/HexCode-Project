@@ -4,8 +4,6 @@ services:
   mongo_db:
     container_name: database
     image: mongo:latest
-    ports:
-      - 27017:27017
     restart: always
     volumes:
       - mongo_db:/data/db
@@ -15,7 +13,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
     env_file:
-      - ./client/.env.local
+      - ./client/.env
     container_name: hexcode_client
     volumes:
       - ./:/app
