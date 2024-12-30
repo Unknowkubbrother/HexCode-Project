@@ -7,9 +7,16 @@ defaults:
     working-directory: ./client
 
 jobs:
-  checking:
-    name: Checking Client
+  eslint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+      - name: Install npm dependencies
+        run: npm ci
+      - name: Run ESLint
+        run: npm run lint
