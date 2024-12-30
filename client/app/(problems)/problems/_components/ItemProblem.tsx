@@ -53,7 +53,7 @@ export default function ItemProblem ({ value }: { value: ProblemInterface }) {
         <span> {value.author.name}</span>
       </span>
 
-      <Link href={`/problem/${value.id}`} passHref>
+      <Link href={`/problems/${value.id}`} passHref>
       <Button variant="default" size="sm" asChild className="absolute top-1/2 right-0 transform -translate-x-1/4 -translate-y-1/2 hover:scale-105 duration-300 cursor-pointer"
       >
         <span>Solve problem</span>

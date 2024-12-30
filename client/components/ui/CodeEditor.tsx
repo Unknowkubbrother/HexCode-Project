@@ -32,7 +32,7 @@ export default function CodeEditor(props: {
         {({ tokens }) => (
           <div className="flex flex-col">
             {tokens.map((_, i) => (
-              <span className="text-white font-mono text-sm w-[4ch]" key={i}>
+              <span className="dark:text-white font-mono text-sm w-[4ch]" key={i}>
                 {i + 1}{" "}
               </span>
             ))}

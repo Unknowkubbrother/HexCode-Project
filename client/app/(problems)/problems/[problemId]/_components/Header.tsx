@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Navigate from "./Navigate";
 import { Progress } from "@/components/ui/progress";
 
-export default function Header({ problemsId }: { problemsId: string }) {
+export default function Header({ problemId }: { problemId: string }) {
     const points = 30;
     const maxPoints = 100;  
 
@@ -15,7 +16,7 @@ export default function Header({ problemsId }: { problemsId: string }) {
       </div>
       <div className="w-fit flex flex-col gap-2">
         <div className="flex justify-between items-center gap-3">
-            <span className="text-[10px] p-1 rounded-md bg-green-400">EASY</span>
+            <span className="text-[10px] p-1 rounded-md bg-green-500 text-white">EASY</span>
           <span className="text-sm text-[#9CA3AF]">
             Points : <span className="dark:text-white text-black w-[5ch]">{points} / {maxPoints}</span>
           </span>

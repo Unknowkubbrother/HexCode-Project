@@ -69,6 +69,7 @@ const FilterProblems = () => {
       setselectedSolutionType(type.split(",").map((v) => Number(v)));
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

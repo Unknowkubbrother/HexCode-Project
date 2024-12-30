@@ -4,9 +4,8 @@ import PDFViewer from "@/components/ui/pdf-viewer";
 import CodeEditor from "@/components/ui/CodeEditor";
 import customLanguages from "@/config/languages";
 
-export default function TabProblem({ problemsId }: { problemsId: string }) {
+export default function TabProblem({ problemId }: { problemId: string }) {
   const [language, setLanguage] = useState<string>("javascript");
-
   const [code, setCode] = useState<string>(customLanguages[language].template);
 
 
@@ -14,13 +13,19 @@ export default function TabProblem({ problemsId }: { problemsId: string }) {
     setCode(customLanguages[language].template);
   }, [language]);
 
+  useEffect(() => {
+    console.log(code);
+  }, [code]);
 
   return (
     <div className="w-full h-full flex justify-between gap-3">
-      <div className="w-1/2 h-[650px] bg-bgsecondary rounded-lg p-5">
-        <div className="w-full h-full">
+      <div className="w-1/2 h-[650px] bg-bgsecondary rounded-lg p-5 overflow-auto flex flex-col gap-5">
+          <div className="w-full h-fit">
+            <h1 className="text-2xl font-semibold">Problem Statement</h1>
+          </div>
+        <div className="w-[90%] m-auto h-full rounded-xl overflow-hidden">
           <PDFViewer
-            url={`${process.env.NEXT_PUBLIC_API_END_POINT}/file/docs/${problemsId}`}
+            url={`${process.env.NEXT_PUBLIC_API_END_POINT}/file/docs/${problemId}`}
             className="rouned-lg overflow-hidden"
           />
         </div>
