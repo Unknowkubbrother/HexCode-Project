@@ -4,6 +4,7 @@ import { createProblem,updateProblem,getProblemById,ProblemModel} from "@/models
 import { getSubmitbyClerkId } from "@/models/submissions.model";
 import { getSumPointByProblemId} from "@/models/testcases.model";
 import { toArray } from "lodash";
+import { fileExtension } from "@lib/utils";
 
 /**
  * @description ProblemRoute
@@ -17,11 +18,11 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
   .post("/create", async ({ body, auth, error }) => {
       try {
 
-        if (!auth?.userId) {
-          return error(401, "Unauthorized");
-        }
+        // if (!auth?.userId) {
+        //   return error(401, "Unauthorized");
+        // }
 
-        const { title, description, difficulty, type, docs, hint } = body;
+        const { title, description, difficulty, type, docs, hint , source_code } = body;
 
 
         if (docs.type !== "application/pdf") {
@@ -29,7 +30,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         }
 
         const problemCreated = await createProblem({
-          clerkId: auth?.userId,
+          clerkId: global.testuserId,
           title: title,
           description: description,
           difficulty: Number(difficulty),
@@ -43,19 +44,33 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
 
         const id = problemCreated._id.toString();
 
-        const pathName = `./uploads/problems/${id}.pdf`;
+        const docsData = {
+          name: docs.name,
+          size: docs.size,
+          type: docs.type,
+          pathName: `./uploads/problems/docs/${id}.${fileExtension[docs.type]}`,
+        }
 
-        const FileCreated = await Bun.write(pathName, docs);
+        const source_codeData = {
+          name: source_code.name,
+          size: source_code.size,
+          type: source_code.type,
+          pathName: `./uploads/problems/source_code/${id}.${source_code.name.split('.').pop()}`,
+        };
 
-        if (!FileCreated) {
+        const FileCreated = await Bun.write(docsData.pathName, docs);
+        const FileCreatedSourceCode = await Bun.write(source_codeData.pathName, source_code);
+
+        if (!FileCreated || !FileCreatedSourceCode) {
           return error(404, "upload file error");
         }
 
-        const problemUpeateFileDocs = await updateProblem(id, {
-          docs: pathName,
+        const problemUpeateFile = await updateProblem(id, {
+          docs: docsData,
+          source_code: source_codeData,
         });
 
-        if (!problemUpeateFileDocs) {
+        if (!problemUpeateFile) {
           return error(404, "update file error");
         }
 
@@ -70,6 +85,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           status: 200,
           message: "create problem success",
         };
+ 
       } catch (e) {
         console.log(e);
         return error(500, "Internal Server Error");
@@ -83,6 +99,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         type: t.String(),
         docs: t.File(),
         hint: t.String(),
+        source_code: t.File(),
       }),
     }
   )

@@ -35,9 +35,9 @@ const ProblemSchema = new Schema(
       default: 0,
     },
     docs: {
-      type: String,
-      required: false,
-      default: null,
+      type: Object,
+      required: true,
+      default: {},
     },
     hint: {
       type: Array,
@@ -59,8 +59,9 @@ const ProblemSchema = new Schema(
       required: false,
     },
     source_code:{
-      type: String,
-      required: false,
+      type: Object,
+      required: true,
+      default: {},
     },
     cpu_time_limit: {
       type: Number,
@@ -99,3 +100,5 @@ export const deleteProblemById = (id: string) =>
   ProblemModel.findByIdAndDelete(id);
 export const deleteProblemBySolution = (solution: string) =>
   ProblemModel.deleteMany({ solution: solution });
+export const getFileByProblemId = (id: string) =>
+  ProblemModel.findById(id).then((problem) => problem?.docs);

@@ -26,6 +26,11 @@ body {
   overflow-x: hidden;
 }
 
+textarea:focus, pre:focus {
+  outline: none !important;
+}
+
+
 .Loading {
   animation: rotate 2s linear infinite;
 }
@@ -47,7 +52,7 @@ body {
   @layer base {
     :root {
       --background: var(--light-bg-primary);
-      --bg-secondary: var(--light-bg-secondary);
+      --bg-secondary: #f1f5f9;
       --foreground: black;
       --nav-text-color: #0000008c;
       --card: 0 0% 100%;

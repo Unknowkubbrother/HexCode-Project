@@ -2,9 +2,10 @@ import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 import "@/database/db.setup";
 import { logger } from "@chneau/elysia-logger";
-import { ProblemRoute } from "./router/problems.router";
-import { SubmissionRoute } from "./router/submissions.router";
-import { TestCaseRoute } from "./router/testcases.router";
+import { ProblemRoute } from "@/router/problems.router";
+import { SubmissionRoute } from "@/router/submissions.router";
+import { TestCaseRoute } from "@/router/testcases.router";
+import { fileRoute } from "@/router/file";
 
 /**
 * @author clerkId Test go
@@ -23,6 +24,7 @@ const app = new Elysia()
   .use(ProblemRoute)
   .use(TestCaseRoute)
   .use(SubmissionRoute)
+  .use(fileRoute)
   .get("/", "Hello, Elysia!")
   .listen(process.env.SERVER_PORT || 3001);
 

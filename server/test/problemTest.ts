@@ -11,6 +11,7 @@ export default function runTest() {
         const type = [(i % 4) + 1, (i % 3) + 1];
         const docs = `test/assets/problemOne/avg_shortest.pdf`;
         const hint = ["hint one", "hint two"];
+        const source_code = `test/assets/problemOne/average.cpp`;
 
         const problemResult = await createProblem(
           title,
@@ -18,24 +19,25 @@ export default function runTest() {
           difficulty,
           type,
           docs,
-          hint
+          hint,
+          source_code
         );
 
-        const problemId = problemResult.result._id;
-        const id = 1;
-        const input = `test/assets/problemOne/1.in`;
-        const output = `test/assets/problemOne/1.sol`;
-        const points = 100 + i;
+      //   const problemId = problemResult.result._id;
+      //   const id = 1;
+      //   const input = `test/assets/problemOne/1.in`;
+      //   const output = `test/assets/problemOne/1.sol`;
+      //   const points = 100 + i;
 
-       const resultTestcase =  await addTestCase(
-          problemId,
-          id,
-          input,
-          output,
-          points
-        );
+      //  const resultTestcase =  await addTestCase(
+      //     problemId,
+      //     id,
+      //     input,
+      //     output,
+      //     points
+      //   );
 
-        console.log(resultTestcase);
+      //   console.log(resultTestcase);
 
     });
   });
@@ -47,7 +49,8 @@ async function createProblem(
   difficulty: number,
   type: number[],
   docs?: string,
-  hint?: string[]
+  hint?: string[],
+  source_code?: string
 ) { 
   try {
     const body = new FormData();
@@ -64,6 +67,12 @@ async function createProblem(
 
     if (hint) {
       body.append("hint", JSON.stringify(hint));
+    }
+
+    if (source_code) {
+      const BufferFileSourceCode = await Bun.file(source_code).arrayBuffer();
+      const fileNameFileSourceCode = source_code.split("/")[3];
+      body.append("source_code", new File([BufferFileSourceCode], fileNameFileSourceCode));
     }
 
     const response = await fetch(`${API_END_POINT}/problem/create`, {
