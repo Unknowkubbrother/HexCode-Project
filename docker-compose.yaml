@@ -13,12 +13,8 @@ services:
       context: ./client
       dockerfile: Dockerfile
     env_file:
-      - ./client/.env
+      - ./client/.env.local
     container_name: hexcode_client
-    volumes:
-      - ./:/app
-      - /app/node_modules
-      - /app/.next
     image: hexcode_client_image
     ports:
       - 3000:3000
