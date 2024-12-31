@@ -23,21 +23,21 @@ export default function runTest() {
           source_code
         );
 
-      //   const problemId = problemResult.result._id;
-      //   const id = 1;
-      //   const input = `test/assets/problemOne/1.in`;
-      //   const output = `test/assets/problemOne/1.sol`;
-      //   const points = 100 + i;
+        const problemId = problemResult.result._id;
+        const id = 1;
+        const input = `test/assets/problemOne/1.in`;
+        const output = `test/assets/problemOne/1.sol`;
+        const points = 100 + i;
 
-      //  const resultTestcase =  await addTestCase(
-      //     problemId,
-      //     id,
-      //     input,
-      //     output,
-      //     points
-      //   );
+       const resultTestcase =  await addTestCase(
+          problemId,
+          id,
+          input,
+          output,
+          points
+        );
 
-      //   console.log(resultTestcase);
+        console.log(resultTestcase);
 
     });
   });
