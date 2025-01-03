@@ -26,7 +26,7 @@ const app = new Elysia()
   .use(SubmissionRoute)
   .use(fileRoute)
   .get("/", () =>{
-    return {message: "Hello, Elysia!!!!"};
+    return {message: "Hello, Elysia!! by HEX CODE"};
   })
   .listen(process.env.SERVER_PORT || 3001);
 

@@ -72,9 +72,9 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    # needs: 
-    #   - publish-client-docker
-    #   - publish-server-docker
+    needs: 
+      - publish-client-docker
+      - publish-server-docker
     
     steps:
       - uses: actions/checkout@v4
