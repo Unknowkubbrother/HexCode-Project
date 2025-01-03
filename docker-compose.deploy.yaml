@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mongo_db:
+    container_name: database
+    image: mongo:latest
+    ports:
+      - 27018:27017
+    restart: always
+    volumes:
+      - mongo_db:/data/db
+      
+  server:
+    container_name: hexcode_server
+    image: unknowkubbrother/hexcode_server:latest
+    ports:
+      - 4000:4000
+    restart: always
+    volumes:
+      - ./data/uploads/problems:/app/uploads/problems
+    depends_on:
+      - mongo_db
+
+volumes:
+  mongo_db: {}
