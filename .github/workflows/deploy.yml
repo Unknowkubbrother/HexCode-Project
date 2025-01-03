@@ -85,4 +85,4 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }}
-          "ls"
+          "./deploy.sh"
