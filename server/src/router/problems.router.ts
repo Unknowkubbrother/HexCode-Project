@@ -18,9 +18,9 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
   .post("/create", async ({ body, auth, error }) => {
       try {
 
-        // if (!auth?.userId) {
-        //   return error(401, "Unauthorized");
-        // }
+        if (!auth?.userId) {
+          return error(401, "Unauthorized");
+        }
 
         const { title, description, difficulty, type, docs, hint , source_code } = body;
 
@@ -30,7 +30,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         }
 
         const problemCreated = await createProblem({
-          clerkId: global.testuserId,
+          clerkId: auth.userId,
           title: title,
           description: description,
           difficulty: Number(difficulty),
