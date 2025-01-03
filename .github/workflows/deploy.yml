@@ -85,5 +85,4 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }}
-          "cd /${{ secrets.SSH_USER }}/"
-          "pwd"
+          "sudo /${{ secrets.SSH_USER }}/HexCode-Deploy/deploy.sh"
