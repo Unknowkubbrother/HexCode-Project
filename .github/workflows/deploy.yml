@@ -85,5 +85,5 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }}
-          "cd /root/"
+          "cd /${{ secrets.SSH_USER }}/"
           "pwd"
