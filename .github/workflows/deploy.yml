@@ -79,6 +79,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Deploy to Coolify
+      - name: Deploy to Droplet
         run: |
           curl https://hexcode-api.unknowkubbrother.net
