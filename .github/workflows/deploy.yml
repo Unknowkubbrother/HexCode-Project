@@ -73,10 +73,12 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     # needs: 
-      # - publish-client-docker
-      # - publish-server-docker
+    #   - publish-client-docker
+    #   - publish-server-docker
     
     steps:
+      - uses: actions/checkout@v4
+
       - name: webfactory/ssh-agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -84,5 +86,4 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }}
-          "pwd"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} "bash -s" < ./scripts/deploy.sh
