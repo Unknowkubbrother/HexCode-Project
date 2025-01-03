@@ -13,6 +13,7 @@ services:
   server:
     container_name: hexcode_server
     image: unknowkubbrother/hexcode_server:latest
+    env_file: hexcode.conf
     ports:
       - 4000:4000
     restart: always
