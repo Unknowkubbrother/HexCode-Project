@@ -16,6 +16,8 @@ services:
     env_file: hexcode.conf
     ports:
       - 4000:4000
+    environment:
+      - NODE_ENV=production
     restart: always
     volumes:
       - ./data/uploads/problems:/app/uploads/problems
