@@ -25,7 +25,9 @@ const app = new Elysia()
   .use(TestCaseRoute)
   .use(SubmissionRoute)
   .use(fileRoute)
-  .get("/", "Hello, Elysia!!!!")
+  .get("/", () =>{
+    return {message: "Hello, Elysia!!!!"};
+  })
   .listen(process.env.SERVER_PORT || 3001);
 
 console.log(
