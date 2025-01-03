@@ -77,8 +77,12 @@ jobs:
       - publish-server-docker
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Deploy to Droplet
+      - name: webfactory/ssh-agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to server
         run: |
-          curl https://hexcode-api.unknowkubbrother.net
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }}
+          "/root/HexCode-Deploy/deploy.sh"
