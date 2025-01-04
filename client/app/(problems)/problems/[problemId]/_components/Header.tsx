@@ -1,6 +1,6 @@
 import Navigate from "./Navigate";
 import { Progress } from "@/components/ui/progress";
-import { SchemaDifficulty } from "@/config/difficulty";
+import StatusDifficulty from "@/components/ui/StatusDifficulty";
 
 interface HeaderProps {
   title: string;
@@ -22,7 +22,7 @@ export default function Header({ title, points, maxPoints, submissions, difficul
       </div>
       <div className="w-fit flex flex-col gap-2">
         <div className="flex justify-between items-center gap-3">
-            <span className={`text-[10px] p-1 rounded-md ${SchemaDifficulty[difficulty][1]} text-white`}>{SchemaDifficulty[difficulty][0]}</span>
+            <StatusDifficulty difficulty={difficulty}/>
           <span className="text-sm text-[#9CA3AF]">
             Points : <span className="dark:text-white text-black w-[5ch]">{points} / {maxPoints}</span>
           </span>

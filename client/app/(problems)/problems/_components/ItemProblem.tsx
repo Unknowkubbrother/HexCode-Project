@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ListProblemInterface } from "@/interface/problems";
-import { SchemaDifficulty } from "@/config/difficulty";
+import StatusDifficulty from "@/components/ui/StatusDifficulty";
 
 export default function ItemProblem ({ value }: { value: ListProblemInterface }) {
 
@@ -13,11 +13,7 @@ export default function ItemProblem ({ value }: { value: ListProblemInterface })
     >
       <span className="flex gap-2 justify-start items-center">
         <span className="text-lg font-mono">{value.title}</span>
-        <span
-          className={`${SchemaDifficulty[value.difficulty][1]} rounded-md p-1 text-xs text-white`}
-        >
-          {SchemaDifficulty[value.difficulty][0]}
-        </span>
+        <StatusDifficulty difficulty={value.difficulty} />
         <span className="flex justify-center items-center gap-1 text-sm">
            <span>{value.points}</span>
            <span>Points</span>
