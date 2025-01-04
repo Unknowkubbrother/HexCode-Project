@@ -107,7 +107,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
   /**
    * @description get problems and filter problems
    */
-  .get("/get", async ({ query, clerk, auth, error }) => {
+  .get("/gets", async ({ query, clerk, auth, error }) => {
       try {
         if (!auth?.userId) {
           return error(401, "Unauthorized");
@@ -198,4 +198,37 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         })
       ),
     }
-  );
+  )
+
+  /**
+   * @description get problem by id
+   */
+
+  .get("get/:id", async ({ params, error }) => {
+      try {
+        const { id } = params;
+
+        const problem = await getProblemById(id);
+
+        if (!problem) {
+          return error(404, "problem not found");
+        }
+
+        const point = await getSumPointByProblemId(problem._id.toString());
+
+        return {
+          result: {
+            ...problem,
+            maxPoints: point[0]?.total || 0,
+          },
+        };
+      } catch (e) {
+        console.log(e);
+        return error(500, "Internal Server Error");
+      }
+    },
+    {
+      params: t.Object({
+        id: t.String(),
+      }),
+    });

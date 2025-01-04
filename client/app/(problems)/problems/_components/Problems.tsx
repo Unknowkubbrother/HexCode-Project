@@ -3,14 +3,14 @@ import FilterProblems from "./FilterProblems";
 import { Suspense } from "react";
 import ListProblems from "./ListProblems";
 import { SkeletonListProblem } from "@/components/ui/SkeletonTemplate";
-import { getProblem } from "@/actions/problemAction";
+import { getProblems } from "@/actions/problemAction";
 
 interface Props {
   searchParams : {[key: string]: string | string[] | undefined }
 }
 
 const Problems = async ({searchParams} : Props) => {
-  const { result , totalCounts} = await getProblem(searchParams);
+  const { result , totalCounts} = await getProblems(searchParams);
 
   return (
     <main className="w-full h-full flex flex-col">
