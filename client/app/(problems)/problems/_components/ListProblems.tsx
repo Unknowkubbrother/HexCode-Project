@@ -1,6 +1,6 @@
 "use server";
 import ItemProblem from "./ItemProblem";
-import { ProblemInterface } from "@/interface/problems";
+import { ListProblemInterface } from "@/interface/problems";
 
 interface Props {
   result: [];
@@ -11,7 +11,7 @@ export default async function ListProblems({ result }: Props) {
     <div className="w-full h-fit max:h-[2000px] overflow-y-auto">
       {result.length > 0 ? (
         <div className="w-full h-fit grid grid-cols-1 gap-3">
-          {result.map((value: ProblemInterface) => (
+          {result.map((value: ListProblemInterface) => (
             <ItemProblem value={value} key={value.id} />
           ))}
         </div>
