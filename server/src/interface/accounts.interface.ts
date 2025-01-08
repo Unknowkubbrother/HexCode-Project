@@ -5,7 +5,7 @@ export interface IAccount {
     role?: string;
     avatar?: string;
     detail?: string;
-    status: string;
+    status?: string;
     followers?: Array<string>;
     following?: Array<string>;
 }
