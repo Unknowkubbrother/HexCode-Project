@@ -5,7 +5,8 @@ import { logger } from "@chneau/elysia-logger";
 import { ProblemRoute } from "@/router/problems.router";
 import { SubmissionRoute } from "@/router/submissions.router";
 import { TestCaseRoute } from "@/router/testcases.router";
-import { fileRoute } from "@/router/file";
+import { fileRoute } from "@/router/file.router";
+import { AccountRoute } from "@/router/accounts.router";
 
 /**
 * @author clerkId Test go
@@ -25,6 +26,7 @@ const app = new Elysia()
   .use(TestCaseRoute)
   .use(SubmissionRoute)
   .use(fileRoute)
+  .use(AccountRoute)
   .get("/", () =>{
     return {message: "Hello, Elysia! by HEX CODE"};
   })
