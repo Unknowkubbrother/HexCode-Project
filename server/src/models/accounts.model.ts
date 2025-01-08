@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-
+import {IAccount} from "@/interface/accounts.interface";
 const AccountSchema = new Schema(
   {
     clerkId: {
@@ -49,3 +49,7 @@ const AccountSchema = new Schema(
 );
 
 export const AccountModel = model("accounts", AccountSchema);
+
+
+export const createAccount = async (value: IAccount) => 
+    new AccountModel(value).save().then((account) => account.toObject());
