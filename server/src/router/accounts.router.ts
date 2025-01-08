@@ -10,8 +10,8 @@ export const AccountRoute = new Elysia({ prefix: '/account' })
         const UserData = {
             clerkId: String(data.id),
             username: String(data.username),
-            email: String(data.email_addresses.email_address),
-            avatar: String(data.avatar),
+            email: String(data.email_addresses[0].email_address),
+            avatar: String(data.image_url),
         }
 
         const account = await createAccount(UserData);
@@ -50,8 +50,8 @@ export const AccountRoute = new Elysia({ prefix: '/account' })
         const UserData = {
             clerkId: String(data.id),
             username: String(data.username),
-            email: String(data.email_addresses.email_address),
-            avatar: String(data.avatar),
+            email: String(data.email_addresses[0].email_address),
+            avatar: String(data.image_url),
             status: Boolean(data.banned) ? "banned" : "active",
         }
 
