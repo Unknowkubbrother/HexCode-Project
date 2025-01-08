@@ -2,7 +2,7 @@ export interface IAccount {
     clerkId: string;
     username: string;
     email: string;
-    role: string;
+    role?: string;
     avatar?: string;
     detail?: string;
     status: string;
