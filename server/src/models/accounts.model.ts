@@ -53,3 +53,14 @@ export const AccountModel = model("accounts", AccountSchema);
 
 export const createAccount = async (value: IAccount) => 
     new AccountModel(value).save().then((account) => account.toObject());
+
+
+export const getAccountbyClerkId = async (clerkId: string) => 
+    AccountModel.findOne({ clerkId }).then((account) => account?.toObject());
+
+export const updateAccount = async (clerkId: string, value: IAccount) => 
+    AccountModel.findOneAndUpdate({ clerkId }, value, { new: true }).then((account) => account?.toObject());
+
+
+export const deleteAccount = async (clerkId: string) => 
+    AccountModel.findOneAndDelete({ clerkId }).then((account) => account?.toObject());
