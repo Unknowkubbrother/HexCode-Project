@@ -218,7 +218,12 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
 
         return {
           result: {
-            ...problem,
+            _id: problem._id,
+            title: problem.title,
+            description: problem.description,
+            difficulty: problem.difficulty,
+            submissions: problem.submissions,
+            accepted: problem.accepted,
             maxPoints: point[0]?.total || 0,
           },
         };

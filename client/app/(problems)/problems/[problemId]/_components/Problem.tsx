@@ -6,8 +6,6 @@ import { getProblemById } from "@/actions/problemAction";
 export default async function Problem({ problemId }: {problemId : string}) {
   const { result } = await getProblemById(problemId);
 
-  console.log(result);
-
   return (
     <div className="w-full h-full flex flex-col">
       <Header title={result?.title} points={result?.maxPoints/2} maxPoints={result?.maxPoints} submissions={result?.submissions} difficulty={result?.difficulty}/>

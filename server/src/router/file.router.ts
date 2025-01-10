@@ -9,9 +9,9 @@ export const fileRoute = new Elysia({ prefix: '/file' })
     .use(clerkPlugin())
     .get('docs/:problemId', async ({ params: { problemId }, set, auth}) => {
 
-        // if (!auth?.userId) {
-        //     return { msg: 'Unauthorized' }
-        // }
+        if (!auth?.userId) {
+            return { msg: 'Unauthorized' }
+        }
 
         const file = await getFileByProblemId(problemId);
 

@@ -5,7 +5,7 @@ import CodeEditor from "@/components/ui/CodeEditor";
 import customLanguages from "@/config/languages";
 import { IProblem } from "@/interface/problems";
 
-export default function TabProblem({ problemData }: { problemData: IProblem }) {
+export default function TabProblem({ problemData }: { problemData: IProblem}) {
   const [language, setLanguage] = useState<string>("javascript");
   const [code, setCode] = useState<string>(customLanguages[language].template);
 
