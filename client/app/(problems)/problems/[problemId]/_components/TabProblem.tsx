@@ -37,6 +37,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem}) {
           setCode={setCode}
           className="rounded-lg"
           language={language}
+          size="xs"
           setLanguage={setLanguage}
         />
       </div>
