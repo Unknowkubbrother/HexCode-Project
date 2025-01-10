@@ -13,7 +13,7 @@ export default function PDFViewer(props: { url: string; className?: string }) {
 
     return (
         <div className={cn("h-full w-full", props.className)}>
-            <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+            <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                 <Viewer
                     fileUrl={url}
                     plugins={[defaultLayoutPluginInstance]}
