@@ -1,8 +1,14 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { SchemaDifficulty } from "@/config/difficulty";
-
+const SchemaDifficulty: {
+    [key: number]: string[];
+  } = {
+    1: ["Easy","bg-green-500"],
+    2: ["Medium","bg-yellow-500"],
+    3: ["Hard","bg-red-500"],
+    4: ["Expert","bg-rose-500"],
+  };
 
 export default function StatusDifficulty(props: { className?: string, difficulty: number }) {
 
