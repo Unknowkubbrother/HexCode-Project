@@ -14,7 +14,7 @@ import { AccountRoute } from "@/router/accounts.router";
 declare global {
   var testuserId: string;
 }
-globalThis.testuserId = "user_2qRd8EVDei0OGYmRQ6DAI37Vf4L";
+globalThis.testuserId = "user_2sSBAIPFb76Nu4JujDkYIvy1Mt5";
 
 /**
 * @comment Create a new Elysia app
