@@ -1,8 +1,11 @@
-import React from 'react'
+// import React from 'react'
+import Profile from "./_components/Profile"
 
 const page = () => {
   return (
-    <div>Dashboard</div>
+    <main className="w-full ">
+      <Profile/>
+    </main>
   )
 }
 
