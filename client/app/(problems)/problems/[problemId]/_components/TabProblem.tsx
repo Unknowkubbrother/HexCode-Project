@@ -13,11 +13,14 @@ import {
 } from "@/components/ui/accordion"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea"
 
 export default function TabProblem({ problemData }: { problemData: IProblem }) {
   const [language, setLanguage] = useState<string>("javascript");
   const [code, setCode] = useState<string>(customLanguages[language].template);
-  // const []
+  const [InputCode, setInputCode] = useState<string>("");
+  const [InputCodeActive, setInputCodeActive] = useState<string>("inactive");
 
   useEffect(() => {
     setCode(customLanguages[language].template);
@@ -106,20 +109,28 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
 
 
         <div className="w-full flex justify-between items-center gap-3">
-          <div className="flex justify-center items-center gap-3">
+          <div className="flex justify-start items-center gap-3">
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <label htmlFor="code" className="text-sm font-medium leading-none">Upload Code</label>
               <Input id="code" type="file" placeholder="Upload Code" className="w-[200px]" />
             </div>
+            <div className="flex gap-2 w-full mt-5">
+              <Checkbox id="InputCodeActive" value={InputCodeActive} onClick={()=>setInputCodeActive(InputCodeActive === "inactive" ? "active" : "inactive")} />
+              <label className="text-xs">Custom Input</label>
+            </div>
           </div>
 
-          <div className="flex justify-center items-center gap-3"> 
+          <div className="flex justify-center items-center gap-3 px-3">
             <Button size='sm' variant='outline' className="duration-300 hover:bg-green-400">Runcode</Button>
             <Button size='sm' className="duration-300 hover:scale-105">Submit</Button>
-
           </div>
 
         </div>
+
+
+        {(InputCodeActive === "active") && (
+          <Textarea placeholder="Input Code here .." value={InputCode} onChange={(e)=>setInputCode(e.target.value)}/>
+        )}
 
         <div className="w-full h-[190px] bg-bgsecondary rounded-lg overflow-hidden">
           <header className="w-full p-2 gap-2 border-b-[1px] border-primary flex items-center justify-between px-5 sticky top-0 bg-bgsecondary  dark:text-white z-10">
