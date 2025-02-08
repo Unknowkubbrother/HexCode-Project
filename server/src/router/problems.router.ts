@@ -224,6 +224,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
             difficulty: problem.difficulty,
             submissions: problem.submissions,
             accepted: problem.accepted,
+            hint: problem.hint,
             maxPoints: point[0]?.total || 0,
           },
         };
@@ -359,4 +360,4 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
       params: t.Object({
         id: t.String(),
       }),
-    })
+    });
