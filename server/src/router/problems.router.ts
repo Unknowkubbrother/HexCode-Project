@@ -236,4 +236,121 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
       params: t.Object({
         id: t.String(),
       }),
-    });
+    })
+
+    .post("update",async({body, auth, error})=>{
+
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const {id,title, description, difficulty, type, docs, hint , source_code,viewer}= body;
+
+      const problem = await ProblemModel.findOne({_id:id,clerkId:auth.userId,status:"active"})
+
+      if (!problem) {
+        return error(404, "problem not found");
+      }
+
+      if(docs){
+        if (docs.type !== "application/pdf") {
+          return error(400, "docs must be a pdf file");
+        }
+        const docsData = {
+          name: docs.name,
+          size: docs.size,
+          type: docs.type,
+          pathName : problem.docs.pathName
+        }
+
+        const FileCreated = await Bun.write(problem.docs.pathName, docs);
+        if (!FileCreated) {
+          return error(404, "upload file error");
+        }
+        problem.docs = docsData
+      }
+
+      if(source_code){
+        const sourceData = {
+          name: source_code.name,
+          size: source_code.size,
+          type: source_code.type,
+          pathName : problem.source_code.pathName
+        }
+
+        const FileCreated = await Bun.write(problem.source_code.pathName, source_code);
+        if (!FileCreated) {
+          return error(404, "upload file error");
+        }
+        problem.source_code = sourceData
+      }
+
+      problem.title = title?title:problem.title
+      problem.description = description?description:problem.description
+      problem.difficulty = difficulty?Number(difficulty):problem.difficulty
+      problem.type = type?toArray(JSON.parse(type)):problem.type
+      problem.hint = hint?toArray(JSON.parse(hint)):problem.hint
+
+      if(viewer){
+        if(viewer=="private"){
+          problem.viewer=viewer
+        }else if(viewer=="public"){
+          //send to authenication
+        }else{
+          return error(404, "update view wrror");
+        }
+      }
+
+      const problemUpeate = await updateProblem(id, problem);
+      if (!problemUpeate) {
+        return error(404, "update error");
+      }
+
+      return {
+        status: 200,
+        message: "update problem success",
+      };
+
+    },{
+      body: t.Object({
+        id: t.String(),
+        title: t.Optional(t.String()),
+        description: t.Optional(t.String()),
+        difficulty: t.Optional(t.String()),
+        type: t.Optional(t.String()),
+        docs: t.Optional(t.File()),
+        hint: t.Optional(t.String()),
+        source_code: t.Optional(t.File()),
+        viewer:t.Optional(t.String())
+      }),
+    })
+
+    .get("remove/:id",async({params, auth, error})=>{
+
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const { id } = params;
+
+      const problem = await ProblemModel.findOne({_id:id,clerkId:auth.userId,status:"active"})
+
+      if (!problem) {
+        return error(404, "problem not found");
+      }
+
+      const problemUpeate = await updateProblem(id, {status:"deleted"});
+      if (!problemUpeate) {
+        return error(404, "remove error");
+      }
+
+      return {
+        status: 200,
+        message: "remove problem success",
+      };
+
+    },{
+      params: t.Object({
+        id: t.String(),
+      }),
+    })
