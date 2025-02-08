@@ -225,6 +225,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
             submissions: problem.submissions,
             accepted: problem.accepted,
             maxPoints: point[0]?.total || 0,
+            hint: problem.hint,
           },
         };
       } catch (e) {

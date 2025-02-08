@@ -13,7 +13,7 @@ export default async function Problem({ problemId }: {problemId : string}) {
         <Tabs defaultValue="problem" className="w-full">
           <header className="w-full flex">
             <TabsList className="rounded-lg p-1">
-              <TabsTrigger value="problem">Problem</TabsTrigger>
+              <TabsTrigger value="problem">Description</TabsTrigger>
               <TabsTrigger value="submissions">Submissions</TabsTrigger>
             </TabsList>
           </header>

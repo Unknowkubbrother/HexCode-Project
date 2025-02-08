@@ -5,8 +5,10 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar"
 import { Button } from '@/components/ui/button';
-import { Users, Dot,Pen } from 'lucide-react';
-import Markdown from 'react-markdown'
+import { Users, Dot, Pen } from 'lucide-react';
+import Markdown from "markdown-to-jsx"
+// import remarkGfm from 'remark-gfm'
+import Code from '@/components/ui/MarkDownCode';
 
 export default function Profile() {
     const markdown = `
@@ -65,9 +67,17 @@ export default function Profile() {
             <div className='w-[80%] m-auto border-2 p-5 rounded-lg flex flex-col gap-5'>
                 <div className='w-full flex justify-between items-center px-3 font-semibold'>
                     <span className='text-[10px]'>Unknowkubbrother / README.MD</span>
-                    <span className='text-[10px]'><Pen size={15}/></span>
+                    <span className='text-[10px]'><Pen size={15} /></span>
                 </div>
-                <Markdown className="text-[12px]">
+                <Markdown options={{
+                    overrides: {
+                        Code: {
+                            component: Code
+                        }
+                    }
+                }}
+                className='text-xs'
+            >
                     {markdown}
                 </Markdown>
             </div>
