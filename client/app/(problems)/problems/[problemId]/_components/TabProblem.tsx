@@ -15,13 +15,20 @@ import {
 } from "@/components/ui/accordion"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+<<<<<<< HEAD
+>>>>>>> parent of 53865b9 (update textarea input code)
+=======
 >>>>>>> parent of 53865b9 (update textarea input code)
 
 export default function TabProblem({ problemData }: { problemData: IProblem}) {
   const [language, setLanguage] = useState<string>("javascript");
   const [code, setCode] = useState<string>(customLanguages[language].template);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+  // const []
+>>>>>>> parent of 53865b9 (update textarea input code)
 =======
   // const []
 >>>>>>> parent of 53865b9 (update textarea input code)
