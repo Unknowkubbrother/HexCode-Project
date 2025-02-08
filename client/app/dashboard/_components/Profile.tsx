@@ -62,7 +62,7 @@ export default function Profile() {
                 </div>
             </div>
 
-            <div className='w-[90%] m-auto border-2 p-5 rounded-lg flex flex-col gap-5'>
+            <div className='w-[80%] m-auto border-2 p-5 rounded-lg flex flex-col gap-5'>
                 <div className='w-full flex justify-between items-center px-3 font-semibold'>
                     <span className='text-[10px]'>Unknowkubbrother / README.MD</span>
                     <span className='text-[10px]'><Pen size={15}/></span>
@@ -70,7 +70,6 @@ export default function Profile() {
                 <Markdown className="text-[12px]">
                     { markdown }
                 </Markdown>
-
             </div>
         </main>
     )
