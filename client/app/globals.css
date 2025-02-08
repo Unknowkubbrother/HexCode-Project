@@ -44,9 +44,9 @@ textarea:focus, pre:focus {
   }
 }
 
-*::-webkit-scrollbar {
+/* *::-webkit-scrollbar {
   display: none;
-}
+} */
 
 @layer base {
   @layer base {

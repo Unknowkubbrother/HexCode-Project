@@ -14,7 +14,7 @@ export default function Profile() {
 
     Hello! I'm Unknowkubbrother, a passionate developer who loves coding and sharing knowledge with the community.
 
-    # Skills
+    #Skills
     - **Languages:** JavaScript, TypeScript, Python
     - **Frameworks:** React, Next.js, Node.js
     - **Tools:** Git, Docker, VSCode
@@ -68,7 +68,7 @@ export default function Profile() {
                     <span className='text-[10px]'><Pen size={15}/></span>
                 </div>
                 <Markdown className="text-[12px]">
-                    { markdown }
+                    {markdown}
                 </Markdown>
             </div>
         </main>
