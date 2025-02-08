@@ -9,21 +9,39 @@ export default {
   ],
   theme: {
   	extend: {
-		animation: {
-			spotlight: "spotlight 2s ease .75s 1 forwards",
-		  },
-		  keyframes: {
-			spotlight: {
-			  "0%": {
-				opacity: "0",
-				transform: "translate(-72%, -62%) scale(0.5)",
-			  },
-			  "100%": {
-				opacity: "1",
-				transform: "translate(-50%,-40%) scale(1)",
-			  },
-			},
-		  },
+  		animation: {
+  			spotlight: 'spotlight 2s ease .75s 1 forwards',
+  			'accordion-down': 'accordion-down 0.2s ease-out',
+  			'accordion-up': 'accordion-up 0.2s ease-out'
+  		},
+  		keyframes: {
+  			spotlight: {
+  				'0%': {
+  					opacity: '0',
+  					transform: 'translate(-72%, -62%) scale(0.5)'
+  				},
+  				'100%': {
+  					opacity: '1',
+  					transform: 'translate(-50%,-40%) scale(1)'
+  				}
+  			},
+  			'accordion-down': {
+  				from: {
+  					height: '0'
+  				},
+  				to: {
+  					height: 'var(--radix-accordion-content-height)'
+  				}
+  			},
+  			'accordion-up': {
+  				from: {
+  					height: 'var(--radix-accordion-content-height)'
+  				},
+  				to: {
+  					height: '0'
+  				}
+  			}
+  		},
   		colors: {
   			primary: {
   				DEFAULT: 'var(--primary)',
@@ -34,7 +52,7 @@ export default {
   				foreground: 'var(--secondary-foreground)'
   			},
   			background: 'var(--background)',
-			bgsecondary: 'var(--bg-secondary)',
+  			bgsecondary: 'var(--bg-secondary)',
   			foreground: 'var(--foreground)',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
@@ -66,7 +84,7 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			},
-			navtextcolor: 'var(--nav-text-color)',
+  			navtextcolor: 'var(--nav-text-color)'
   		},
   		extend: {},
   		borderRadius: {
