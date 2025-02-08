@@ -123,7 +123,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
           <div className="flex justify-start items-center gap-3">
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <label htmlFor="code" className="text-sm font-medium leading-none">Upload Code</label>
-              <Input id="code" type="file" placeholder="Upload Code" className="w-[200px]" />
+              <Input id="code" type="file" placeholder="Upload Code" className="w-[300px]" />
             </div>
             <div className="flex gap-2 w-full mt-5">
               <Checkbox id="InputCodeActive" value={InputCodeActive} onClick={() => setInputCodeActive(InputCodeActive === "inactive" ? "active" : "inactive")} />
@@ -132,7 +132,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
           </div>
 
           <div className="flex justify-center items-center gap-3 px-3">
-            <Button size='sm' variant='outline' className="duration-300 hover:bg-green-400">Runcode</Button>
+            <Button size='sm' variant='outline' className="duration-300 hover:bg-green-400">Run code Test</Button>
             <Button size='sm' className="duration-300 hover:scale-105">Submit</Button>
           </div>
 
@@ -177,7 +177,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
                   {Array.from({ length: 10 }).map((_, index) => (
                     <TableRow key={index}>
                     <TableCell className="text-center">{index+1}</TableCell>
-                    <TableCell className="text-center">Correct</TableCell>
+                    <TableCell className="text-center text-green-400">Correct</TableCell>
                     <TableCell className="text-center">Output is correct</TableCell>
                   </TableRow>
                   ))}
@@ -205,14 +205,14 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
 
               <div className="w-full h-fit mt-5">
                 <h1 className="font-semibold text-[15px]"> Standard output </h1>
-                <div className="w-full bg-background p-3 h-fit rounded-lg mt-2">
+                <div className="w-full bg-background p-3 h-fit rounded-lg mt-2 text-xs">
                   No Output
                 </div>
               </div>
 
               <div className="w-full h-fit mt-5">
                 <h1 className="font-semibold text-[15px]"> Standard error </h1>
-                <div className="w-full bg-background p-3 h-fit rounded-lg mt-2">
+                <div className="w-full bg-background p-3 h-fit rounded-lg mt-2 text-xs">
                   No Error
                 </div>
               </div>
