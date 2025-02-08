@@ -49,7 +49,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
               <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
                 <div className="flex justify-center items-center gap-1">
                   <Database size={13} />
-                  <span>STACK_LIMT</span>
+                  <span>STACK_LIMIT</span>
                 </div>
                 <span className="text-primary">{problemData?.stack_limit || 0} MiB</span>
               </li>
