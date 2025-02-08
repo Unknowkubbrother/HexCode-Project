@@ -239,7 +239,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
     })
 
     .post("update",async({body, auth, error})=>{
-
+      try {
       if (!auth?.userId) {
         return error(401, "Unauthorized");
       }
@@ -310,7 +310,10 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         status: 200,
         message: "update problem success",
       };
-
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
     },{
       body: t.Object({
         id: t.String(),
@@ -326,7 +329,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
     })
 
     .get("remove/:id",async({params, auth, error})=>{
-
+      try {
       if (!auth?.userId) {
         return error(401, "Unauthorized");
       }
@@ -348,7 +351,10 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         status: 200,
         message: "remove problem success",
       };
-
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
     },{
       params: t.Object({
         id: t.String(),
