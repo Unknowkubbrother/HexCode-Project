@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 import { Newspaper } from 'lucide-react';
 import {
     Carousel,
@@ -15,12 +15,12 @@ export default function Challengs() {
         <main className='w-[80%] m-auto flex flex-col gap-3'>
             <header className='flex w-full justify-between items-center px-5'>
                 <span className='text-lg'>Challengs</span>
-                <Button variant="outline" className='border-sky-500 hover:bg-primary duration-300'>
+                <Link href="/challenges/create" className='px-3 py-2 rounded-lg border border-input bg-background shadow-sm hover:text-accent-foreground border-sky-500 hover:bg-primary duration-300'>
                     <span className='flex justify-center items-center text-[13px] gap-2'>
                         <Newspaper size={15} />
                         <span>New</span>
                     </span>
-                </Button>
+                </Link>
             </header>
 
             <Carousel className="w-full">
