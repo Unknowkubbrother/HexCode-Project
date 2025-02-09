@@ -5,7 +5,8 @@ export interface ListProblemInterface {
     successRate: number;
     accepted: number;
     submissions: number;
-    author: {
+    viewer?: string;
+    author?: {
         name: string;
         avatar: string;
     };
@@ -31,4 +32,6 @@ export interface IProblem {
     memory_limit?: number;
     stack_limit?: number;
     max_file_size?: number;
+    createdAt?: string;
+    updatedAt?: string;
 }

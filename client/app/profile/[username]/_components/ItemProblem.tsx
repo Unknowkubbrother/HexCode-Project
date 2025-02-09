@@ -1,34 +1,35 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import StatusDifficulty from "@/components/ui/StatusDifficulty";
+import { ListProblemInterface } from "@/interface/problems";
 
-export default function ItemProblem() {
+export default function ItemProblem({ problem, itself }: { problem: ListProblemInterface, itself: boolean }) {
 
   return (
     <div
       className="w-full bg-bgsecondary h-fit rounded-2xl px-3 py-5 flex flex-col gap-1 relative"
     >
       <span className="flex gap-2 justify-start items-center">
-        <span className="font-semibold">Premutaion Bro</span>
-        <StatusDifficulty difficulty={2} />
-        <span className="px-2 py-1 rounded-lg border-2 border-primary text-xs">Private</span>
+        <span className="font-semibold">{problem?.title}</span>
+        <StatusDifficulty difficulty={problem?.difficulty} />
+        <span className="px-2 py-1 rounded-lg border-2 border-primary text-xs">{problem.viewer}</span>
         <span className="flex justify-center items-center gap-1 text-sm">
-          <span>{100}</span>
+          <span>{problem.points}</span>
           <span>Points</span>
         </span>
       </span>
       <div className="w-full flex gap-3 justify-start items-center">
         <span>
           <span className="text-rose-500">Success Rate</span>
-          <span> : {50}%</span>
+          <span> : {problem.successRate}%</span>
         </span>
         <span>
-          <span className="text-green-500">Accpted</span>
-          <span> : {100}</span>
+          <span className="text-green-500">Accepted</span>
+          <span> : {problem.accepted}</span>
         </span>
         <span>
           <span className="text-yellow-500">Submissions</span>
-          <span> : {200}</span>
+          <span> : {problem.submissions}</span>
         </span>
       </div>
 
@@ -40,9 +41,13 @@ export default function ItemProblem() {
             <span>Solve problem</span>
           </Button>
         </Link>
-        <Button size="sm" variant="default" className="bg-yellow-500 hover:scale-105 duration-300">
-          <span>Edit</span>
-        </Button>
+        {itself && (
+          <Link href={`/problem/edit/${problem.id}`}>
+            <Button variant="default" size="sm" className="bg-yellow-500 hover:scale-105 duration-300">
+              <span>Edit</span>
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   );

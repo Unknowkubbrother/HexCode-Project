@@ -58,6 +58,9 @@ export const createAccount = async (value: IAccount) =>
 export const getAccountbyClerkId = async (clerkId: string) => 
     AccountModel.findOne({ clerkId }).then((account) => account?.toObject());
 
+export const getAccountbyUsername = async (username: string) => 
+    AccountModel.findOne({ username }).then((account) => account?.toObject());
+
 export const updateAccount = async (clerkId: string, value: IAccount) => 
     AccountModel.findOneAndUpdate({ clerkId }, value, { new: true }).then((account) => account?.toObject());
 

@@ -89,7 +89,7 @@ export default function CreateProblem() {
           <label htmlFor="solutiontype" className="text-sm">SolutionType <span className="text-primary">*</span></label>
           <Select>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a Difficulty" />
+              <SelectValue placeholder="Select a SolutionType" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>

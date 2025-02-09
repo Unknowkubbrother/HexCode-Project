@@ -102,3 +102,5 @@ export const deleteProblemBySolution = (solution: string) =>
   ProblemModel.deleteMany({ solution: solution });
 export const getFileByProblemId = (id: string) =>
   ProblemModel.findById(id).then((problem) => problem?.docs);
+export const getProblemByClerkIdAndStatus = (clerkId: string, status: string) =>
+  ProblemModel.find({ clerkId: clerkId, status: status });
