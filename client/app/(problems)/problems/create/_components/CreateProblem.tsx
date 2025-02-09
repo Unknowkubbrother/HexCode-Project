@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input"
 import {
   Avatar,
@@ -24,6 +24,8 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/ui/toggle-group"
+import { createProblem } from "@/actions/problemAction"
+import { toast } from 'react-toastify';
 
 const SchemaDifficulty: {
   [key: number]: string[];
@@ -107,38 +109,61 @@ export default function CreateProblem() {
     }
   }
 
+  const CreateProblem = async () => {
+    if (!title || !difficulty || !type || !viewer || !docs || !cpuTimeLimit || !memoryLimit || !stackLimit || !maxFileSize || !sourceCode || !hint || !TestCase || !TestCase.length || !hint.length || !TestCase.some((t) => t.input && t.output && t.input.name && t.output.name) || !hint.some((h) => h) || !type.length) {
+      toast.error("Please fill in all the required fields.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
 
-  useEffect(() => {
-    console.log({
-      title,
-      difficulty,
-      type,
-      description,
-      viewer,
-      docs,
-      cpuTimeLimit,
-      memoryLimit,
-      stackLimit,
-      maxFileSize,
-      sourceCode,
-      TestCase,
-      hint,
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("difficulty", difficulty.toString());
+    formData.append("type", JSON.stringify(type));
+    formData.append("description", description);
+    formData.append("viewer", viewer);
+    formData.append("docs", docs as Blob);
+    formData.append("cpu_time_limit", cpuTimeLimit.toString());
+    formData.append("memory_limit", memoryLimit.toString());
+    formData.append("stack_limit", stackLimit.toString());
+    formData.append("max_file_size", maxFileSize.toString());
+    formData.append("source_code", sourceCode as Blob);
+    formData.append(`hint`, JSON.stringify(hint));
+    const created = await createProblem(formData);
+
+    if (!created) {
+      toast.error("Failed to create problem. Please try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
+    toast.success("Problem created successfully.", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
     });
-  }, [
-    title,
-    difficulty,
-    type,
-    description,
-    viewer,
-    docs,
-    cpuTimeLimit,
-    memoryLimit,
-    stackLimit,
-    maxFileSize,
-    sourceCode,
-    TestCase,
-    hint,
-  ]);
+  }
 
   return (
     <main className="w-[60%] m-auto my-10">
@@ -183,9 +208,9 @@ export default function CreateProblem() {
           <label htmlFor="solutiontype" className="text-sm">SolutionType <span className="text-primary">*</span></label>
           <ToggleGroup type="multiple">
             {Object.entries(SolutionType).map(([key, value]) => (
-                <ToggleGroupItem value={key} aria-label={value} key={key} onClick={() => handlerType(parseInt(key))} >
-                <span className={`text-xs px-2 py-1 rounded-lg ${type.includes(parseInt(key)) ? 'bg-sky-500' : ''}`}>{value}</span>
-                </ToggleGroupItem>
+              <ToggleGroupItem value={key} aria-label={value} key={key} onClick={() => handlerType(parseInt(key))} >
+                <span className={`text-xs px-2 py-1 rounded-lg ${type.includes(parseInt(key)) ? 'bg-sky-500 text-white' : ''}`}>{value}</span>
+              </ToggleGroupItem>
             ))}
           </ToggleGroup>
         </div>
@@ -354,10 +379,8 @@ export default function CreateProblem() {
       </div>
 
       <div className="w-full mt-5 flex justify-end items-center gap-3">
-        <Button variant="default">Create Problem</Button>
-        <Button variant="default" className="bg-rose-400">Cancel</Button>
+        <Button variant="default" onClick={CreateProblem}>Create Problem</Button>
       </div>
-
     </main>
   )
 }

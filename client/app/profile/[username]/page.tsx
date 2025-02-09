@@ -1,7 +1,7 @@
 import Profile from "./_components/Profile"
 import Challengs from "./_components/Challengs"
 import Problem from "./_components/Problem"
-import { getProblemByUsername } from "@/actions/profileAction"
+import { getProfileByUsername } from "@/actions/profileAction"
 
 const page = async ({
   params,
@@ -10,7 +10,7 @@ const page = async ({
 }) => {
 
   const username = (await params).username;
-  const data = await getProblemByUsername(username);
+  const data = await getProfileByUsername(username);
   const { account, problem, itself } = data;
 
   return (

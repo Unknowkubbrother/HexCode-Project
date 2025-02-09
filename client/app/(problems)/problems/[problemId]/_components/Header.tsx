@@ -24,13 +24,13 @@ export default function Header({ title, points, maxPoints, submissions, difficul
         <div className="flex justify-between items-center gap-3">
             <StatusDifficulty difficulty={difficulty}/>
           <span className="text-sm text-[#9CA3AF]">
-            Points : <span className="dark:text-white text-black w-[5ch]">{points} / {maxPoints}</span>
+            Points : <span className="dark:text-white text-black w-[5ch]">{points} / {maxPoints || 100}</span>
           </span>
           <span className="text-sm text-[#9CA3AF]">
             Submissions : <span className="dark:text-white text-black w-[5ch]">{submissions}</span>
           </span>
         </div>
-        <Progress value={points} max={maxPoints} />
+        <Progress value={points} max={maxPoints || 100} />
       </div>
     </div>
   );

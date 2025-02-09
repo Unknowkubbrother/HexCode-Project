@@ -2,7 +2,7 @@
 import axios from 'axios';
 import getSession from "@/hooks/use-session";
 
-export const getProblemByUsername = async (username: string) => {
+export const getProfileByUsername = async (username: string) => {
     try{
         const token = await getSession();
 
