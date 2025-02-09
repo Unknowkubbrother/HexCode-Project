@@ -10,17 +10,19 @@ import {
 } from "@/components/ui/carousel";
 import CardChallenge from '@/components/ui/CardChallenge';
 
-export default function Challengs() {
+export default function Challengs({itself} : {itself: boolean}) {
     return (
         <main className='w-[80%] m-auto flex flex-col gap-3'>
             <header className='flex w-full justify-between items-center px-5'>
                 <span className='text-lg'>Challengs</span>
-                <Link href="/challenges/create" className='px-3 py-2 rounded-lg border border-input bg-background shadow-sm hover:text-accent-foreground border-sky-500 hover:bg-primary duration-300'>
+                {itself && (
+                    <Link href="/challenges/create" className='px-3 py-2 rounded-lg border border-input bg-background shadow-sm hover:text-accent-foreground border-sky-500 hover:bg-primary duration-300'>
                     <span className='flex justify-center items-center text-[13px] gap-2'>
                         <Newspaper size={15} />
                         <span>New</span>
                     </span>
                 </Link>
+                )}
             </header>
 
             <Carousel className="w-full">

@@ -17,7 +17,7 @@ const page = async ({
     <main className="w-full flex flex-col gap-5">
       <Profile account={account} itself={itself} />
       {account.role == 'premium' && (
-        <Challengs />
+        <Challengs itself={itself} />
       )}
       <Problem problem={problem} itself={itself} />
     </main>
