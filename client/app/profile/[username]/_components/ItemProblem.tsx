@@ -35,14 +35,14 @@ export default function ItemProblem({ problem, itself }: { problem: ListProblemI
 
 
       <div className="absolute top-1/2 right-0 transform -translate-x-1/4 -translate-y-1/2 flex justify-center items-center gap-3">
-        <Link href={`/problems/1`} passHref>
+        <Link href={`/problems/${problem.id}`} passHref>
           <Button variant="default" size="sm" asChild className="hover:scale-105 duration-300 cursor-pointer"
           >
             <span>Solve problem</span>
           </Button>
         </Link>
         {itself && (
-          <Link href={`/problem/edit/${problem.id}`}>
+          <Link href={`/problem/edit/${problem.id}`} passHref>
             <Button variant="default" size="sm" className="bg-yellow-500 hover:scale-105 duration-300">
               <span>Edit</span>
             </Button>

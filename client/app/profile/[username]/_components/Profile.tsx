@@ -5,7 +5,7 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar"
 import { Button } from '@/components/ui/button';
-import { Users, Dot, Pen } from 'lucide-react';
+import { Users, Dot, Pen , Crown} from 'lucide-react';
 import Markdown from 'react-markdown'
 import { IAccount } from '@/interface/accounts';
 
@@ -20,7 +20,10 @@ export default function Profile({ account, itself }: { account: IAccount, itself
                         <AvatarFallback>HEXCODE</AvatarFallback>
                     </Avatar>
                     <div className='flex flex-col'>
-                        <h1 className='text-lg font-semibold'>{account?.username}</h1>
+                        <h1 className='text-lg font-semibold flex justify-start items-center gap-1'>
+                            {account?.role == 'premium' && <Crown size={20} className='text-yellow-500'/>}
+                            <span className={`${account.role == 'premium' ? 'text-yellow-600' : ''}`}>{account?.username}</span>
+                        </h1>
                         <span className='text-sm'>@{account?.username}</span>
                         <div className='flex gap-2 mt-[7px]'>
                             <span className='flex gap-1 justify-center items-center text-sm'>

@@ -22,7 +22,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           return error(401, "Unauthorized");
         }
 
-        const { title, description, difficulty, type, docs, hint , source_code } = body;
+        const { title, description, difficulty, type, docs, hint , source_code, cpu_time_limit, memory_limit, stack_limit,max_file_size } = body;
 
 
         if (docs.type !== "application/pdf") {
@@ -35,7 +35,11 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           description: description,
           difficulty: Number(difficulty),
           type: toArray(JSON.parse(type)),
-          hint: toArray(JSON.parse(hint))
+          hint: toArray(JSON.parse(hint)),
+          ...(cpu_time_limit && { cpu_time_limit }),
+          ...(memory_limit && { memory_limit }),
+          ...(stack_limit && { stack_limit }),
+          ...(max_file_size && { max_file_size }),
         });
 
         if (!problemCreated) {
@@ -100,6 +104,10 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         docs: t.File(),
         hint: t.String(),
         source_code: t.File(),
+        cpu_time_limit: t.Optional(t.Number()),
+        memory_limit: t.Optional(t.Number()),
+        stack_limit: t.Optional(t.Number()),
+        max_file_size: t.Optional(t.Number()),
       }),
     }
   )
