@@ -55,10 +55,10 @@ export default function CreateProblem() {
           <label htmlFor="owner" className="text-sm">Owner <span className="text-primary">*</span></label>
           <div className="flex gap-2 justify-start items-center border-2 px-1 py-[3px] rounded-md">
             <Avatar className='w-7 h-7'>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage src={user?.imageUrl} alt="@shadcn" />
               <AvatarFallback>Username</AvatarFallback>
             </Avatar>
-            <span className="text-sm">{user?.fullName}</span>
+            <span className="text-sm">{user?.username}</span>
           </div>
         </div>
         <span className="mt-10 text-2xl">/</span>
