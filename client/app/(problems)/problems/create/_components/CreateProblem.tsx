@@ -110,7 +110,7 @@ export default function CreateProblem() {
   }
 
   const CreateProblem = async () => {
-    if (!title || !difficulty || !type || !viewer || !docs || !cpuTimeLimit || !memoryLimit || !stackLimit || !maxFileSize || !sourceCode || !hint || !TestCase || !TestCase.length || !hint.length || !TestCase.some((t) => t.input && t.output && t.input.name && t.output.name) || !hint.some((h) => h) || !type.length) {
+    if (!title || !difficulty || !type || !viewer || !docs || cpuTimeLimit < 0|| memoryLimit < 0 || stackLimit < 0 || maxFileSize < 0|| !sourceCode || !hint || !TestCase || !TestCase.length || !hint.length || !TestCase.some((t) => t.input && t.output && t.input.name && t.output.name) || !hint.some((h) => h) || !type.length) {
       toast.error("Please fill in all the required fields.", {
         position: "top-right",
         autoClose: 5000,
@@ -155,7 +155,7 @@ export default function CreateProblem() {
 
     toast.success("Problem created successfully.", {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: false,
       pauseOnHover: true,
@@ -163,6 +163,10 @@ export default function CreateProblem() {
       progress: undefined,
       theme: "light",
     });
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 3500);
   }
 
   return (
@@ -260,22 +264,22 @@ export default function CreateProblem() {
           </Label>
           <nav>
             <ul className="flex gap-2 justify-start items-center">
-              <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
+                <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
                 <div className="flex justify-center items-center gap-1">
                   <Cpu size={13} />
                   <span>TIME_LIMIT <span className="text-primary">(s)</span></span>
                 </div>
                 <Input id="time_limit" type="number" className="w-[100px] h-5 text-center" min={0} step={0.01}
-                  value={cpuTimeLimit} onChange={(e) => setCpuTimeLimit(parseFloat(e.target.value))}
+                  value={cpuTimeLimit} onChange={(e) => setCpuTimeLimit(parseFloat(e.target.value) > 0 ? parseFloat(e.target.value) : 0)}
                 />
-              </li>
+                </li>
               <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
                 <div className="flex justify-center items-center gap-1">
                   <Database size={13} />
                   <span>MEMORY_LIMIT <span className="text-primary">(MiB)</span></span>
                 </div>
                 <Input id="memory_limit" type="number" className="w-[100px] h-5 text-center" min={0}
-                  value={memoryLimit} onChange={(e) => setMemoryLimit(parseInt(e.target.value))}
+                  value={memoryLimit} onChange={(e) => setMemoryLimit(parseInt(e.target.value) > 0 ? parseInt(e.target.value) : 0)}
                 />
               </li>
               <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
@@ -284,7 +288,7 @@ export default function CreateProblem() {
                   <span>STACK_LIMIT <span className="text-primary">(MiB)</span></span>
                 </div>
                 <Input id="stack_limit" type="number" className="w-[100px] h-5 text-center" min={0}
-                  value={stackLimit} onChange={(e) => setStackLimit(parseInt(e.target.value))}
+                  value={stackLimit} onChange={(e) => setStackLimit(parseInt(e.target.value) > 0 ? parseInt(e.target.value) : 0)}
                 />
               </li>
               <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
@@ -293,7 +297,7 @@ export default function CreateProblem() {
                   <span>FILESIZE_LIMIT <span className="text-primary">(MiB)</span></span>
                 </div>
                 <Input id="filesize_limit" type="number" className="w-[100px] h-5 text-center" min={0}
-                  value={maxFileSize} onChange={(e) => setMaxFileSize(parseInt(e.target.value))}
+                  value={maxFileSize} onChange={(e) => setMaxFileSize(parseInt(e.target.value) > 0 ? parseInt(e.target.value) : 0)}
                 />
               </li>
             </ul>
