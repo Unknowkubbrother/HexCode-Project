@@ -27,7 +27,7 @@ const Problems = async ({searchParams} : Props) => {
           </div>
         </div>
 
-        <div className="w-[25%] h-fit bg-bgsecondary rounded-2xl">
+        <div className="w-[25%] h-fit">
           <FilterProblems />
         </div>
       </section>

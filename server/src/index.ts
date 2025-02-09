@@ -7,6 +7,7 @@ import { SubmissionRoute } from "@/router/submissions.router";
 import { TestCaseRoute } from "@/router/testcases.router";
 import { fileRoute } from "@/router/file.router";
 import { AccountRoute } from "@/router/accounts.router";
+import { ProfileRoute } from "@/router/profile.router";
 
 /**
 * @author clerkId Test go
@@ -14,7 +15,7 @@ import { AccountRoute } from "@/router/accounts.router";
 declare global {
   var testuserId: string;
 }
-globalThis.testuserId = "user_2qRd8EVDei0OGYmRQ6DAI37Vf4L";
+globalThis.testuserId = "user_2sSBAIPFb76Nu4JujDkYIvy1Mt5";
 
 /**
 * @comment Create a new Elysia app
@@ -27,6 +28,7 @@ const app = new Elysia()
   .use(SubmissionRoute)
   .use(fileRoute)
   .use(AccountRoute)
+  .use(ProfileRoute)
   .get("/", () =>{
     return {message: "Hello, Elysia! by HEX CODE"};
   })

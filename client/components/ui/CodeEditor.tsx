@@ -14,7 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 
 export default function CodeEditor(props: {
   code: string;
@@ -93,7 +92,7 @@ export default function CodeEditor(props: {
             <span className="text-primary">
               <Code size={20} />
             </span>
-            <h1 className="text-lg font-semibold font-mono">Code Edit</h1>
+            <h1 className="font-semibold font-mono">Code Editor</h1>
           </div>
           <SelectMenuLanguage />
         </header>
@@ -122,14 +121,6 @@ export default function CodeEditor(props: {
             )}
             placeholder="Write your code here..."
           />
-        </div>
-        <div className="fixed bottom-10 right-0 z-10 p-5 flex gap-3">
-          <Button variant="default" size="sm">
-            Run Code
-          </Button>
-          <Button variant="default" size="sm" className="bg-green-400">
-            Submit
-          </Button>
         </div>
       </div>
     </div>

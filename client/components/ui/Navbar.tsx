@@ -3,7 +3,7 @@ import React from "react";
 import { ModeToggle } from "@/components/ui/ModeToggle";
 import Image from "next/image";
 import Link from "next/link";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import { usePathname  } from "next/navigation";
@@ -14,7 +14,8 @@ interface NavbarProps {
 
 export default function Navbar({ setTheme }: NavbarProps) {
   const { theme } = useTheme();
-  const pathname = usePathname()
+  const pathname = usePathname();
+  const {user} = useUser();
 
   useEffect(() => {
     setTheme(theme || "dark");
@@ -44,8 +45,8 @@ export default function Navbar({ setTheme }: NavbarProps) {
         </Link>
 
         <SignedIn>
-          <Link href="/dashboard" className={`${pathname == '/dashboard' ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
-            Dashboard
+          <Link href={`/profile/${user?.username}`} className={`${pathname.startsWith('/profile') ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
+            Profile
           </Link>
         </SignedIn>
 
