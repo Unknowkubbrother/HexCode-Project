@@ -9,13 +9,14 @@ const page = async ({
   params: Promise<{ username: string }>;
 }) => {
 
-  // const username = (await params).username;
+  const username = (await params).username;
   
   return (
     <main className="w-full flex flex-col gap-5">
       <Profile/>
       <Challengs/>
       <Problem/>
+      {username}
     </main>
   )
 }
