@@ -1,7 +1,7 @@
-// import React from 'react'
 import Profile from "./_components/Profile"
 import Challengs from "./_components/Challengs"
 import Problem from "./_components/Problem"
+import { getProfileByUsername } from "@/actions/profileAction"
 
 const page = async ({
   params,
@@ -10,13 +10,16 @@ const page = async ({
 }) => {
 
   const username = (await params).username;
-  
+  const data = await getProfileByUsername(username);
+  const { account, problem, itself } = data;
+
   return (
     <main className="w-full flex flex-col gap-5">
-      <Profile/>
-      <Challengs/>
-      <Problem/>
-      {username}
+      <Profile account={account} itself={itself} />
+      {account.role == 'premium' && (
+        <Challengs />
+      )}
+      <Problem problem={problem} itself={itself} />
     </main>
   )
 }

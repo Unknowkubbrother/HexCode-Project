@@ -50,28 +50,28 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
                   <Cpu size={13} />
                   <span>TIME_LIMIT</span>
                 </div>
-                <span className="text-primary">{problemData?.cpu_time_limit || 0} s</span>
+                <span className="text-primary">{(problemData?.cpu_time_limit != 0) ? problemData?.cpu_time_limit : "N/A"} s</span>
               </li>
               <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
                 <div className="flex justify-center items-center gap-1">
                   <Database size={13} />
                   <span>MEMORY_LIMIT</span>
                 </div>
-                <span className="text-primary">{problemData?.memory_limit || 0} MiB</span>
+                <span className="text-primary">{(problemData?.memory_limit != 0) ? problemData?.memory_limit : "N/A"} MiB</span>
               </li>
               <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
                 <div className="flex justify-center items-center gap-1">
                   <Database size={13} />
                   <span>STACK_LIMIT</span>
                 </div>
-                <span className="text-primary">{problemData?.stack_limit || 0} MiB</span>
+                <span className="text-primary">{(problemData?.stack_limit != 0) ? problemData?.stack_limit : "N/A"} MiB</span>
               </li>
               <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
                 <div className="flex justify-center items-center gap-1">
                   <File size={13} />
                   <span>FILESIZE_LIMIT</span>
                 </div>
-                <span className="text-primary">{problemData?.max_file_size || 0} MiB</span>
+                <span className="text-primary">{(problemData?.max_file_size != 0) ? problemData?.max_file_size : "N/A"} MiB</span>
               </li>
             </ul>
           </nav>

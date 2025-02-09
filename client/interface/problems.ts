@@ -5,7 +5,8 @@ export interface ListProblemInterface {
     successRate: number;
     accepted: number;
     submissions: number;
-    author: {
+    viewer?: string;
+    author?: {
         name: string;
         avatar: string;
     };
@@ -31,4 +32,27 @@ export interface IProblem {
     memory_limit?: number;
     stack_limit?: number;
     max_file_size?: number;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+interface TestcaseFile {
+    input: File;
+    output: File;
+}
+
+export interface ICreateProblem {
+    title: string;
+    difficulty: number;
+    type: Array<number>;
+    description: string;
+    viewer: string;
+    docs: File;
+    cpu_time_limit?: number;
+    memory_limit?: number;
+    stack_limit?: number;
+    max_file_size?: number;
+    sercet_code?: string;
+    source_code: File;
+    hint: Array<TestcaseFile>;
 }

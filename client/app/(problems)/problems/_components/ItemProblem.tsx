@@ -25,7 +25,7 @@ export default function ItemProblem ({ value }: { value: ListProblemInterface })
           <span> : {value.successRate}%</span>
         </span>
         <span>
-          <span className="text-green-500">Accpted</span>
+          <span className="text-green-500">Accpeted</span>
           <span> : {value.accepted}</span>
         </span>
         <span>
@@ -35,10 +35,10 @@ export default function ItemProblem ({ value }: { value: ListProblemInterface })
       </div>
       <span className="flex justify-start items-center gap-2">
         <Avatar className="h-5 w-5">
-          <AvatarImage src={value.author.avatar} />
+          <AvatarImage src={value?.author?.avatar} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-        <span> {value.author.name}</span>
+        <span> {value?.author?.name}</span>
       </span>
 
       <Link href={`/problems/${value.id}`} passHref>

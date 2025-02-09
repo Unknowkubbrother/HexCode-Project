@@ -22,7 +22,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           return error(401, "Unauthorized");
         }
 
-        const { title, description, difficulty, type, docs, hint , source_code } = body;
+        const { title, description, difficulty,viewer, type, docs, hint , source_code, cpu_time_limit, memory_limit, stack_limit,max_file_size } = body;
 
 
         if (docs.type !== "application/pdf") {
@@ -33,9 +33,14 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           clerkId: auth.userId,
           title: title,
           description: description,
+          viewer: viewer,
           difficulty: Number(difficulty),
           type: toArray(JSON.parse(type)),
-          hint: toArray(JSON.parse(hint))
+          hint: toArray(JSON.parse(hint)),
+          ...(cpu_time_limit && { cpu_time_limit: Number(cpu_time_limit) }),
+          ...(memory_limit && { memory_limit: Number(memory_limit) }),
+          ...(stack_limit && { stack_limit: Number(stack_limit) }),
+          ...(max_file_size && { max_file_size: Number(max_file_size) }),
         });
 
         if (!problemCreated) {
@@ -97,9 +102,14 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         description: t.String(),
         difficulty: t.String(),
         type: t.String(),
+        viewer: t.String(),
         docs: t.File(),
         hint: t.String(),
         source_code: t.File(),
+        cpu_time_limit: t.Optional(t.String()),
+        memory_limit: t.Optional(t.String()),
+        stack_limit: t.Optional(t.String()),
+        max_file_size: t.Optional(t.String()),
       }),
     }
   )
@@ -225,6 +235,11 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
             submissions: problem.submissions,
             accepted: problem.accepted,
             hint: problem.hint,
+            type: problem.type,
+            cpu_time_limit: problem.cpu_time_limit,
+            memory_limit: problem.memory_limit,
+            stack_limit: problem.stack_limit,
+            max_file_size: problem.max_file_size,
             maxPoints: point[0]?.total || 0,
           },
         };

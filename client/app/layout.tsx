@@ -9,9 +9,9 @@ import { useState } from "react";
 import { Spotlight } from "@/components/ui/Spotlight";
 import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
+import { ToastContainer } from 'react-toastify';
 
 const inter = Inter({ subsets: ["latin"] });
-
 
 export default function RootLayout({
   children,
@@ -52,6 +52,7 @@ export default function RootLayout({
                   fill="#9c7cd6"
                 />
                 {children}
+                <ToastContainer/>
                 <Footer />
             </ClerkLoaded>
           </Providers>

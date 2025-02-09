@@ -40,3 +40,23 @@ export const getProblemById = async (id: string) => {
         console.error(error);
     }
 };
+
+export const createProblem = async (data: FormData) => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_END_POINT}/problem/create`, data, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+        console.log(response.data);
+
+        return response.data;
+    }catch(error){
+        console.error(error);
+    }
+};
