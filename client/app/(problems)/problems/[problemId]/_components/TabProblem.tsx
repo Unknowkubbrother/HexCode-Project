@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {runCodeTest} from "@/actions/submissionAction";
 
 export default function TabProblem({ problemData }: { problemData: IProblem }) {
   const [language, setLanguage] = useState<string>("javascript");
@@ -26,6 +27,19 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
   useEffect(() => {
     setCode(customLanguages[language].template);
   }, [language]);
+
+  const handleRunCodeTest = async () => {
+    if (!code) {
+      return;
+    }
+    const response = await runCodeTest({
+      source_code: code,
+      language_id: customLanguages[language].language_id,
+    });
+
+    console.log(response);
+
+  };
 
   return (
     <div className="w-full h-full flex justify-between gap-3">
@@ -122,7 +136,9 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
           </div>
 
           <div className="flex justify-center items-center gap-3 px-3">
-            <Button size='sm' variant='outline' className="duration-300 hover:bg-green-400">Run code Test</Button>
+            <Button size='sm' variant='outline' className="duration-300 hover:bg-green-400"
+              onClick={handleRunCodeTest}
+            >Run code Test</Button>
             <Button size='sm' className="duration-300 hover:scale-105">Submit</Button>
           </div>
 

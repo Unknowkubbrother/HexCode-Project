@@ -1,10 +1,8 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { getSubmitById,SubmissionModel } from "@/models/submissions.model";
-import { ProblemModel,getProblemById } from "@/models/problems.model";
-import { isNumber } from "lodash";
+import { createSubmission, getSubmission, convertStatusToType } from "@lib/judge0";
 
-export const SubmissionRoute = new Elysia({ prefix: "/solution" })
+export const SubmissionRoute = new Elysia({ prefix: "/submission" })
   .use(clerkPlugin())
   .post(
     "/submit",
@@ -14,38 +12,11 @@ export const SubmissionRoute = new Elysia({ prefix: "/solution" })
           return error(401, "Unauthorized");
         }
 
-        const user = await clerk.users.getUser(auth.userId);
-        const submitdata = await getSubmitById(body.problemId,user.id);
 
-        //submitcode to check
-
-        if(submitdata.length>0){
-          const result = await getProblemById(body.problemId);
-          if(isNumber(result?.submissions)){
-            result.submissions+=1;
-            result.accepted+=1;
-            await ProblemModel.findByIdAndUpdate(result._id.toString(),result)
-          }
-          return { msg: submitdata };
+        return {
+          msg: "success",
         }
 
-        const problem = await getProblemById(body.problemId);
-          if(isNumber(problem?.submissions)){
-            problem.submissions+=1;
-            problem.accepted+=1;
-            await ProblemModel.findByIdAndUpdate(problem._id.toString(),problem)
-          }
-
-        const values = await SubmissionModel.create({
-          problemId:body.problemId,
-          clerkId:user.id,
-          success: false,
-          score:100
-        })
-
-        const result = await values.save()
-
-        return { msg: result };
       } catch (e) {
         return error(500, "Internal Server Error");
       }
@@ -53,7 +24,48 @@ export const SubmissionRoute = new Elysia({ prefix: "/solution" })
     {
       body: t.Object({
         problemId: t.String(),
-        
+
       }),
     }
   )
+
+  .post(
+    "/runcodeTest",
+    async ({ body, clerk, auth, error }) => {
+      try {
+        if (!auth?.userId) {
+          return error(401, "Unauthorized");
+        }
+
+        const { language_id, source_code } = body;
+        
+        const { token } = await createSubmission({
+          source_code,
+          language_id,
+        });
+
+        let status = "processing";
+        let submission = await getSubmission(token);
+
+        while (status === "processing" || status === "in_queue") {
+          submission = await getSubmission(token);
+          status = convertStatusToType(submission.status.description);
+        }
+
+        console.log({
+          user: auth.userId,
+          status,
+        });
+
+        return submission;
+
+      } catch (e) {
+        return error(500, "Internal Server Error");
+      }
+    }, {
+    body: t.Object({
+      language_id: t.Number(),
+      source_code: t.String(),
+    }),
+  }
+  );
