@@ -1,6 +1,4 @@
 "use client";
-import Editor from "react-simple-code-editor";
-import { Highlight, themes } from "prism-react-renderer";
 import { cn } from "@/lib/utils";
 import customLanguages from "@/config/languages";
 import { Code } from "lucide-react";
@@ -14,6 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import {dracula} from '@uiw/codemirror-theme-dracula';
+import {materialLight} from "@uiw/codemirror-theme-material"
+import {langs } from '@uiw/codemirror-extensions-langs';
 
 export default function CodeEditor(props: {
   code: string;
@@ -24,35 +27,7 @@ export default function CodeEditor(props: {
   setLanguage: (language: string) => void;
 }) {
   const { theme } = useTheme();
-  const fontSize: { [key: string]: string } = {
-    sm: "text-xs",
-    md: "text-sm",
-    lg: "text-lg",
-    xl: "text-xl",
-    "2xl": "text-2xl",
-  };
-
-  const LineNumbers = () => {
-    return (
-      <Highlight code={props.code} language={props.language}>
-        {({ tokens }) => (
-          <div className="flex flex-col">
-            {tokens.map((_, i) => (
-              <span
-                className={`dark:text-white font-mono ${
-                  fontSize[props.size]
-                } w-[4ch]`}
-                key={i}
-              >
-                {i + 1}{" "}
-              </span>
-            ))}
-          </div>
-        )}
-      </Highlight>
-    );
-  };
-
+  
   const SelectMenuLanguage = () => {
     return (
       <DropdownMenu>
@@ -70,7 +45,6 @@ export default function CodeEditor(props: {
             value={props.language}
             onValueChange={props.setLanguage}
           >
-            {/* <DropdownMenuRadioItem value="javascript">JavaScript</DropdownMenuRadioItem> */}
             {Object.keys(customLanguages).map((language) => (
               <DropdownMenuRadioItem key={language} value={language}>
                 {language}
@@ -96,31 +70,37 @@ export default function CodeEditor(props: {
           </div>
           <SelectMenuLanguage />
         </header>
-        <div className="w-full h-fit flex p-3">
-          <LineNumbers />
-          <Editor
-            className={`w-full ${fontSize[props.size]}`}
-            value={props.code}
-            onValueChange={(code) => props.setCode(code)}
-            highlight={(code) => (
-              <Highlight
-                code={code}
-                language={props.language}
-                theme={theme == "dark" ? themes.nightOwl : themes.nightOwlLight}
-              >
-                {({ tokens, getLineProps, getTokenProps }) =>
-                  tokens.map((line, i) => (
-                    <div {...getLineProps({ line, key: i })} key={i}>
-                      {line.map((token, key) => (
-                        <span {...getTokenProps({ token, key })} key={key} />
-                      ))}
-                    </div>
-                  ))
-                }
-              </Highlight>
-            )}
-            placeholder="Write your code here..."
-          />
+        <div className="w-full h-fit flex">
+            <CodeMirror value={props.code} className="w-full"
+            theme={theme == "dark" ? dracula : materialLight}
+            height="560px"
+            extensions={[
+              javascript({ jsx: true }),
+              langs.cpp(),
+              langs.java(),
+              langs.python(),
+              langs.ruby(),
+              langs.rust(),
+              langs.swift(),
+              langs.typescript(),
+              langs.go(),
+              langs.kotlin(),
+              langs.c(),
+              langs.perl(),
+              langs.r(),
+              langs.lua(),
+              langs.html(),
+              langs.css(),
+              langs.json(),
+              langs.xml(),
+              langs.markdown(),
+              langs.sql(),
+              langs.shell(),
+              langs.php(),
+              langs.csharp(),
+            ]}
+            onChange={(value) => props.setCode(value)}
+            />
         </div>
       </div>
     </div>

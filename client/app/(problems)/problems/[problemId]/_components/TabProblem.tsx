@@ -4,7 +4,7 @@ import PDFViewer from "@/components/ui/pdf-viewer";
 import CodeEditor from "@/components/ui/CodeEditor";
 import customLanguages from "@/config/languages";
 import { IProblem } from "@/interface/problems";
-import { Cpu, Database, File, Lightbulb, BookCheck, Terminal } from 'lucide-react';
+import { Cpu, Database, File, Lightbulb, BookCheck, Terminal, CircleCheckBig, CircleX } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -16,15 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-
 
 export default function TabProblem({ problemData }: { problemData: IProblem }) {
   const [language, setLanguage] = useState<string>("javascript");
@@ -126,7 +117,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
             </div>
             <div className="flex gap-2 w-full mt-5">
               <Checkbox id="InputCodeActive" value={InputCodeActive} onClick={() => setInputCodeActive(InputCodeActive === "inactive" ? "active" : "inactive")} />
-              <label className="text-xs">Custom Input</label>
+              <label className="text-xs">Custom Input Test</label>
             </div>
           </div>
 
@@ -162,60 +153,41 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="testcase">
-            <div className="w-full h-[600px] flex flex-col p-5">
-              <h1 className="font-semibold text-[15px]"> TestCase </h1>
-              <Table>
-                <TableHeader className="sticky top-0 bg-bgsecondary">
-                  <TableRow>
-                    <TableHead className="w-[100px] text-center">#</TableHead>
-                    <TableHead className="text-center">Outcome</TableHead>
-                    <TableHead className="text-center">Details</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+            <div className="w-full h-fit p-3">
+              <Tabs defaultValue="testcase_1" className="w-full flex justify-start items-start">
+                <TabsList className="flex flex-col gap-3 mr-5">
                   {Array.from({ length: 10 }).map((_, index) => (
-                    <TableRow key={index}>
-                    <TableCell className="text-center">{index+1}</TableCell>
-                    <TableCell className="text-center text-green-400">Correct</TableCell>
-                    <TableCell className="text-center">Output is correct</TableCell>
-                  </TableRow>
+                    <TabsTrigger key={index} value={`testcase_${index + 1}`} className={`flex justify-start items-center gap-2 border-b-2 border-background ${index % 2 ? "text-green-400" : "text-red-400"}`}>
+                      {(index % 2) ? <CircleCheckBig size={15} />
+                        : <CircleX size={15} />
+                      }
+                      <span>Test Case {index + 1}</span>
+                    </TabsTrigger>
                   ))}
-                </TableBody>
-              </Table>
-            
-              <div className="w-full h-fit mt-5">
-                <h1 className="font-semibold text-[15px]"> Compilation output </h1>
-                <div className="grid grid-cols-1 grid-rows-3 gap-3 mt-2 text-[14px]">
-                  <div className="w-full justify-between items-center flex gap-3 px-5">
-                    <span>Compilation outcome</span>
-                    <span>Compilation succeeded</span>
-                  </div>
-                  <div className="w-full justify-between items-center flex gap-3 px-5">
-                    <span>Compilation time</span>
-                    <span>1.067 sec</span>
-                  </div>
-                  <div className="w-full justify-between items-center flex gap-3 px-5">
-                    <span>Memory used</span>
-                    <span>45.1 MiB</span>
-                  </div>
-                </div>
-              </div>
+                </TabsList>
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <TabsContent key={index} value={`testcase_${index + 1}`} className="w-full p-5">
+                    <div className="w-full flex flex-col gap-5">
 
+                      <div className="w-full flex flex-col gap-3">
+                        <span>Compiler Message</span>
+                        <p className="text-sm p-3 bg-background">Success</p>
+                      </div>
 
-              <div className="w-full h-fit mt-5">
-                <h1 className="font-semibold text-[15px]"> Standard output </h1>
-                <div className="w-full bg-background p-3 h-fit rounded-lg mt-2 text-xs">
-                  No Output
-                </div>
-              </div>
+                      <div className="w-full flex flex-col gap-3">
+                        <h1>Execution time</h1>
+                        <p className="text-sm p-3 bg-background">0.976 sec</p>
+                      </div>
 
-              <div className="w-full h-fit mt-5">
-                <h1 className="font-semibold text-[15px]"> Standard error </h1>
-                <div className="w-full bg-background p-3 h-fit rounded-lg mt-2 text-xs">
-                  No Error
-                </div>
-              </div>
+                      <div className="w-full flex flex-col gap-3">
+                        <h1>Memory used</h1>
+                        <p className="text-sm p-3 bg-background">{45.7+index} MiB</p>
+                      </div>
 
+                    </div>
+                  </TabsContent>
+                ))}
+              </Tabs>
             </div>
           </TabsContent>
           <TabsContent value="testresult">
