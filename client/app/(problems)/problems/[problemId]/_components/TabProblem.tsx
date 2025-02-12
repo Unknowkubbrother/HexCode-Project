@@ -157,7 +157,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
               <Tabs defaultValue="testcase_1" className="w-full flex justify-start items-start">
                 <TabsList className="flex flex-col gap-3 mr-5">
                   {Array.from({ length: 10 }).map((_, index) => (
-                    <TabsTrigger key={index} value={`testcase_${index + 1}`} className={`flex justify-start items-center gap-2 ${index % 2 ? "text-green-400" : "text-red-400"}`}>
+                    <TabsTrigger key={index} value={`testcase_${index + 1}`} className={`flex justify-start items-center gap-2 border-b-2 border-background ${index % 2 ? "text-green-400" : "text-red-400"}`}>
                       {(index % 2) ? <CircleCheckBig size={15} />
                         : <CircleX size={15} />
                       }

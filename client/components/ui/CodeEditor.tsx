@@ -27,14 +27,7 @@ export default function CodeEditor(props: {
   setLanguage: (language: string) => void;
 }) {
   const { theme } = useTheme();
-  const fontSize: { [key: string]: string } = {
-    sm: "text-xs",
-    md: "text-sm",
-    lg: "text-lg",
-    xl: "text-xl",
-    "2xl": "text-2xl",
-  };
-
+  
   const SelectMenuLanguage = () => {
     return (
       <DropdownMenu>
@@ -78,7 +71,6 @@ export default function CodeEditor(props: {
           <SelectMenuLanguage />
         </header>
         <div className="w-full h-fit flex">
-          {/* <LineNumbers /> */}
             <CodeMirror value={props.code} className="w-full"
             theme={theme == "dark" ? dracula : materialLight}
             height="560px"
