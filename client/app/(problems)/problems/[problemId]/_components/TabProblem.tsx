@@ -147,7 +147,6 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
 
         </div>
 
-
         {(InputCodeActive === "active") && (
           <Textarea placeholder="Input Code here .." value={InputCode} onChange={(e) => setInputCode(e.target.value)} />
         )}

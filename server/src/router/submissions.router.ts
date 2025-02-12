@@ -1,6 +1,6 @@
-import { Elysia, form, t } from "elysia";
+import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { createSubmission, getSubmission, convertStatusToType } from "@lib/judge0";
+import { createSubmission } from "@lib/judge0";
 
 export const SubmissionRoute = new Elysia({ prefix: "/submission" })
   .use(clerkPlugin())

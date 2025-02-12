@@ -18,8 +18,6 @@ export const runCodeTest = async (data: {
             throw new Error('Error');
         }
 
-        console.log(response.data);
-
         return response.data;
     }catch(error){
         console.error(error);
