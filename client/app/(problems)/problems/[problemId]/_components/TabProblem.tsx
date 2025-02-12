@@ -18,7 +18,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { runCodeTest } from "@/actions/submissionAction";
 import { IJudge0Submission } from "@/interface/judge0";
-import Markdown from 'react-markdown'
 
 export default function TabProblem({ problemData }: { problemData: IProblem }) {
   const [language, setLanguage] = useState<string>("javascript");
@@ -37,11 +36,11 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
     }
     const response = await runCodeTest({
       source_code: code,
+      ...((InputCodeActive == "active" && InputCode) && { stdin: InputCode }),
       language_id: customLanguages[language].language_id,
     });
 
-    await setTestResult(response);
-    console.log(testResult);
+    setTestResult(response);
 
   };
 
@@ -211,13 +210,17 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
             </div>
           </TabsContent>
           <TabsContent value="testresult">
-            <div className="w-full h-[300px] px-3 mt-5">
+            <div className="w-full h-[300px] px-3 pb-5 mt-5 overflow-auto">
               {testResult && (
-                atob(testResult.stdout || "").split("\n").map((line: string, index: number) => (
-                  <p key={index}>{line}</p>
-                ))
+                <>
+                  {atob(testResult.stdout || "").split("\n").map((line: string, index: number) => (
+                    <p key={index}>{line}</p>
+                  ))}
+                  {atob(testResult.stderr || testResult.compile_output || "").split("\n").map((line: string, index: number) => (
+                    <p key={index} className="text-rose-400">{line}</p>
+                  ))}
+                </>
               )}
-              {/* {testResult} */}
             </div>
           </TabsContent>
         </Tabs>
