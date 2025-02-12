@@ -71,7 +71,7 @@ export default function CodeEditor(props: {
           <SelectMenuLanguage />
         </header>
         <div className="w-full h-fit flex">
-            <CodeMirror value={props.code} className="w-full"
+            <CodeMirror value={props.code} className="w-full text-[16px]"
             theme={theme == "dark" ? dracula : materialLight}
             height="560px"
             extensions={[
