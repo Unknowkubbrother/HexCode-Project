@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/toggle-group"
 import { createProblem } from "@/actions/problemAction"
 import { toast } from 'react-toastify';
+import { addTestCase } from "@/actions/TestCaseAction"
 
 const SchemaDifficulty: {
   [key: number]: string[];
@@ -63,20 +64,29 @@ export default function CreateProblem() {
   const [stackLimit, setStackLimit] = useState<number>(64);
   const [maxFileSize, setMaxFileSize] = useState<number>(64);
   const [sourceCode, setSourceCode] = useState<File>();
-  const [TestCase, setTestCase] = useState<{ input: File | undefined; output: File | undefined }[]>([]);
+  const [TestCase, setTestCase] = useState<{ input: File | undefined; output: File | undefined, points: number | 0 }[]>([]);
   const [hint, setHint] = useState<string[]>([]);
 
-  const handlerTestCases = (e: React.ChangeEvent<HTMLInputElement>, index: number, type: "input" | "output") => {
+  const handlerTestCases = (e: React.ChangeEvent<HTMLInputElement>, index: number, type: "input" | "output" ) => {
     const file = e.target.files?.[0];
     if (file) {
       const newTestCases = TestCase.slice();
       if (!newTestCases[index]) {
-        newTestCases[index] = { input: undefined, output: undefined };
+        newTestCases[index] = { input: undefined, output: undefined, points: 0 };
       }
       newTestCases[index][type] = file;
       setTestCase(newTestCases);
     }
   };
+
+  const handlerTestCasePoint = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const newTestCases = TestCase.slice();
+    if (!newTestCases[index]) {
+      newTestCases[index] = { input: undefined, output: undefined, points: 0 };
+    }
+    newTestCases[index].points = parseInt(e.target.value) > 0 ? parseInt(e.target.value) : 0;
+    setTestCase(newTestCases);
+  }
 
   const handlerHint = (e: React.ChangeEvent<HTMLTextAreaElement>, index: number) => {
     const newHint = hint.slice();
@@ -86,7 +96,7 @@ export default function CreateProblem() {
 
   const handlerCountTestCase = (count: number) => {
     if (count > countTestCases) {
-      setTestCase([...TestCase, { input: undefined, output: undefined }]);
+      setTestCase([...TestCase, { input: undefined, output: undefined, points: 0 }]);
     } else {
       setTestCase(TestCase.slice(0, count));
     }
@@ -110,36 +120,36 @@ export default function CreateProblem() {
   }
 
   const CreateProblem = async () => {
-    if (!title || !difficulty || !type || !viewer || !docs || cpuTimeLimit < 0|| memoryLimit < 0 || stackLimit < 0 || maxFileSize < 0|| !sourceCode || !hint || !TestCase || !TestCase.length || !hint.length || !TestCase.some((t) => t.input && t.output && t.input.name && t.output.name) || !hint.some((h) => h) || !type.length) {
+    if (!title || !difficulty || !type.length || !viewer || !docs || cpuTimeLimit < 0 || memoryLimit < 0 || stackLimit < 0 || maxFileSize < 0 || !sourceCode || !hint.length || !hint.every((h) => h) || !TestCase.length || !TestCase.every((t) => t.input && t.output)) {
       toast.error("Please fill in all the required fields.", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
       });
       return;
     }
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("difficulty", difficulty.toString());
-    formData.append("type", JSON.stringify(type));
-    formData.append("description", description);
-    formData.append("viewer", viewer);
-    formData.append("docs", docs as Blob);
-    formData.append("cpu_time_limit", cpuTimeLimit.toString());
-    formData.append("memory_limit", memoryLimit.toString());
-    formData.append("stack_limit", stackLimit.toString());
-    formData.append("max_file_size", maxFileSize.toString());
-    formData.append("source_code", sourceCode as Blob);
-    formData.append(`hint`, JSON.stringify(hint));
-    const created = await createProblem(formData);
+    const formProblem = new FormData();
+    formProblem.append("title", title);
+    formProblem.append("difficulty", difficulty.toString());
+    formProblem.append("type", JSON.stringify(type));
+    formProblem.append("description", description);
+    formProblem.append("viewer", viewer);
+    formProblem.append("docs", docs as Blob);
+    formProblem.append("cpu_time_limit", cpuTimeLimit.toString());
+    formProblem.append("memory_limit", memoryLimit.toString());
+    formProblem.append("stack_limit", stackLimit.toString());
+    formProblem.append("max_file_size", maxFileSize.toString());
+    formProblem.append("source_code", sourceCode as Blob);
+    formProblem.append(`hint`, JSON.stringify(hint));
+    const createdProblem = await createProblem(formProblem);
 
-    if (!created) {
+    if (!createdProblem) {
       toast.error("Failed to create problem. Please try again.", {
         position: "top-right",
         autoClose: 5000,
@@ -152,6 +162,30 @@ export default function CreateProblem() {
       });
       return;
     }
+
+    await TestCase.forEach(async (testcase, index) => {
+      const formTestcase = new FormData();
+      formTestcase.append("problemId", createdProblem.result._id);
+      formTestcase.append("id", (index + 1).toString());
+      formTestcase.append("input", testcase.input as Blob);
+      formTestcase.append("output", testcase.output as Blob);
+      formTestcase.append("points", testcase.points.toString());
+      const createdTestcase = await addTestCase(formTestcase);
+      if (!createdTestcase) {
+        toast.error(`Failed to create testcase ${index + 1}. Please try again.`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
+    });
+
 
     toast.success("Problem created successfully.", {
       position: "top-right",
@@ -264,7 +298,7 @@ export default function CreateProblem() {
           </Label>
           <nav>
             <ul className="flex gap-2 justify-start items-center">
-                <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
+              <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
                 <div className="flex justify-center items-center gap-1">
                   <Cpu size={13} />
                   <span>TIME_LIMIT <span className="text-primary">(s)</span></span>
@@ -272,7 +306,7 @@ export default function CreateProblem() {
                 <Input id="time_limit" type="number" className="w-[100px] h-5 text-center" min={0} step={0.01}
                   value={cpuTimeLimit} onChange={(e) => setCpuTimeLimit(parseFloat(e.target.value) > 0 ? parseFloat(e.target.value) : 0)}
                 />
-                </li>
+              </li>
               <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
                 <div className="flex justify-center items-center gap-1">
                   <Database size={13} />
@@ -341,6 +375,12 @@ export default function CreateProblem() {
                     onChange={(e) => handlerTestCases(e, index, "output")}
                   />
                 </div>
+              </div>
+              <div className="flex gap-3 justify-start items-center">
+                <Label htmlFor={`points_${index + 1}`} className="text-sm">Points</Label>
+                <Input id={`points_${index + 1}`} type="number" min={0} value={TestCase[index]?.points || 0} 
+                  onChange={(e) => handlerTestCasePoint(e, index)}
+                />
               </div>
             </div>
           ))}
