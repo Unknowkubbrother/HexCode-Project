@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { createSubmission, getSubmission, convertStatusToType } from "@lib/judge0";
+import { createSubmission } from "@lib/judge0";
 
 export const SubmissionRoute = new Elysia({ prefix: "/submission" })
   .use(clerkPlugin())
@@ -37,27 +37,27 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
           return error(401, "Unauthorized");
         }
 
-        const { language_id, source_code } = body;
+        const { language_id, source_code , stdin} = body;
         
         const { token } = await createSubmission({
           source_code,
           language_id,
+          ...(stdin && { stdin }),
+          cpu_time_limit: 10,
         });
-
-        let status = "processing";
-        let submission = await getSubmission(token);
-
-        while (status === "processing" || status === "in_queue") {
-          submission = await getSubmission(token);
-          status = convertStatusToType(submission.status.description);
-        }
-
-        console.log({
-          user: auth.userId,
-          status,
+        return await new Promise((resolve, reject) => {
+          const worker = new Worker(`${import.meta.dir}/worker.ts`);
+          worker.postMessage({ token });
+    
+          worker.onmessage = (event) => {
+            resolve(event.data);
+            worker.terminate();
+          };
+    
+          worker.onerror = (err) => {
+            reject(error(500, "Worker Error: " + err.message));
+          };
         });
-
-        return submission;
 
       } catch (e) {
         return error(500, "Internal Server Error");
@@ -66,6 +66,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
     body: t.Object({
       language_id: t.Number(),
       source_code: t.String(),
+      stdin: t.Optional(t.String()),
     }),
   }
   );

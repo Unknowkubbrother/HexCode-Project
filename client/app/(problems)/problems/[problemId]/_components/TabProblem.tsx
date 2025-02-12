@@ -16,13 +16,15 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {runCodeTest} from "@/actions/submissionAction";
+import { runCodeTest } from "@/actions/submissionAction";
+import { IJudge0Submission } from "@/interface/judge0";
 
 export default function TabProblem({ problemData }: { problemData: IProblem }) {
   const [language, setLanguage] = useState<string>("javascript");
   const [code, setCode] = useState<string>(customLanguages[language].template);
   const [InputCode, setInputCode] = useState<string>("");
   const [InputCodeActive, setInputCodeActive] = useState<string>("inactive");
+  const [testResult, setTestResult] = useState<IJudge0Submission | null>(null);
 
   useEffect(() => {
     setCode(customLanguages[language].template);
@@ -34,10 +36,11 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
     }
     const response = await runCodeTest({
       source_code: code,
+      ...((InputCodeActive == "active" && InputCode) && { stdin: InputCode }),
       language_id: customLanguages[language].language_id,
     });
 
-    console.log(response);
+    setTestResult(response);
 
   };
 
@@ -144,7 +147,6 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
 
         </div>
 
-
         {(InputCodeActive === "active") && (
           <Textarea placeholder="Input Code here .." value={InputCode} onChange={(e) => setInputCode(e.target.value)} />
         )}
@@ -197,7 +199,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
 
                       <div className="w-full flex flex-col gap-3">
                         <h1>Memory used</h1>
-                        <p className="text-sm p-3 bg-background">{45.7+index} MiB</p>
+                        <p className="text-sm p-3 bg-background">{45.7 + index} MiB</p>
                       </div>
 
                     </div>
@@ -207,12 +209,17 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
             </div>
           </TabsContent>
           <TabsContent value="testresult">
-            <div className="w-full h-[300px] px-3 mt-5">
-              <p className="text-sm">
-                1
-                2
-                3
-              </p>
+            <div className="w-full h-[300px] px-3 pb-5 mt-5 overflow-auto">
+              {testResult && (
+                <>
+                  {atob(testResult.stdout || "").split("\n").map((line: string, index: number) => (
+                    <p key={index}>{line}</p>
+                  ))}
+                  {atob(testResult.stderr || testResult.compile_output || "").split("\n").map((line: string, index: number) => (
+                    <p key={index} className="text-rose-400">{line}</p>
+                  ))}
+                </>
+              )}
             </div>
           </TabsContent>
         </Tabs>

@@ -4,6 +4,7 @@ import getSession from "@/hooks/use-session";
 
 export const runCodeTest = async (data: {
     source_code : string,
+    stdin?: string,
     language_id : number,
 }) => {
     try{
@@ -16,8 +17,6 @@ export const runCodeTest = async (data: {
         if (!response) {
             throw new Error('Error');
         }
-
-        console.log(response.data);
 
         return response.data;
     }catch(error){
