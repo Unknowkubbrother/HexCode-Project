@@ -16,15 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-
 
 export default function TabProblem({ problemData }: { problemData: IProblem }) {
   const [language, setLanguage] = useState<string>("javascript");
@@ -190,7 +181,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
 
                       <div className="w-full flex flex-col gap-3">
                         <h1>Memory used</h1>
-                        <p className="text-sm p-3 bg-background">45.7 MiB</p>
+                        <p className="text-sm p-3 bg-background">{45.7+index} MiB</p>
                       </div>
 
                     </div>
