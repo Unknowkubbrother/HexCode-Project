@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { createSubmission,getSubmission , convertStatusToType} from "@lib/judge0";
+import { createSubmission, getSubmission, convertStatusToType } from "@lib/judge0";
 
 export const SubmissionRoute = new Elysia({ prefix: "/submission" })
   .use(clerkPlugin())
@@ -12,11 +12,11 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
           return error(401, "Unauthorized");
         }
 
-        
+
         return {
           msg: "success",
         }
-        
+
       } catch (e) {
         return error(500, "Internal Server Error");
       }
@@ -24,7 +24,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
     {
       body: t.Object({
         problemId: t.String(),
-        
+
       }),
     }
   )
@@ -38,8 +38,8 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
         }
 
         const { language_id, source_code } = body;
-
-        const {token} = await createSubmission({
+        
+        const { token } = await createSubmission({
           source_code,
           language_id,
         });
@@ -47,20 +47,25 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
         let status = "processing";
         let submission = await getSubmission(token);
 
-        while(status === "processing" || status === "in_queue"){
-            submission = await getSubmission(token);
-            status = convertStatusToType(submission.status.description);
+        while (status === "processing" || status === "in_queue") {
+          submission = await getSubmission(token);
+          status = convertStatusToType(submission.status.description);
         }
 
+        console.log({
+          user: auth.userId,
+          status,
+        });
+
         return submission;
-        
+
       } catch (e) {
         return error(500, "Internal Server Error");
       }
-    },{
-      body: t.Object({
-        language_id: t.Number(),
-        source_code: t.String(),
-      }),
-    }
+    }, {
+    body: t.Object({
+      language_id: t.Number(),
+      source_code: t.String(),
+    }),
+  }
   );
