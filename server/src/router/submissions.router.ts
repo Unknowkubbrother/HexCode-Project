@@ -43,19 +43,16 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
           source_code,
           language_id,
         });
-        
-        let status = "processing";
 
-        while (status != "accepted"){ 
-           const submission = await getSubmission(token);
-           status = convertStatusToType(
-              submission.status.description
-           );
-           if (status == "accepted"){
-            return submission;
-           }
+        let status = "processing";
+        let submission = await getSubmission(token);
+
+        while(status === "processing" || status === "in_queue"){
+            submission = await getSubmission(token);
+            status = convertStatusToType(submission.status.description);
         }
-        
+
+        return submission;
         
       } catch (e) {
         return error(500, "Internal Server Error");
