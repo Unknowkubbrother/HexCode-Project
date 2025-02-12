@@ -85,8 +85,6 @@ export const getSubmission = async (
         },
     );
 
-    console.log(response);
-
     return response.json();
 };
 
