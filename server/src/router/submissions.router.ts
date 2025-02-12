@@ -1,4 +1,4 @@
-import { Elysia, t } from "elysia";
+import { Elysia, form, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { createSubmission, getSubmission, convertStatusToType } from "@lib/judge0";
 
@@ -37,11 +37,12 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
           return error(401, "Unauthorized");
         }
 
-        const { language_id, source_code } = body;
+        const { language_id, source_code , stdin} = body;
         
         const { token } = await createSubmission({
           source_code,
           language_id,
+          ...(stdin && { stdin }),
           cpu_time_limit: 10,
         });
         return await new Promise((resolve, reject) => {
@@ -65,6 +66,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
     body: t.Object({
       language_id: t.Number(),
       source_code: t.String(),
+      stdin: t.Optional(t.String()),
     }),
   }
   );
