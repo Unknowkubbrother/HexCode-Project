@@ -44,16 +44,19 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
           language_id,
           cpu_time_limit: 10,
         });
-
-        let status = "processing";
-        let submission = await getSubmission(token);
-
-        while (status === "processing" || status === "in_queue") {
-          submission = await getSubmission(token);
-          status = convertStatusToType(submission.status.description);
-        }
-
-        return submission;
+        return await new Promise((resolve, reject) => {
+          const worker = new Worker(`${import.meta.dir}/worker.ts`);
+          worker.postMessage({ token });
+    
+          worker.onmessage = (event) => {
+            resolve(event.data);
+            worker.terminate();
+          };
+    
+          worker.onerror = (err) => {
+            reject(error(500, "Worker Error: " + err.message));
+          };
+        });
 
       } catch (e) {
         return error(500, "Internal Server Error");
