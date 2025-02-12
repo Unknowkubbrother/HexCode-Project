@@ -42,6 +42,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
         const { token } = await createSubmission({
           source_code,
           language_id,
+          cpu_time_limit: 10,
         });
 
         let status = "processing";
@@ -51,11 +52,6 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
           submission = await getSubmission(token);
           status = convertStatusToType(submission.status.description);
         }
-
-        console.log({
-          user: auth.userId,
-          status,
-        });
 
         return submission;
 
