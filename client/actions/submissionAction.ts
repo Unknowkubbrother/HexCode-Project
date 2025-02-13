@@ -23,3 +23,27 @@ export const runCodeTest = async (data: {
         console.error(error);
     }
 };
+
+export const submitCode = async (data: {
+    problemId: string,
+    source_code : string,
+    language_id : number,
+}) => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_END_POINT}/submission/submit`, data, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+        console.log(response.data);
+
+        return response.data;
+    }catch(error){
+        console.error(error);
+    }
+}

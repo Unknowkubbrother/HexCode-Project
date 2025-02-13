@@ -16,8 +16,16 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { runCodeTest } from "@/actions/submissionAction";
+import { runCodeTest,submitCode } from "@/actions/submissionAction";
 import { IJudge0Submission } from "@/interface/judge0";
+import { set } from "lodash";
+
+interface ISubmission{
+  problemId: string,
+  testcases: IJudge0Submission[]
+  points: number
+  success: boolean
+}
 
 export default function TabProblem({ problemData }: { problemData: IProblem }) {
   const [language, setLanguage] = useState<string>("javascript");
@@ -25,6 +33,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
   const [InputCode, setInputCode] = useState<string>("");
   const [InputCodeActive, setInputCodeActive] = useState<string>("inactive");
   const [testResult, setTestResult] = useState<IJudge0Submission | null>(null);
+  const [submissionResult, setSubmissionResult] = useState<ISubmission | null>(null);
 
   useEffect(() => {
     setCode(customLanguages[language].template);
@@ -43,6 +52,21 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
     setTestResult(response);
 
   };
+
+  const handleSubmission = async () => {
+    if (!code) {
+      return;
+    }
+
+    setSubmissionResult(null);
+    const response = await submitCode({
+      problemId: problemData._id,
+      source_code: code,
+      language_id: customLanguages[language].language_id,
+    });
+
+    setSubmissionResult(response);
+  }
 
   return (
     <div className="w-full h-full flex justify-between gap-3">
@@ -142,7 +166,9 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
             <Button size='sm' variant='outline' className="duration-300 hover:bg-green-400"
               onClick={handleRunCodeTest}
             >Run code Test</Button>
-            <Button size='sm' className="duration-300 hover:scale-105">Submit</Button>
+            <Button size='sm' className="duration-300 hover:scale-105"
+              onClick={handleSubmission}
+            >Submit</Button>
           </div>
 
         </div>
@@ -172,40 +198,56 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
           </TabsList>
           <TabsContent value="testcase">
             <div className="w-full h-fit p-3">
+              {submissionResult ? 
               <Tabs defaultValue="testcase_1" className="w-full flex justify-start items-start">
                 <TabsList className="flex flex-col gap-3 mr-5">
-                  {Array.from({ length: 10 }).map((_, index) => (
-                    <TabsTrigger key={index} value={`testcase_${index + 1}`} className={`flex justify-start items-center gap-2 border-b-2 border-background ${index % 2 ? "text-green-400" : "text-red-400"}`}>
-                      {(index % 2) ? <CircleCheckBig size={15} />
-                        : <CircleX size={15} />
-                      }
-                      <span>Test Case {index + 1}</span>
-                    </TabsTrigger>
-                  ))}
+                  {
+                    submissionResult.testcases.map((testcase, index) => (
+                      <TabsTrigger key={index} value={`testcase_${index + 1}`} className={`flex justify-start items-center gap-2 border-b-2 border-background ${testcase.status.description === "Accepted" ? "text-green-400" : "text-red-400"}`}>
+                        {(testcase.status.description === "Accepted") ? <CircleCheckBig size={15}/>
+                          : <CircleX size={15} />
+                        }
+                        <span>Test Case {index + 1}</span>
+                      </TabsTrigger>
+                    ))
+                  }
                 </TabsList>
-                {Array.from({ length: 10 }).map((_, index) => (
-                  <TabsContent key={index} value={`testcase_${index + 1}`} className="w-full p-5">
-                    <div className="w-full flex flex-col gap-5">
+                {
+                  submissionResult.testcases.map((testcase, index) => (
+                    <TabsContent key={index} value={`testcase_${index + 1}`} className="w-full px-5 pb-5">
+        
+                      <div className="w-full flex flex-col gap-5">
 
                       <div className="w-full flex flex-col gap-3">
-                        <span>Compiler Message</span>
-                        <p className="text-sm p-3 bg-background">Success</p>
-                      </div>
+                          <span>Points</span>
+                          <p className="text-sm p-3 bg-background">{testcase.points}</p>
+                        </div>
 
-                      <div className="w-full flex flex-col gap-3">
-                        <h1>Execution time</h1>
-                        <p className="text-sm p-3 bg-background">0.976 sec</p>
-                      </div>
+                        <div className="w-full flex flex-col gap-3">
+                          <span>Compiler Message</span>
+                          <p className="text-sm p-3 bg-background">{testcase.status.description}</p>
+                        </div>
 
-                      <div className="w-full flex flex-col gap-3">
-                        <h1>Memory used</h1>
-                        <p className="text-sm p-3 bg-background">{45.7 + index} MiB</p>
-                      </div>
+                        <div className="w-full flex flex-col gap-3">
+                          <h1>Execution time</h1>
+                          <p className="text-sm p-3 bg-background">{testcase.time || 0} sec</p>
+                        </div>
 
-                    </div>
-                  </TabsContent>
-                ))}
+                        <div className="w-full flex flex-col gap-3">
+                          <h1>Memory used</h1>
+                          <p className="text-sm p-3 bg-background">{(Number(testcase.memory)/1024).toFixed(3) || 0} MiB</p>
+                        </div>
+
+                      </div>
+                    </TabsContent>
+                  ))
+                }
               </Tabs>
+              : (
+                <div className="w-full h-[300px] flex justify-center items-center gap-3">
+                  <h1 className="text-sm font-semibold">No Submission</h1>
+                </div>
+              )}
             </div>
           </TabsContent>
           <TabsContent value="testresult">
