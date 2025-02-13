@@ -235,7 +235,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
 
                         <div className="w-full flex flex-col gap-3">
                           <h1>Memory used</h1>
-                          <p className="text-sm p-3 bg-background">{testcase.memory || 0} MiB</p>
+                          <p className="text-sm p-3 bg-background">{(Number(testcase.memory)/1024).toFixed(3) || 0} MiB</p>
                         </div>
 
                       </div>
