@@ -43,14 +43,16 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
   }, [language]);
 
   const handleRunCodeTest = async () => {
-    if (!code) {
+    const submisCode: string = FileCode || code;
+
+    if (!submisCode) {
       return;
     }
 
     setTestResult(null);
 
     const response = await runCodeTest({
-      source_code: code,
+      source_code: submisCode,
       ...((InputCodeActive == "active" && InputCode) && { stdin: InputCode }),
       language_id: customLanguages[language].language_id,
     });
