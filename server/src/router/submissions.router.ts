@@ -56,6 +56,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
                 resolve({
                 ...event.data,
                 testcaseId: idx,
+                points: event.data.status.description === "Accepted" ? testcase.points : 0,
                 });
               worker.terminate();
             };
@@ -75,6 +76,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
           });
           return points;
         }
+        
         const submissionData = {
           clerkId: auth.userId,
           problemId: problemId,
@@ -91,8 +93,6 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
         }
 
         return {
-          _id: submissioned._id,
-          clerkId: submissioned.clerkId,
           problemId: submissioned.problemId,
           testcases: submissioned.testcases,
           points: submissioned.points,

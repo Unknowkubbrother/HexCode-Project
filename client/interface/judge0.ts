@@ -16,4 +16,6 @@ export interface IJudge0Submission {
             | 'Runtime Error (NZEC)'
             | 'Time Limit Exceeded';
     };
+    testcaseId?: number;
+    points?: number;
 }
