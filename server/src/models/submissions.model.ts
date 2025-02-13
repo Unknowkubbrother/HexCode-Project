@@ -34,6 +34,15 @@ const SubmissionSchema = new Schema(
 
 export const SubmissionModel = model("submissions", SubmissionSchema);
 
+export const createSubmissionDB = (values: {
+  clerkId: string;
+  problemId: string;
+  testcases: Object[];
+  points: number;
+  source_code: string;
+  success: boolean;
+}) => new SubmissionModel(values).save().then((submission) => submission.toObject());
+
 export const getSubmitbyClerkId = (clerkId: string) => SubmissionModel.find({ clerkId: clerkId });
 
 export const getSubmitById = (problemId: string,clerkId:string) => SubmissionModel.find({problemId:problemId,clerkId:clerkId});

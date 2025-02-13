@@ -5,6 +5,7 @@ import { getProblemById } from "@/models/problems.model";
 import { getTestCasesByProblemId } from "@/models/testcases.model";
 import {min} from "mathjs"
 import { IJudge0Submission } from "@/interface/judge0.interface";
+import {createSubmissionDB} from "@/models/submissions.model"
 
 export const SubmissionRoute = new Elysia({ prefix: "/submission" })
   .use(clerkPlugin())
@@ -65,10 +66,37 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
           });
         }));
 
-        console.log(submission[0]);
+        const calculatePoints = (submission: IJudge0Submission[]) => {
+          let points = 0;
+          submission.forEach((sub : IJudge0Submission) => {
+            if (sub.status.description === "Accepted") {
+              points += testcases[sub.testcaseId].points;
+            }
+          });
+          return points;
+        }
+        const submissionData = {
+          clerkId: auth.userId,
+          problemId: problemId,
+          testcases: submission,
+          points: calculatePoints(submission),
+          source_code: source_code,
+          success: submission.every((sub : IJudge0Submission) => sub.status.description === "Accepted"),
+        }
+
+        const submissioned = await createSubmissionDB(submissionData);
+
+        if (!submissioned) {
+          return error(500, "Failed to submit");
+        }
 
         return {
-          msg: "Submission Successful",
+          _id: submissioned._id,
+          clerkId: submissioned.clerkId,
+          problemId: submissioned.problemId,
+          testcases: submissioned.testcases,
+          points: submissioned.points,
+          success: submissioned.success,
         };
 
       } catch (e) {
