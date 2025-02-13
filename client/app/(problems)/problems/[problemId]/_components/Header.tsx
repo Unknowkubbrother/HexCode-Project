@@ -30,7 +30,7 @@ export default function Header({ title, points, maxPoints, submissions, difficul
             Submissions : <span className="dark:text-white text-black w-[5ch]">{submissions}</span>
           </span>
         </div>
-        <Progress value={points} max={maxPoints || 100} />
+        <Progress value={(points / Number(maxPoints)) * 100} max={100}/>
       </div>
     </div>
   );
