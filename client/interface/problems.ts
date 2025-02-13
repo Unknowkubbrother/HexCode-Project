@@ -32,6 +32,7 @@ export interface IProblem {
     memory_limit?: number;
     stack_limit?: number;
     max_file_size?: number;
+    maxPoints?: number;
     createdAt?: string;
     updatedAt?: string;
 }
