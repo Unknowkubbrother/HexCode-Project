@@ -33,6 +33,7 @@ export interface IProblem {
     stack_limit?: number;
     max_file_size?: number;
     maxPoints?: number;
+    myMaxPoints?: number;
     createdAt?: string;
     updatedAt?: string;
 }

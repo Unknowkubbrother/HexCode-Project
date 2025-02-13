@@ -1,11 +1,11 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { createSubmission } from "@lib/judge0";
-import { getProblemById } from "@/models/problems.model";
+import { getProblemById , updateCountSubmissionByProblemId,updateCountAcceptedByProblemId} from "@/models/problems.model";
 import { getTestCasesByProblemId } from "@/models/testcases.model";
 import {min} from "mathjs"
 import { IJudge0Submission } from "@/interface/judge0.interface";
-import {createSubmissionDB} from "@/models/submissions.model"
+import {createSubmissionDB,getIsAcceptedByProblemAndClerkId} from "@/models/submissions.model"
 
 export const SubmissionRoute = new Elysia({ prefix: "/submission" })
   .use(clerkPlugin())
@@ -22,6 +22,12 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
 
         if (!problem) {
           return error(404, "Problem not found");
+        }
+
+        const updatedProblem = await updateCountSubmissionByProblemId(problemId, { submissions: problem.submissions + 1 });
+
+        if (!updatedProblem) {
+          return error(500, "Failed to update problem submission count");
         }
 
         const { status } = problem;
@@ -76,6 +82,18 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
           });
           return points;
         }
+
+        const isAccepted = submission.every((sub : IJudge0Submission) => sub.status.description === "Accepted");
+
+        const isAcceptedDB = await getIsAcceptedByProblemAndClerkId(problemId,auth.userId);
+        
+        if (isAccepted && !isAcceptedDB) {
+          const updatedProblem = await updateCountAcceptedByProblemId(problemId, { accepted: problem.accepted + 1 });
+
+          if (!updatedProblem) {
+            return error(500, "Failed to update problem accepted count");
+          }
+        }
         
         const submissionData = {
           clerkId: auth.userId,
@@ -83,7 +101,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
           testcases: submission,
           points: calculatePoints(submission),
           source_code: source_code,
-          success: submission.every((sub : IJudge0Submission) => sub.status.description === "Accepted"),
+          success: isAccepted,
         }
 
         const submissioned = await createSubmissionDB(submissionData);

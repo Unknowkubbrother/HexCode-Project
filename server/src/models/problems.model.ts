@@ -104,3 +104,9 @@ export const getFileByProblemId = (id: string) =>
   ProblemModel.findById(id).then((problem) => problem?.docs);
 export const getProblemByClerkIdAndStatus = (clerkId: string, status: string) =>
   ProblemModel.find({ clerkId: clerkId, status: status });
+
+export const updateCountSubmissionByProblemId = (id: string, values: object) =>
+  ProblemModel.findByIdAndUpdate(id, values);
+
+export const updateCountAcceptedByProblemId = (id: string, values: object) =>
+  ProblemModel.findByIdAndUpdate(id, values);

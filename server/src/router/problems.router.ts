@@ -5,6 +5,7 @@ import { getSubmitbyClerkId } from "@/models/submissions.model";
 import { getSumPointByProblemId} from "@/models/testcases.model";
 import { toArray } from "lodash";
 import { fileExtension } from "@lib/utils";
+import {getTopSubmissionByProblemAndClerkId } from "@/models/submissions.model";
 
 /**
  * @description ProblemRoute
@@ -214,8 +215,13 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
    * @description get problem by id
    */
 
-  .get("get/:id", async ({ params, error }) => {
+  .get("get/:id", async ({ params, error , auth}) => {
       try {
+
+        if (!auth?.userId) {
+          return error(401, "Unauthorized");
+        }
+
         const { id } = params;
 
         const problem = await getProblemById(id);
@@ -225,6 +231,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         }
 
         const point = await getSumPointByProblemId(problem._id.toString());
+        const TopPointMySubmission = await getTopSubmissionByProblemAndClerkId(problem._id.toString(),auth.userId);
 
         return {
           result: {
@@ -241,6 +248,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
             stack_limit: problem.stack_limit,
             max_file_size: problem.max_file_size,
             maxPoints: point[0]?.total || 0,
+            myMaxPoints: TopPointMySubmission?.points || 0,
           },
         };
       } catch (e) {

@@ -21,7 +21,7 @@ export default function ItemProblem({ problem, itself }: { problem: ListProblemI
       <div className="w-full flex gap-3 justify-start items-center">
         <span>
           <span className="text-rose-500">Success Rate</span>
-          <span> : {problem.successRate}%</span>
+          <span> : {Number(problem.successRate).toFixed(3)}%</span>
         </span>
         <span>
           <span className="text-green-500">Accepted</span>

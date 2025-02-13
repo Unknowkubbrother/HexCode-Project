@@ -36,6 +36,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
   const [InputCodeActive, setInputCodeActive] = useState<string>("inactive");
   const [testResult, setTestResult] = useState<IJudge0Submission | null>(null);
   const [submissionResult, setSubmissionResult] = useState<ISubmission | null>(null);
+  const [FileCode, setFileCode] = useState<string>("");
 
   useEffect(() => {
     setCode(customLanguages[language].template);
@@ -59,14 +60,17 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
   };
 
   const handleSubmission = async () => {
-    if (!code) {
+
+    const submisCode: string = FileCode || code;
+
+    if (!submisCode) {
       return;
     }
 
     setSubmissionResult(null);
     const response = await submitCode({
       problemId: problemData._id,
-      source_code: code,
+      source_code: submisCode,
       language_id: customLanguages[language].language_id,
     });
 
@@ -159,7 +163,19 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
           <div className="flex justify-start items-center gap-3">
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <label htmlFor="code" className="text-sm font-medium leading-none">Upload Code</label>
-              <Input id="code" type="file" placeholder="Upload Code" className="w-[300px]" />
+              <Input id="code" type="file" placeholder="Upload Code" className="w-[300px]"
+                onChange={(e) => {
+                  setFileCode("");
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      setFileCode(reader.result as string);
+                    };
+                    reader.readAsText(file);
+                  }
+                }}
+              />
             </div>
             <div className="flex gap-2 w-full mt-5">
               <Checkbox id="InputCodeActive" value={InputCodeActive} onClick={() => setInputCodeActive(InputCodeActive === "inactive" ? "active" : "inactive")} />
@@ -213,7 +229,7 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
                         <span className="mx-1">{submissionResult.points}</span>
                         /
                         <span className="mx-1">{problemData?.maxPoints}</span></span>
-                      <Progress value={(submissionResult.points / Number(problemData.maxPoints)) * 100} max={100}/>
+                      <Progress value={(submissionResult.points / Number(problemData.maxPoints)) * 100} max={100} />
                     </div>
                   </div>
                   <Tabs defaultValue="testcase_1" className="w-full flex justify-start items-start">

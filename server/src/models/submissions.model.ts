@@ -45,4 +45,12 @@ export const createSubmissionDB = (values: {
 
 export const getSubmitbyClerkId = (clerkId: string) => SubmissionModel.find({ clerkId: clerkId });
 
+export const getTopSubmissionByProblemAndClerkId = (problemId: string, clerkId: string) => {
+  return SubmissionModel.findOne({ problemId: problemId, clerkId: clerkId }).sort({ points: -1 });
+}
+
+export const getIsAcceptedByProblemAndClerkId = (problemId: string, clerkId: string) => {
+  return SubmissionModel.findOne({ problemId: problemId, clerkId: clerkId, success: true });
+}
+
 export const getSubmitById = (problemId: string,clerkId:string) => SubmissionModel.find({problemId:problemId,clerkId:clerkId});
