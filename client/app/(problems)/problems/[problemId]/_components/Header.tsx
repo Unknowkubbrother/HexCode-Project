@@ -8,9 +8,10 @@ interface HeaderProps {
   maxPoints: number;
   submissions: number;
   difficulty: number;
+  accpeted: number;
 }
 
-export default function Header({ title, points, maxPoints, submissions, difficulty }: HeaderProps) {
+export default function Header({ title, points, maxPoints, submissions, difficulty , accpeted}: HeaderProps) {
 
   return (
     <div className="w-full h-fit py-5 bg-bgsecondary flex justify-around items-center">
@@ -28,6 +29,9 @@ export default function Header({ title, points, maxPoints, submissions, difficul
           </span>
           <span className="text-sm text-[#9CA3AF]">
             Submissions : <span className="dark:text-white text-black w-[5ch]">{submissions}</span>
+          </span>
+          <span className="text-sm text-[#9CA3AF]">
+            Accpeted : <span className="dark:text-white text-black w-[5ch]">{accpeted}</span>
           </span>
         </div>
         <Progress value={(points / Number(maxPoints)) * 100} max={100}/>

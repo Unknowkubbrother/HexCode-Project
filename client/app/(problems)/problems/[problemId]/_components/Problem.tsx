@@ -8,7 +8,7 @@ export default async function Problem({ problemId }: {problemId : string}) {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <Header title={result?.title} points={result?.myMaxPoints} maxPoints={result?.maxPoints} submissions={result?.submissions} difficulty={result?.difficulty}/>
+      <Header title={result?.title} points={result?.myMaxPoints} maxPoints={result?.maxPoints} submissions={result?.submissions} difficulty={result?.difficulty} accpeted={result?.accepted}/>
       <div className="w-full h-fit p-2">
         <Tabs defaultValue="problem" className="w-full">
           <header className="w-full flex">
