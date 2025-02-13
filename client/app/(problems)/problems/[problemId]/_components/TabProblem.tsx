@@ -16,10 +16,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { runCodeTest,submitCode } from "@/actions/submissionAction";
+import { runCodeTest, submitCode } from "@/actions/submissionAction";
 import { IJudge0Submission } from "@/interface/judge0";
+import { Progress } from "@/components/ui/progress";
+import Image from "next/image";
+import logo from "@/assets/logo.svg";
 
-interface ISubmission{
+interface ISubmission {
   problemId: string,
   testcases: IJudge0Submission[]
   points: number
@@ -42,6 +45,9 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
     if (!code) {
       return;
     }
+
+    setTestResult(null);
+
     const response = await runCodeTest({
       source_code: code,
       ...((InputCodeActive == "active" && InputCode) && { stdin: InputCode }),
@@ -197,61 +203,74 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
           </TabsList>
           <TabsContent value="testcase">
             <div className="w-full h-fit p-3">
-              {submissionResult ? 
-              <Tabs defaultValue="testcase_1" className="w-full flex justify-start items-start">
-                <TabsList className="flex flex-col gap-3 mr-5">
-                  {
-                    submissionResult.testcases.map((testcase, index) => (
-                      <TabsTrigger key={index} value={`testcase_${index + 1}`} className={`flex justify-start items-center gap-2 border-b-2 border-background ${testcase.status.description === "Accepted" ? "text-green-400" : "text-red-400"}`}>
-                        {(testcase.status.description === "Accepted") ? <CircleCheckBig size={15}/>
-                          : <CircleX size={15} />
-                        }
-                        <span>Test Case {index + 1}</span>
-                      </TabsTrigger>
-                    ))
-                  }
-                </TabsList>
-                {
-                  submissionResult.testcases.map((testcase, index) => (
-                    <TabsContent key={index} value={`testcase_${index + 1}`} className="w-full px-5 pb-5">
-        
-                      <div className="w-full flex flex-col gap-5">
+              {submissionResult ?
+                <div className="w-full flex flex-col gap-5">
+                  <div className="w-[90%] m-auto flex justify-between items-center gap-3">
+                    <Image src={logo} width={50} height={50} alt="logo"></Image>
+                    <div className="w-full flex flex-col gap-3">
+                      <span>
+                        <span className="font-semibold">Points : </span>
+                        <span className="mx-1">{submissionResult.points}</span>
+                        /
+                        <span className="mx-1">{problemData?.maxPoints}</span></span>
+                      <Progress value={(submissionResult.points / Number(problemData.maxPoints)) * 100} max={100}/>
+                    </div>
+                  </div>
+                  <Tabs defaultValue="testcase_1" className="w-full flex justify-start items-start">
+                    <TabsList className="flex flex-col gap-3 mr-5">
+                      {
+                        submissionResult.testcases.map((testcase, index) => (
+                          <TabsTrigger key={index} value={`testcase_${index + 1}`} className={`flex justify-start items-center gap-2 border-b-2 border-background ${testcase.status.description === "Accepted" ? "text-green-400" : "text-red-400"}`}>
+                            {(testcase.status.description === "Accepted") ? <CircleCheckBig size={15} />
+                              : <CircleX size={15} />
+                            }
+                            <span>Test Case {index + 1}</span>
+                          </TabsTrigger>
+                        ))
+                      }
+                    </TabsList>
+                    {
+                      submissionResult.testcases.map((testcase, index) => (
+                        <TabsContent key={index} value={`testcase_${index + 1}`} className="w-full px-5 pb-5">
 
-                      <div className="w-full flex flex-col gap-3">
-                          <span>Points</span>
-                          <p className="text-sm p-3 bg-background">{testcase.points}</p>
-                        </div>
+                          <div className="w-full flex flex-col gap-5">
 
-                        <div className="w-full flex flex-col gap-3">
-                          <span>Compiler Message</span>
-                          <p className="text-sm p-3 bg-background">{testcase.status.description}</p>
-                        </div>
+                            <div className="w-full flex flex-col gap-3">
+                              <span>Points</span>
+                              <p className="text-sm p-3 bg-background">{testcase.points}</p>
+                            </div>
 
-                        <div className="w-full flex flex-col gap-3">
-                          <h1>Execution time</h1>
-                          <p className="text-sm p-3 bg-background">{testcase.time || 0} sec</p>
-                        </div>
+                            <div className="w-full flex flex-col gap-3">
+                              <span>Compiler Message</span>
+                              <p className="text-sm p-3 bg-background">{testcase.status.description}</p>
+                            </div>
 
-                        <div className="w-full flex flex-col gap-3">
-                          <h1>Memory used</h1>
-                          <p className="text-sm p-3 bg-background">{(Number(testcase.memory)/1024).toFixed(3) || 0} MiB</p>
-                        </div>
+                            <div className="w-full flex flex-col gap-3">
+                              <h1>Execution time</h1>
+                              <p className="text-sm p-3 bg-background">{testcase.time || 0} sec</p>
+                            </div>
 
-                      </div>
-                    </TabsContent>
-                  ))
-                }
-              </Tabs>
-              : (
-                <div className="w-full h-[300px] flex justify-center items-center gap-3">
-                  <h1 className="text-sm font-semibold">No Submission</h1>
+                            <div className="w-full flex flex-col gap-3">
+                              <h1>Memory used</h1>
+                              <p className="text-sm p-3 bg-background">{(Number(testcase.memory) / 1024).toFixed(3) || 0} MiB</p>
+                            </div>
+
+                          </div>
+                        </TabsContent>
+                      ))
+                    }
+                  </Tabs>
                 </div>
-              )}
+                : (
+                  <div className="w-full h-[300px] flex justify-center items-center gap-3">
+                    <h1 className="text-sm font-semibold">No Submission</h1>
+                  </div>
+                )}
             </div>
           </TabsContent>
           <TabsContent value="testresult">
             <div className="w-full h-[300px] px-3 pb-5 mt-5 overflow-auto">
-              {testResult && (
+              {testResult ? (
                 <>
                   {atob(testResult.stdout || "").split("\n").map((line: string, index: number) => (
                     <p key={index}>{line}</p>
@@ -260,6 +279,10 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
                     <p key={index} className="text-rose-400">{line}</p>
                   ))}
                 </>
+              ) : (
+                <div className="w-full h-full flex justify-center items-center">
+                  <h1 className="text-sm font-semibold">No Test Result</h1>
+                </div>
               )}
             </div>
           </TabsContent>

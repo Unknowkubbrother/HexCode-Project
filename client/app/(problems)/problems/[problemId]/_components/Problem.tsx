@@ -19,7 +19,7 @@ export default async function Problem({ problemId }: {problemId : string}) {
           </header>
           <div className="w-full h-fit rounded-b-lg rounded-lg mt-2">
             <TabsContent value="problem">
-              <TabProblem problemData={result} />
+              <TabProblem problemData={result}/>
             </TabsContent>
             <TabsContent value="submissions">
               Change your password here.
