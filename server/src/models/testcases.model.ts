@@ -35,6 +35,10 @@ export const TestCaseModel = model(
 export const createProblemTestcase = (values: ITestCase) =>
   new TestCaseModel(values).save().then((problem) => problem.toObject());
 
+export const getTestCasesByProblemId = (problemId: string) => TestCaseModel.find({
+    problemId: problemId,
+}).then((testcases) => testcases.map((testcase) => testcase.toObject()));
+
 export const getProblemByIdCaseAndProblemId = (
   idcase: number,
   problemId: string

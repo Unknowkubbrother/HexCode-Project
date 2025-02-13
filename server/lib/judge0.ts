@@ -20,6 +20,7 @@ export const createSubmission = async (body: {
     stack_limit?: number; // In MiB  = > 1024 * KiB
     max_file_size?: number; // In MiB  = > 1024 * KiB
     stdin?: string;
+    expected_output?: string;
 }): Promise<{ token: string }> => {
     const formattedBody = {
         source_code: body.source_code,
@@ -34,11 +35,14 @@ export const createSubmission = async (body: {
             stack_limit: body.stack_limit * 1024,
         }),
         ...(body.max_file_size && {
-            max_file_size: body.max_file_size * 1024,
+            max_file_size: (body.max_file_size * 1024) % 64000,
         }),
         ...(body.stdin && {
             stdin: body.stdin,
         }),
+        ...(body.expected_output && {
+            expected_output: body.expected_output,
+        })
     };
 
     const response = await fetch(`${judge0_api_url}/submissions`, {

@@ -25,6 +25,7 @@ self.onmessage = async (event) => {
 
       self.postMessage(submission);
     } catch (error) {
+      console.log(error);
       self.postMessage({ error: "Failed to process submission" });
     }
   };
