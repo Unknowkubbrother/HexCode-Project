@@ -88,7 +88,13 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
         const isAcceptedDB = await getIsAcceptedByProblemAndClerkId(problemId,auth.userId);
         
         if (isAccepted && !isAcceptedDB) {
-          const updatedProblem = await updateCountAcceptedByProblemId(problemId, { accepted: problem.accepted + 1 });
+          const lastproblem = await getProblemById(problemId);
+          
+          if (!lastproblem) {
+            return error(404, "Problem not found");
+          }
+
+          const updatedProblem = await updateCountAcceptedByProblemId(problemId, { accepted: lastproblem.accepted + 1 });
 
           if (!updatedProblem) {
             return error(500, "Failed to update problem accepted count");
