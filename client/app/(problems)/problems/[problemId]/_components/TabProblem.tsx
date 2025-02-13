@@ -18,7 +18,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { runCodeTest,submitCode } from "@/actions/submissionAction";
 import { IJudge0Submission } from "@/interface/judge0";
-import { set } from "lodash";
 
 interface ISubmission{
   problemId: string,
