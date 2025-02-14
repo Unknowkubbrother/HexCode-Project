@@ -22,6 +22,14 @@ import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
 import logo from "@/assets/logo.svg";
 
+import Markdown from 'react-markdown'
+import rehypeRaw from "rehype-raw";
+import { CodeBlock } from "@/components/ui/code-block";
+import rehypeKatex from 'rehype-katex'
+import remarkMath from 'remark-math'
+import 'katex/dist/katex.min.css' // `rehype-katex` does not import the CSS for you
+import remarkGfm from 'remark-gfm'
+
 interface ISubmission {
   problemId: string,
   testcases: IJudge0Submission[]
@@ -121,9 +129,25 @@ export default function TabProblem({ problemData }: { problemData: IProblem }) {
 
           <div className="w-full h-fit mt-5 flex flex-col">
             <h1 className="text-lg font-semibold">Description</h1>
-            <p className="text-sm mt-5 ml-5">
-              {problemData.description}
-            </p>
+            <div className="mt-5 ml-5">
+              <Markdown className="text-sm" rehypePlugins={[rehypeRaw, rehypeKatex]} remarkPlugins={[remarkMath, remarkGfm]}
+                components={{
+                  code(props) {
+                    const { children, className } = props
+                    const match = /language-(\w+)/.exec(className || '')
+                    return match && (
+                      <CodeBlock
+                        language={match[1]}
+                        code={String(children).replace(/\n$/, '')}
+                        filename={""}
+                        className="drop-shadow-lg bg-background"
+                      />
+                    )
+                  }
+                }}>
+                {problemData.description}
+              </Markdown>
+            </div>
           </div>
 
           <PDFViewer

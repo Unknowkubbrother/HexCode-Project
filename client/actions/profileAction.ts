@@ -19,3 +19,48 @@ export const getProfileByUsername = async (username: string) => {
         console.error(error);
     }
 };
+
+export const followAccount = async (targetClerkId : string) => {
+    try{
+
+        const token = await getSession();
+
+        const response = await axios.put(`${process.env.NEXT_PUBLIC_API_END_POINT}/profile/follow`, {
+            targetClerkId,
+        }, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+        return response.data;
+
+    }catch(error){
+        console.error(error);
+    }
+
+}
+
+export const updateAccountDetail = async (detail : string) => {
+    try{
+
+        const token = await getSession();
+
+        const response = await axios.put(`${process.env.NEXT_PUBLIC_API_END_POINT}/profile/accountDetail`, {
+            detail,
+        }, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+        return response.data;
+
+    }catch(error){
+        console.error(error);
+    }
+}

@@ -1,5 +1,5 @@
 import { getProblemByClerkIdAndStatus } from "@/models/problems.model";
-import { getAccountbyUsername } from "@/models/accounts.model";
+import { getAccountbyUsername, updateFolllowByClerkIdAndTargetClerkId,updateAccountDetail } from "@/models/accounts.model";
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { getSumPointByProblemId } from "@/models/testcases.model";
@@ -21,6 +21,8 @@ export const ProfileRoute = new Elysia({ 'prefix': '/profile' })
       if (!account) {
         return error(404, "Account Not Found");
       }
+
+      const myfollowed = account.followers?.includes(auth.userId);
 
       const filterAccount = {
         clerkId: account.clerkId,
@@ -60,6 +62,7 @@ export const ProfileRoute = new Elysia({ 'prefix': '/profile' })
         status: 200,
         account: filterAccount,
         problem: filterProblem,
+        myfollowed: myfollowed,
         itself: account.clerkId == auth.userId,
       };
 
@@ -72,4 +75,81 @@ export const ProfileRoute = new Elysia({ 'prefix': '/profile' })
       username: t.String(),
     }),
   })
+
+  .put("/follow", async ({ body, auth, error }) => {
+    try {
+
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const { targetClerkId } = body;
+
+      if (auth.userId == targetClerkId) {
+        return error(400, "Can't follow yourself");
+      }
+
+      const account = await updateFolllowByClerkIdAndTargetClerkId(auth.userId, targetClerkId);
+
+      if (!account) {
+        return error(404, "Account Not Found");
+      }
+
+      return {
+        status: 200,
+        message: "Follow Success",
+      };
+
+
+
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+
+  },
+    {
+      body: t.Object({
+        targetClerkId: t.String()
+      }),
+    }
+  )
+
+  .put("/accountDetail", async ({ body, auth, error }) => {
+    try {
+
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const { detail } = body;
+
+      const account = await updateAccountDetail(auth.userId, detail);
+
+      if (!account) {
+        return error(404, "Account Not Found");
+      }
+
+      return {
+        status: 200,
+        message: "Update Detail Success",
+      };
+
+
+
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+
+  },
+    {
+      body: t.Object({
+        detail: t.String()
+      }),
+    }
+  )
+
+
+
 
