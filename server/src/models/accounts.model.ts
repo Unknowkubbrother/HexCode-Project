@@ -67,3 +67,33 @@ export const updateAccount = async (clerkId: string, value: IAccount) =>
 
 export const deleteAccount = async (clerkId: string) => 
     AccountModel.findOneAndDelete({ clerkId }).then((account) => account?.toObject());
+
+export const updateFolllowByClerkIdAndTargetClerkId = async (clerkId : string, targetclerkId : string) => {
+    const account = await AccountModel.findOne({ clerkId });
+    const targetAccount = await AccountModel.findOne({ clerkId: targetclerkId });
+    if(account && targetAccount){
+        account.following = account.following || [];
+        targetAccount.followers = targetAccount.followers || [];
+        
+        const index = account.following.indexOf(targetclerkId);
+        if(index === -1){
+            account.following.push(targetclerkId);
+            targetAccount.followers.push(clerkId);
+        }else{
+            account.following.splice(index, 1);
+            targetAccount.followers.splice(targetAccount.followers.indexOf(clerkId), 1);
+        }
+        await account.save();
+        await targetAccount.save();
+        return account.toObject();
+    }
+}
+
+export const updateAccountDetail = async (clerkId : string, detail : string) => {
+    const account = await AccountModel.findOne({ clerkId });
+    if(account){
+        account.detail = detail;
+        await account.save();
+        return account.toObject();
+    }
+}
