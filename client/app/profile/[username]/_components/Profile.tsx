@@ -110,6 +110,35 @@ export default function Profile({ account, itself, myfollowed }: { account: IAcc
     }
 
 
+    const handlerCreateFirstAccountDetail = async () => {
+
+        const update = await updateAccountDetail(`# Hello World\n\nThis is ${account.username}'s README.md`);
+
+        if (!update) {
+            console.error('update error');
+        }
+
+        setTempAccountDetail(AccountDetail);
+
+        toast.success("Create Success wait 3 sec!!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+
+        setAccountDetailEdit(false);
+
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 3000);
+    }
+
     return (
         <main>
             <div className='w-full flex justify-around items-center p-5'>
@@ -166,7 +195,7 @@ export default function Profile({ account, itself, myfollowed }: { account: IAcc
             </div>
 
 
-            {(account?.detail) && (
+            {(account?.detail) ? (
                 <div className='w-[80%] m-auto border-2 p-5 rounded-lg flex flex-col gap-5'>
                     <div className='w-full flex justify-between items-center px-3 font-semibold'>
                         <span className='text-[10px]'>{account.username} / README.MD</span>
@@ -181,7 +210,7 @@ export default function Profile({ account, itself, myfollowed }: { account: IAcc
                             className='w-full h-[200px] p-3'
                         />
                         :
-                        <Markdown className="text-[12px]" rehypePlugins={[rehypeRaw,rehypeKatex]} remarkPlugins={[remarkMath,remarkGfm]}
+                        <Markdown className="text-[12px]" rehypePlugins={[rehypeRaw, rehypeKatex]} remarkPlugins={[remarkMath, remarkGfm]}
                             components={{
                                 code(props) {
                                     const { children, className } = props
@@ -191,7 +220,7 @@ export default function Profile({ account, itself, myfollowed }: { account: IAcc
                                             language={match[1]}
                                             code={String(children).replace(/\n$/, '')}
                                             filename={""}
-                                            
+
                                             className="drop-shadow-lg bg-bgsecondary"
                                         />
                                     )
@@ -210,6 +239,33 @@ export default function Profile({ account, itself, myfollowed }: { account: IAcc
                         </div>
                     )}
                 </div>
+            ) : (
+                <div className='w-[80%] m-auto border-2 p-5 rounded-lg flex justify-between items-center gap-5'>
+                    <Markdown className="text-[12px]" rehypePlugins={[rehypeRaw, rehypeKatex]} remarkPlugins={[remarkMath, remarkGfm]}
+                        components={{
+                            code(props) {
+                                const { children, className } = props
+                                const match = /language-(\w+)/.exec(className || '')
+                                return match && (
+                                    <CodeBlock
+                                        language={match[1]}
+                                        code={String(children).replace(/\n$/, '')}
+                                        filename={""}
+
+                                        className="drop-shadow-lg bg-bgsecondary"
+                                    />
+                                )
+                            }
+                        }}>
+                        {"Be the first to write a README.md for this account"}
+                    </Markdown>
+                    <Button variant="outline" className='border-sky-500 hover:bg-primary duration-300'
+                        onClick={handlerCreateFirstAccountDetail}
+                    >
+                        Create first README.md
+                    </Button>
+                </div>
+
             )}
         </main>
     )
