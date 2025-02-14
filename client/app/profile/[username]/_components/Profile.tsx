@@ -239,7 +239,7 @@ export default function Profile({ account, itself, myfollowed }: { account: IAcc
                         </div>
                     )}
                 </div>
-            ) : (
+            ) : itself ? (
                 <div className='w-[80%] m-auto border-2 p-5 rounded-lg flex justify-between items-center gap-5'>
                     <Markdown className="text-[12px]" rehypePlugins={[rehypeRaw, rehypeKatex]} remarkPlugins={[remarkMath, remarkGfm]}
                         components={{
@@ -265,8 +265,7 @@ export default function Profile({ account, itself, myfollowed }: { account: IAcc
                         Create first README.md
                     </Button>
                 </div>
-
-            )}
+            ) : <></>}
         </main>
     )
 }
