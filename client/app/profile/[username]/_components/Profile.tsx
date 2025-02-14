@@ -191,7 +191,8 @@ export default function Profile({ account, itself, myfollowed }: { account: IAcc
                                             language={match[1]}
                                             code={String(children).replace(/\n$/, '')}
                                             filename={""}
-                                            className="drop-shadow-lg"
+                                            
+                                            className="drop-shadow-lg bg-bgsecondary"
                                         />
                                     )
                                 }
