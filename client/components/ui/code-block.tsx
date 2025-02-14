@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { oneLight , oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
+import { useTheme } from "next-themes";
 
 type CodeBlockProps = {
   language: string;
@@ -35,6 +36,7 @@ export const CodeBlock = ({
 }: CodeBlockProps) => {
   const [copied, setCopied] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState(0);
+  const { theme } = useTheme();
 
   const tabsExist = tabs.length > 0;
 
@@ -89,7 +91,7 @@ export const CodeBlock = ({
       </div>
       <SyntaxHighlighter
         language={activeLanguage}
-        style={atomDark}
+        style={theme === "dark" ? oneDark : oneLight}
         customStyle={{
           margin: 0,
           padding: 0,
