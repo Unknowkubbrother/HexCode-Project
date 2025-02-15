@@ -15,7 +15,8 @@
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "mathjs": "^14.0.1",
-    "mongoose": "^8.9.1"
+    "mongoose": "^8.9.1",
+    "resend": "^4.1.2"
   },
   "devDependencies": {
     "bun-types": "latest"
