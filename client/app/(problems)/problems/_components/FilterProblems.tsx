@@ -20,6 +20,7 @@ const FilterProblems = () => {
   const searchParams = useSearchParams();
   const [selectedSolve, setselectedSolve] = useState<boolean | undefined>(undefined);
   const [selectedUnSolve, setselectedUnSolve] = useState<boolean | undefined>(undefined);
+  const [searchProblem, setSearchProblem] = useState<string>("");
   const [selectedDifficulty, setselectedDifficulty] = useState<number[]>([]);
   const [selectedSolutionType, setselectedSolutionType] = useState<number[]>(
     []
@@ -48,6 +49,9 @@ const FilterProblems = () => {
     }
     if (selectedSolutionType.length > 0) {
       params.set("type", selectedSolutionType.join(","));
+    }
+    if (searchProblem) {
+      params.set("search", searchProblem.toString());
     }
     return params.toString();
   };
@@ -80,11 +84,22 @@ const FilterProblems = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSolve, selectedUnSolve, selectedDifficulty, selectedSolutionType]);
 
+  const handleSearch = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    const search = createQueryParams();
+    router.push(pathname + "?" + search);
+  }
+
   return (
     <div className="flex flex-col gap-3">
       <div className="flex w-full max-w-sm items-center space-x-2">
-        <Input type="text" placeholder="Search" name="Search"/>
-        <Button type="submit" size="sm">Search</Button>
+        <Input type="text" placeholder="Search" name="Search"
+          value={searchProblem}
+          onChange={(e) => setSearchProblem(e.target.value)}
+        />
+        <Button type="submit" size="sm"
+          onClick={(e) => handleSearch(e)}
+        >Search</Button>
       </div>
       <div className="w-full flex flex-col gap-3 p-6 bg-bgsecondary rounded-2xl">
         <nav

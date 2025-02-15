@@ -7,7 +7,7 @@ export const getProblems = async (searchParams?: {[key: string]: string | string
     try{
         const token = await getSession();
 
-        const search = `?page=${searchParams?.page ?? 1}&pagesize=${searchParams?.pageSize ?? 10}${searchParams?.solve !== undefined ? `&solve=${searchParams?.solve}` : ''}${searchParams?.unsolve !== undefined ? `&unsolve=${searchParams?.unsolve}` : ''}${searchParams?.difficulty ? `&difficulty=[${searchParams?.difficulty}]` : ''}${searchParams?.type ? `&type=[${searchParams?.type}]` : ''}
+        const search = `?page=${searchParams?.page ?? 1}&pagesize=${searchParams?.pageSize ?? 10}${searchParams?.search ? `&search=${searchParams.search}`: ""}${searchParams?.solve !== undefined ? `&solve=${searchParams?.solve}` : ''}${searchParams?.unsolve !== undefined ? `&unsolve=${searchParams?.unsolve}` : ''}${searchParams?.difficulty ? `&difficulty=[${searchParams?.difficulty}]` : ''}${searchParams?.type ? `&type=[${searchParams?.type}]` : ''}
         `;
 
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_END_POINT}/problem/gets${search}`, {

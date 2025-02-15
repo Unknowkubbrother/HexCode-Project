@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { createProblem,updateProblem,getProblemById,ProblemModel} from "@/models/problems.model";
-import { getSubmitbyClerkId } from "@/models/submissions.model";
+import { getSubmitbyClerkId, SubmissionModel } from "@/models/submissions.model";
 import { getSumPointByProblemId} from "@/models/testcases.model";
 import { toArray } from "lodash";
 import { fileExtension } from "@lib/utils";
@@ -128,36 +128,22 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         const page = query?.page || 1;
         const difficulty = query.difficulty ? JSON.parse(query.difficulty) : [];
         const type = query.type ? JSON.parse(query.type) : [];
+        const search = query.search ? query.search : "";
+
+        console.log(query)
 
         const filter = {
           ...(difficulty.length && { difficulty: { $in: difficulty } }),
           ...(type.length && { type: { $in: type } }),
+          ...(search.length && { title: { $regex: search, $options: 'i' } }),
         };
 
-        const submissions = await getSubmitbyClerkId(auth.userId);
-
-        if (query.solve && query.unsolve) {
-          const solvedProblemIds = submissions
-            .filter(sub => sub.success)
-            .map(sub => sub.problemId);
-          const unsolvedProblemIds = submissions
-            .filter(sub => !sub.success)
-            .map(sub => sub.problemId);
-          filter['_id'] = { $in: [...solvedProblemIds, ...unsolvedProblemIds] };
-        } else {
-          if (query.solve) {
-            const solvedProblemIds = submissions
-              .filter(sub => sub.success)
-              .map(sub => sub.problemId);
-            filter['_id'] = { $in: solvedProblemIds };
-          }
-
-          if (query.unsolve) {
-            const unsolvedProblemIds = submissions
-              .filter(sub => !sub.success)
-              .map(sub => sub.problemId);
-            filter['_id'] = { $in: unsolvedProblemIds };
-          }
+        if(query.solve){
+          const submissions = await SubmissionModel.aggregate([{$match:{ clerkId: auth.userId,success:true }},{ $group: { _id: "$problemId"}}]);
+          filter['_id']={$in: submissions}
+        }else if(query.unsolve){
+          const submissions = await SubmissionModel.aggregate([{$match:{ clerkId: auth.userId,success:true }},{ $group: { _id: "$problemId"}}]);
+          filter['_id']={$nin: submissions}
         }
 
         const problems = await ProblemModel.find(filter)
@@ -200,6 +186,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
     {
       query: t.Optional(
         t.Object({
+          search: t.Optional(t.String()),
           page: t.Optional(t.Number()),
           pagesize: t.Optional(t.Number()),
           solve: t.Optional(t.Boolean()),

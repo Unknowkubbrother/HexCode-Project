@@ -138,7 +138,9 @@ export default function CreateProblem() {
     formProblem.append("title", title);
     formProblem.append("difficulty", difficulty.toString());
     formProblem.append("type", JSON.stringify(type));
-    formProblem.append("description", description);
+    if (description){
+      formProblem.append("description", description);
+    }
     formProblem.append("viewer", viewer);
     formProblem.append("docs", docs as Blob);
     formProblem.append("cpu_time_limit", cpuTimeLimit.toString());
