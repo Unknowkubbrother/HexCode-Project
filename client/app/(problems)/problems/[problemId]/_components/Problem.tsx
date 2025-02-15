@@ -2,6 +2,7 @@ import Header from "./Header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TabProblem from "./TabProblem";
 import { getProblemById } from "@/actions/problemAction";
+import Submissions from "./Submissions";
 
 export default async function Problem({ problemId }: {problemId : string}) {
   const { result } = await getProblemById(problemId);
@@ -22,7 +23,7 @@ export default async function Problem({ problemId }: {problemId : string}) {
               <TabProblem problemData={result}/>
             </TabsContent>
             <TabsContent value="submissions">
-              Change your password here.
+              <Submissions problemId={problemId}/>
             </TabsContent>
           </div>
         </Tabs>

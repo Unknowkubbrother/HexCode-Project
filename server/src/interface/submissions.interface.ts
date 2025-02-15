@@ -4,5 +4,6 @@ export interface ISubmission {
     testcases: Array<object>;
     points: Number;
     source_code: string;
+    language_id: number;
     success: boolean;
   }

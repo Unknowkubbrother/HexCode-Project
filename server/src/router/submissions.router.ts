@@ -1,11 +1,11 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { createSubmission } from "@lib/judge0";
+import { createSubmission , getLanguages } from "@lib/judge0";
 import { getProblemById , updateCountSubmissionByProblemId,updateCountAcceptedByProblemId} from "@/models/problems.model";
 import { getTestCasesByProblemId } from "@/models/testcases.model";
 import {min} from "mathjs"
 import { IJudge0Submission } from "@/interface/judge0.interface";
-import {createSubmissionDB,getIsAcceptedByProblemAndClerkId} from "@/models/submissions.model"
+import {createSubmissionDB,getIsAcceptedByProblemAndClerkId,getSubmitByProblemIdAndClerkId} from "@/models/submissions.model"
 
 export const SubmissionRoute = new Elysia({ prefix: "/submission" })
   .use(clerkPlugin())
@@ -107,6 +107,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
           testcases: submission,
           points: calculatePoints(submission),
           source_code: source_code,
+          language_id: language_id,
           success: isAccepted,
         }
 
@@ -179,4 +180,46 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
       stdin: t.Optional(t.String()),
     }),
   }
+  )
+
+  .get(
+    "get/:problemId",
+    async ({ params, error , auth}) => {
+      try {
+
+        if (!auth?.userId) {
+          return error(401, "Unauthorized");
+        }
+
+        const { problemId } = params;
+
+        const submission = await getSubmitByProblemIdAndClerkId(problemId,auth.userId);
+
+        if (!submission) {
+          return error(404, "Submission not found");
+        }
+
+        const listLanguage = await getLanguages();
+
+        const Filtersubmission = submission.map((sub) => {
+          return {
+            _id: sub._id,
+            problemId: sub.problemId,
+            testcases: sub.testcases,
+            points: sub.points,
+            success: sub.success,
+            source_code: sub.source_code,
+            language_id: sub.language_id,
+            createdAt: sub.createdAt,
+            updatedAt: sub.updatedAt,
+            language_name: listLanguage.find((lang) => lang.id === sub.language_id)?.name,
+          };
+        });
+
+        return Filtersubmission;
+
+      } catch (e) {
+        return error(500, "Internal Server Error");
+      }
+    }
   );
