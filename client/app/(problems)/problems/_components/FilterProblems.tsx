@@ -57,6 +57,15 @@ const FilterProblems = () => {
   };
 
   useEffect(() => {
+    if (selectedSolve){
+      setselectedUnSolve(false);
+    }
+    if (selectedUnSolve){
+      setselectedSolve(false);
+    }
+  }, [selectedSolve, selectedUnSolve]);
+
+  useEffect(() => {
     const solve = searchParams.get("solve");
     const unsolve = searchParams.get("unsolve");
     const difficulty = searchParams.get("difficulty");
