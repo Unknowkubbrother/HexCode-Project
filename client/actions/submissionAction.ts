@@ -45,3 +45,22 @@ export const submitCode = async (data: {
         console.error(error);
     }
 }
+
+
+export const getSubmissionByProblemId = async (problemId: string) => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_END_POINT}/submission/get/${problemId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+        
+        return response.data;
+    }catch(error){
+        console.error(error);
+    }
+}

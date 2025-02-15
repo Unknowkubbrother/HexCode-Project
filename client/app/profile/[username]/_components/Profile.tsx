@@ -18,12 +18,14 @@ import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 import 'katex/dist/katex.min.css' // `rehype-katex` does not import the CSS for you
 import remarkGfm from 'remark-gfm'
+import { useClerk } from '@clerk/clerk-react'
 
 export default function Profile({ account, itself, myfollowed }: { account: IAccount, itself: boolean, myfollowed: boolean }) {
     const [followed, setFollowed] = useState(myfollowed);
     const [AccountDetail, setAccountDetail] = useState(account.detail || "");
     const [tempAccountDetail, setTempAccountDetail] = useState(account.detail || "");
     const [AccountDetailEdit, setAccountDetailEdit] = useState(false);
+    const { openUserProfile } = useClerk();
 
     const handlerFollow = async () => {
         const follow = await followAccount(account.clerkId);
@@ -169,7 +171,9 @@ export default function Profile({ account, itself, myfollowed }: { account: IAcc
                 </div>
                 {itself ? (
                     <div className='flex justify-center items-center gap-5'>
-                        <Button variant="outline" className='border-sky-500 hover:bg-primary duration-300'>
+                        <Button variant="outline" className='border-sky-500 hover:bg-primary duration-300'
+                            onClick={() => openUserProfile()}
+                        >
                             Edit Profile
                         </Button>
                     </div>

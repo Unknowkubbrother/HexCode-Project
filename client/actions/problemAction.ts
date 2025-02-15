@@ -1,6 +1,7 @@
 'use server';
 import axios from 'axios';
 import getSession from "@/hooks/use-session";
+import { redirect } from 'next/navigation'
 
 export const getProblems = async (searchParams?: {[key: string]: string | string[] | undefined })  => {
     try{
@@ -35,9 +36,13 @@ export const getProblemById = async (id: string) => {
             throw new Error('Error');
         }
 
+
         return response.data;
     }catch(error){
-        console.error(error);
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+            redirect('/problems');
+        }
+        console.log(error);
     }
 };
 

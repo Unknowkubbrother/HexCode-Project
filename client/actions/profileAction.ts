@@ -1,6 +1,8 @@
 'use server';
 import axios from 'axios';
 import getSession from "@/hooks/use-session";
+import { redirect } from 'next/navigation'
+import { currentUser } from '@clerk/nextjs/server'
 
 export const getProfileByUsername = async (username: string) => {
     try{
@@ -16,6 +18,10 @@ export const getProfileByUsername = async (username: string) => {
 
         return response.data;
     }catch(error){
+        const user = await currentUser();
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+            redirect(`/profile/${user?.username}`);
+        }
         console.error(error);
     }
 };

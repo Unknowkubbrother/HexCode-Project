@@ -23,6 +23,10 @@ const SubmissionSchema = new Schema(
       type: String,
       required: true,
     },
+    language_id: {
+      type: Number,
+      required: true,
+    },
     success: {
       type: Boolean,
       required: true,
@@ -53,4 +57,4 @@ export const getIsAcceptedByProblemAndClerkId = (problemId: string, clerkId: str
   return SubmissionModel.findOne({ problemId: problemId, clerkId: clerkId, success: true });
 }
 
-export const getSubmitById = (problemId: string,clerkId:string) => SubmissionModel.find({problemId:problemId,clerkId:clerkId});
+export const getSubmitByProblemIdAndClerkId = (problemId: string,clerkId:string) => SubmissionModel.find({problemId:problemId,clerkId:clerkId});
