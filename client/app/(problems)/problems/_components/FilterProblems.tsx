@@ -61,6 +61,7 @@ const FilterProblems = () => {
     const unsolve = searchParams.get("unsolve");
     const difficulty = searchParams.get("difficulty");
     const type = searchParams.get("type");
+    const search = searchParams.get("search");
 
     if (solve) {
       setselectedSolve(solve === "true");
@@ -74,9 +75,19 @@ const FilterProblems = () => {
     if (type) {
       setselectedSolutionType(type.split(",").map((v) => Number(v)));
     }
+    if (search) {
+      setSearchProblem(search);
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (searchProblem) {
+      const search = createQueryParams();
+      router.push(pathname + "?" + search);
+    }
+  }, [searchParams.get("search")]);
 
   useEffect(() => {
     const search = createQueryParams();
