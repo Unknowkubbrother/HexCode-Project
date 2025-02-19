@@ -10,9 +10,9 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
   .post("/create", async ({ body, auth, error }) => {
     try {
 
-      // if (!auth?.userId) {
-      //   return error(401, "Unauthorized");
-      // }
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
 
       const { title, description, thumbnail, images, problem, viewer, reward, startTime, endTime } = body;
 
@@ -26,14 +26,14 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "Invalid Viewer error");
       }
 
-      const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active" , clerkId: global.testuserId });
+      const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active" , clerkId: auth?.userId});
       
       if (problemcount != problem.length && problemcount>30) {
         return error(404, "problem incorrect");
       }
 
       const challengeCreated = await createChallenge({
-        clerkId: global.testuserId,
+        clerkId: auth?.userId,
         title,
         description,
         thumbnail,

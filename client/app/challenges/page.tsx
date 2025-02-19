@@ -3,7 +3,6 @@ import { getChallenges } from "@/actions/challengeAction"
 const page = async () => {
 
   const { result } = await getChallenges();
-  console.log(result);
 
   return (
     <Challengs Data={result}/>
