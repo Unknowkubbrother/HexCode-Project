@@ -7,18 +7,12 @@ import {
 } from "@/components/ui/avatar"
 import { Button } from '@/components/ui/button';
 import { Users, Dot, Pen, Crown } from 'lucide-react';
-import Markdown from 'react-markdown'
 import { IAccount } from '@/interface/accounts';
 import { followAccount, updateAccountDetail } from '@/actions/profileAction'
 import { toast } from 'react-toastify';
 import { Textarea } from '@/components/ui/textarea';
-import rehypeRaw from "rehype-raw";
-import { CodeBlock } from "@/components/ui/code-block";
-import rehypeKatex from 'rehype-katex'
-import remarkMath from 'remark-math'
-import 'katex/dist/katex.min.css' // `rehype-katex` does not import the CSS for you
-import remarkGfm from 'remark-gfm'
 import { useClerk } from '@clerk/clerk-react'
+import MarkDown from '@/components/ui/MarkDown';
 
 export default function Profile({ account, itself, myfollowed }: { account: IAccount, itself: boolean, myfollowed: boolean }) {
     const [followed, setFollowed] = useState(myfollowed);
@@ -214,24 +208,7 @@ export default function Profile({ account, itself, myfollowed }: { account: IAcc
                             className='w-full h-[200px] p-3'
                         />
                         :
-                        <Markdown className="text-[12px]" rehypePlugins={[rehypeRaw, rehypeKatex]} remarkPlugins={[remarkMath, remarkGfm]}
-                            components={{
-                                code(props) {
-                                    const { children, className } = props
-                                    const match = /language-(\w+)/.exec(className || '')
-                                    return match && (
-                                        <CodeBlock
-                                            language={match[1]}
-                                            code={String(children).replace(/\n$/, '')}
-                                            filename={""}
-
-                                            className="drop-shadow-lg bg-bgsecondary"
-                                        />
-                                    )
-                                }
-                            }}>
-                            {AccountDetail}
-                        </Markdown>
+                        <MarkDown data={AccountDetail}/>
                     }
                     {AccountDetailEdit && (
                         <div className='w-full flex justify-end items-center'>
@@ -245,24 +222,7 @@ export default function Profile({ account, itself, myfollowed }: { account: IAcc
                 </div>
             ) : itself ? (
                 <div className='w-[80%] m-auto border-2 p-5 rounded-lg flex justify-between items-center gap-5'>
-                    <Markdown className="text-[12px]" rehypePlugins={[rehypeRaw, rehypeKatex]} remarkPlugins={[remarkMath, remarkGfm]}
-                        components={{
-                            code(props) {
-                                const { children, className } = props
-                                const match = /language-(\w+)/.exec(className || '')
-                                return match && (
-                                    <CodeBlock
-                                        language={match[1]}
-                                        code={String(children).replace(/\n$/, '')}
-                                        filename={""}
-
-                                        className="drop-shadow-lg bg-bgsecondary"
-                                    />
-                                )
-                            }
-                        }}>
-                        {"Be the first to write a README.md for this account"}
-                    </Markdown>
+                    <MarkDown data={"Be the first to write a README.md for this account"}/>
                     <Button variant="outline" className='border-sky-500 hover:bg-primary duration-300'
                         onClick={handlerCreateFirstAccountDetail}
                     >

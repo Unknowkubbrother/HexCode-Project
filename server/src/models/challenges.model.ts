@@ -14,6 +14,15 @@ const ChallengeSchema = new Schema(
         type: String,
         required: true
     },
+    thumbnail: {
+        type: String,
+        require: true
+    },
+    images: {
+        type: Array,
+        require: true,
+        default: [],
+    },
     problem: {
         type: Array,
         required: true,
