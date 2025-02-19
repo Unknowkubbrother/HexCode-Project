@@ -37,6 +37,16 @@ const ChallengeSchema = new Schema(
         type: String,
         required: true,
         default: "active",
+    },
+    starttime: {
+        type: Number,
+        required: true,
+        default: "active",
+    },
+    endtime: {
+        type: Number,
+        required: true,
+        default: "active",
     }
   },
   { timestamps: true }
