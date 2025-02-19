@@ -25,7 +25,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       }
 
       if (viewer !== "public" && viewer !== "private") {
-        return error(404, "Invalid Viewer");
+        return error(404, "Invalid Viewer error");
       }
 
       const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active" , clerkId: auth.userId });
