@@ -1,7 +1,6 @@
-'use server';
+"use server";
 import axios from 'axios';
 import getSession from "@/hooks/use-session";
-// import { redirect } from 'next/navigation'
 
 export const getChallengesProblemById = async (id: string) => {
     try{
@@ -19,11 +18,10 @@ export const getChallengesProblemById = async (id: string) => {
         return response.data;
     }catch(error){
         console.log(error);
-        return [];
     }
 };
 
-export const getChallenges = async () => {
+export const getAllChallenges = async () : Promise<any> => {
     try{
         const token = await getSession();
 
@@ -38,6 +36,5 @@ export const getChallenges = async () => {
         return response.data;
     }catch(error){
         console.log(error);
-        return [];
     }
 };
