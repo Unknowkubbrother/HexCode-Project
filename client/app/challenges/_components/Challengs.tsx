@@ -1,13 +1,21 @@
+"use client";
+import { useState,useEffect } from 'react';
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import CardChallenge from "@/components/ui/CardChallenge"
 import {IListChallenge} from '@/interface/challenges'
-import { getChallenges } from "@/actions/challengeAction"
+import { getAllChallenges } from "@/actions/challengeAction";
 
-export default  async function Challengs() {
+export default function Challengs() {
+    const [data, setData] = useState<IListChallenge[]>([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            const {result} = await getAllChallenges();
+            setData(result);
+        }
+        fetchData();
+    }, [])
 
-    const Data: IListChallenge[] = await getChallenges();
-    
     return (
         <main className='w-[90%] m-auto'>
             <header className='my-5 text-lg font-semibold'>Challengs</header>
@@ -38,7 +46,7 @@ export default  async function Challengs() {
                 <div className="w-full h-fit overflow-y-auto mt-10">
                     <div className="w-full h-fit grid grid-cols-5 gap-3">
                         {
-                            Data.map((item, index) => (
+                            data.map((item, index) => (
                                 <CardChallenge key={index} data={item}/>
                             ))
                         }
