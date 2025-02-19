@@ -1,7 +1,8 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { createChallenge } from "../models/challenges.model";
+import { createChallenge , getChallenges } from "../models/challenges.model";
 import { ProblemModel } from "@/models/problems.model";
+import {getAccountbyClerkId} from "@/models/accounts.model";
 
 export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
   .use(clerkPlugin())
@@ -9,33 +10,30 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
   .post("/create", async ({ body, auth, error }) => {
     try {
 
-      console.log(body);
-      if (!auth?.userId) {
-        return error(401, "Unauthorized");
-      }
+      // if (!auth?.userId) {
+      //   return error(401, "Unauthorized");
+      // }
 
       const { title, description, thumbnail, images, problem, viewer, reward, startTime, endTime } = body;
 
-      if (startTime < Date.now() || startTime > Date.now() || endTime < Date.now() || endTime > Date.now()) {
+      if (startTime < Date.now() || endTime < startTime) {
         return error(404, "Invalid Time");
       }
 
-      if (startTime > endTime) {
-        return error(404, "Invalid Time");
-      }
+      console.log("pass");
 
       if (viewer !== "public" && viewer !== "private") {
         return error(404, "Invalid Viewer error");
       }
 
-      const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active" , clerkId: auth.userId });
+      const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active" , clerkId: global.testuserId });
       
-      if (problemcount != problem.length&&problemcount>30) {
+      if (problemcount != problem.length && problemcount>30) {
         return error(404, "problem incorrect");
       }
 
       const challengeCreated = await createChallenge({
-        clerkId: auth.userId,
+        clerkId: global.testuserId,
         title,
         description,
         thumbnail,
@@ -106,7 +104,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
 
       const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active" , clerkId: auth.userId });
       
-      if (problemcount != problem.length&&problemcount>30) {
+      if (problemcount != problem.length && problemcount > 30) {
         return error(404, "problem incorrect");
       }
 
@@ -155,5 +153,48 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       startTime: t.Number(),
       endTime: t.Number(),
     }),
-  }
-  );
+  })
+
+  .get("/gets", async ({ auth, error }) => {
+    try {
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const challenges = await getChallenges();
+
+      if (!challenges) {
+        return error(404, "List Challenge Error");
+      }
+
+      const account = await getAccountbyClerkId(auth.userId);
+
+      if (!account) {
+        return error(404, "Account not found");
+      }
+
+      const filterChallenges = challenges.map((challenge) => {
+        return {
+           _id: challenge._id,
+           avatar: account.avatar,
+            username: account.username,
+            title: challenge.title,
+            thumbnail: challenge.thumbnail,
+            countPlayer: challenge.player?.length || 0,
+            createdAt: challenge.createdAt,
+            updatedAt: challenge.updatedAt,
+        }
+      });
+
+
+      return {
+        status: 200,
+        message: "List Challenge Success",
+        result: filterChallenges,
+      }
+      
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+  });

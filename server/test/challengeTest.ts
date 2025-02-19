@@ -11,7 +11,7 @@ export default function runTest() {
             const images = ["https://wallpapershome.com/images/pages/ico_h/27093.jpg", "https://media.discordapp.net/attachments/1266697909429338208/1341784049168945202/freepik__expand__33474.png?ex=67b74146&is=67b5efc6&hm=17f53670491cb916fb4e291b954e75838df8db013131a371bccd6625d07c7f7c&=&format=webp&quality=lossless&width=550&height=311"];
             const problem = ["67ac9ee19f9d74872a80119b"]
             const viewer = "private";
-            const startTime = Date.now();
+            const startTime = Date.now() + 1000000;
             const endTime = Date.now() + 1000000000;
             const reward = [1000,500,200];
 

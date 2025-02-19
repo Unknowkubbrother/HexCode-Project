@@ -44,19 +44,22 @@ const ChallengeSchema = new Schema(
         default: [],
     },
     status: {
-        type: Number,
+        type: String,
         required: true,
         default: "active",
     },
     startTime: {
         type: Number,
         required: true,
-        default: "active",
     },
     endTime: {
         type: Number,
         required: true,
-        default: "active",
+    },
+    player: {
+        type: Array,
+        required: false,
+        default: [],
     }
   },
   { timestamps: true }
@@ -66,3 +69,6 @@ export const ChallengeModel = model("challenges", ChallengeSchema);
 
 export const createChallenge = async (value: IChallenge) => 
     new ChallengeModel(value).save().then((challenge) => challenge.toObject());
+
+export const getChallenges = async () =>
+    ChallengeModel.find().then((challenges) => challenges.map((challenge) => challenge.toObject()));
