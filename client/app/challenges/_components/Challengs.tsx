@@ -1,8 +1,9 @@
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import CardChallenge from "@/components/ui/CardChallenge"
+import {IListChallenge} from '@/interface/challenges'
 
-export default function Challengs() {
+export default function Challengs({Data} : {Data : IListChallenge[]}) {
     return (
         <main className='w-[90%] m-auto'>
             <header className='my-5 text-lg font-semibold'>Challengs</header>
@@ -33,8 +34,8 @@ export default function Challengs() {
                 <div className="w-full h-fit overflow-y-auto mt-10">
                     <div className="w-full h-fit grid grid-cols-5 gap-3">
                         {
-                            Array.from({ length: 30 }).map((_, index) => (
-                                <CardChallenge key={index} />
+                            Data.map((item, index) => (
+                                <CardChallenge key={index} data={item}/>
                             ))
                         }
                     </div>

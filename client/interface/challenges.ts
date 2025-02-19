@@ -12,4 +12,17 @@ export interface IChallenge {
     startTime: number;
     endTime: number;
     player?: Array<String>;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface IListChallenge {
+    _id: string;
+    avatar: string;
+    username: string;
+    title: string;
+    thumbnail: string;
+    countPlayer: number;
+    createdAt?: string;
+    updatedAt?: string;
 }

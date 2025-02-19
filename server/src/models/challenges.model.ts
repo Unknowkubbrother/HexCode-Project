@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { IChallenge } from "@/interface/challenges.interface";
 
 const ChallengeSchema = new Schema(
   {
@@ -13,6 +14,15 @@ const ChallengeSchema = new Schema(
     description:{
         type: String,
         required: true
+    },
+    thumbnail: {
+        type: String,
+        require: true
+    },
+    images: {
+        type: Array,
+        require: true,
+        default: [],
     },
     problem: {
         type: Array,
@@ -37,9 +47,28 @@ const ChallengeSchema = new Schema(
         type: String,
         required: true,
         default: "active",
+    },
+    startTime: {
+        type: Number,
+        required: true,
+    },
+    endTime: {
+        type: Number,
+        required: true,
+    },
+    player: {
+        type: Array,
+        required: false,
+        default: [],
     }
   },
   { timestamps: true }
 );
 
 export const ChallengeModel = model("challenges", ChallengeSchema);
+
+export const createChallenge = async (value: IChallenge) => 
+    new ChallengeModel(value).save().then((challenge) => challenge.toObject());
+
+export const getChallenges = async () =>
+    ChallengeModel.find().then((challenges) => challenges.map((challenge) => challenge.toObject()));

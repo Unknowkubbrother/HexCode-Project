@@ -91,12 +91,12 @@ const FilterProblems = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (searchProblem) {
-      const search = createQueryParams();
-      router.push(pathname + "?" + search);
-    }
-  }, [searchParams.get("search")]);
+  // useEffect(() => {
+  //   if (searchProblem) {
+  //     const search = createQueryParams();
+  //     router.push(pathname + "?" + search);
+  //   }
+  // }, [searchParams.get("search")]);
 
   useEffect(() => {
     const search = createQueryParams();

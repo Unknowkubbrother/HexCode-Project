@@ -1,33 +1,36 @@
-import Image from 'next/image';
-import TemplateImage from "@/assets/avatar.jpg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { EllipsisVertical, Dot } from 'lucide-react';
+import {  Dot } from 'lucide-react';
+import { IListChallenge } from '@/interface/challenges';
+import Link from 'next/link';
+import Image from 'next/image';
 
-export default function CardChallenge() {
+export default function CardChallenge({ data }: { data: IListChallenge }) {
     return (
-        <div className='w-full flex flex-col h-fit p-2'>
-            <Image src={TemplateImage} alt='ChallengsPhoto' width={300} height={200} className='rounded-lg'></Image>
+        <Link className='w-full flex flex-col h-fit p-2 hover:scale-105 duration-300' href={`/challenges/${data._id}`}>
+            <Image src={data.thumbnail} unoptimized alt="ChallengsPhoto" width={400} height={300} className='rounded-lg object-contain' />
             <div className='flex gap-3 mt-2'>
                 <Avatar className="h-5 w-5 mt-1">
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage src={data.avatar} />
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <div className='flex flex-col'>
-                    <div className='flex'>
-                        <p>บินพารามอเตอร์ กลางหุบเขาเชียงใหม่ 10 องศา!
+                <div className='w-full flex flex-col'>
+                    <div className='w-full flex justify-start items-center'>
+                        <p>
+                            {data.title}
                         </p>
-                        <EllipsisVertical size={30} />
                     </div>
                     <div className='text-[13px] text-[#a1a0a0]'>
-                        unknowkubbrother
+                        {data.username}
                     </div>
                     <div className='text-[13px] flex items-center mt-1'>
-                        <span>10 hours ago</span>
+                        <span>
+                            {Date.now() - new Date(data?.createdAt || 0).getTime() > 86400000 ? Math.floor((Date.now() - new Date(data?.createdAt || 0).getTime()) / 86400000) + " day ago" : Math.floor((Date.now() - new Date(data?.createdAt || 0).getTime()) / 3600000) + " hour ago"}
+                        </span>
                         <Dot size={15} />
-                        <span>เข้าร่วมแล้ว 1000 คน</span>
+                        <span>เข้าร่วมแล้ว {data.countPlayer} คน</span>
                     </div>
                 </div>
             </div>
-        </div>
+        </Link>
     )
 }
