@@ -19,6 +19,7 @@ export const getChallengesProblemById = async (id: string) => {
         return response.data;
     }catch(error){
         console.log(error);
+        return [];
     }
 };
 
@@ -37,5 +38,6 @@ export const getChallenges = async () => {
         return response.data;
     }catch(error){
         console.log(error);
+        return [];
     }
 };

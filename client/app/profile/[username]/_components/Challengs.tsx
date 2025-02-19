@@ -8,7 +8,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
-import CardChallenge from '@/components/ui/CardChallenge';
+// import CardChallenge from '@/components/ui/CardChallenge';
 
 export default function Challengs({itself} : {itself: boolean}) {
     return (
@@ -32,7 +32,10 @@ export default function Challengs({itself} : {itself: boolean}) {
                             key={index}
                             className="pl-3 md:basis-1/2 lg:basis-1/4"
                         >
-                            <CardChallenge />
+                            {/* <CardChallenge /> */}
+                            <div key={index}>
+                                {index+1}
+                            </div>
                         </CarouselItem>
                     ))}
                 </CarouselContent>
