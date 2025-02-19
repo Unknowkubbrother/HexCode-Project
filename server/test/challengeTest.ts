@@ -13,7 +13,6 @@ export default function runTest() {
             const viewer = "private";
             const startTime = Date.now();
             const endTime = Date.now() + 1000000000;
-            const secret_code = "1234";
             const reward = [1000,500,200];
 
             const challengeResult = await createChallenge(
@@ -25,10 +24,10 @@ export default function runTest() {
                 viewer,
                 startTime,
                 endTime,
-                secret_code,
                 reward
             );
            
+            console.log(challengeResult);
         });
     });
 }
@@ -42,7 +41,6 @@ async function createChallenge(
     viewer: string,
     startTime: number,
     endTime: number,
-    secret_code?: string,
     reward?: Number[]
 ) {
     try {
@@ -55,7 +53,6 @@ async function createChallenge(
             viewer,
             startTime,
             endTime,
-            secret_code,
             reward,
         };
 
@@ -66,6 +63,8 @@ async function createChallenge(
                 'Content-Type': 'application/json',
             },
         });
+
+        console.log(response);
 
         if (!response.ok) {
             return response.statusText;

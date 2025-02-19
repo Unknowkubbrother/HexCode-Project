@@ -130,8 +130,6 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         const type = query.type ? JSON.parse(query.type) : [];
         const search = query.search ? query.search : "";
 
-        console.log(query)
-
         const filter = {
           ...(difficulty.length && { difficulty: { $in: difficulty } }),
           ...(type.length && { type: { $in: type } }),

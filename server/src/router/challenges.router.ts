@@ -8,6 +8,8 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
 
   .post("/create", async ({ body, auth, error }) => {
     try {
+
+      console.log(body);
       if (!auth?.userId) {
         return error(401, "Unauthorized");
       }
@@ -26,7 +28,8 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "Invalid Viewer");
       }
 
-      const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active" })
+      const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active" , clerkId: auth.userId });
+      
       if (problemcount != problem.length) {
         return error(404, "problem incorrect");
       }
@@ -64,17 +67,17 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       return error(500, "Internal Server Error");
     }
   },
-    {
-      body: t.Object({
-        title: t.String(),
-        description: t.String(),
-        thumbnail: t.String(),
-        images: t.Array(t.String()),
-        problem: t.Array(t.String()),
-        viewer: t.String(),
-        reward: t.Optional(t.Array(t.Number())),
-        startTime: t.Number(),
-        endTime: t.Number(),
-      }),
-    }
+  {
+    body: t.Object({
+      title: t.String(),
+      description: t.String(),
+      thumbnail: t.String(),
+      images: t.Array(t.String()),
+      problem: t.Array(t.String()),
+      viewer: t.String(),
+      reward: t.Optional(t.Array(t.Number())),
+      startTime: t.Number(),
+      endTime: t.Number(),
+    }),
+  }
   );
