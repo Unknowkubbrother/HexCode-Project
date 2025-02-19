@@ -2,8 +2,12 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import CardChallenge from "@/components/ui/CardChallenge"
 import {IListChallenge} from '@/interface/challenges'
+import { getChallenges } from "@/actions/challengeAction"
 
-export default function Challengs({Data} : {Data : IListChallenge[]}) {
+export default  async function Challengs() {
+
+    const Data: IListChallenge[] = await getChallenges();
+    
     return (
         <main className='w-[90%] m-auto'>
             <header className='my-5 text-lg font-semibold'>Challengs</header>
