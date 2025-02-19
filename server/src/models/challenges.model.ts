@@ -44,7 +44,7 @@ const ChallengeSchema = new Schema(
         default: [],
     },
     status: {
-        type: String,
+        type: Number,
         required: true,
         default: "active",
     },

@@ -67,7 +67,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         problem: t.Array(t.String()),
         viewer: t.String(),
         secret_code: t.Optional(t.String()),
-        reward: t.Optional(t.Array(t.String())),
+        reward: t.Optional(t.Array(t.Number())),
         startTime: t.Number(),
         endTime: t.Number(),
       }),

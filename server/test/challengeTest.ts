@@ -5,7 +5,29 @@ export default function runTest() {
     describe("Challenge System", () => {
         test("Create Challengs", async () => {
 
-            
+            const title = "Challenge 1";
+            const description = "This is challenge 1";
+            const thumbnail = "https://wallpapershome.com/images/pages/ico_h/27093.jpg";
+            const images = ["https://wallpapershome.com/images/pages/ico_h/27093.jpg", "https://media.discordapp.net/attachments/1266697909429338208/1341784049168945202/freepik__expand__33474.png?ex=67b74146&is=67b5efc6&hm=17f53670491cb916fb4e291b954e75838df8db013131a371bccd6625d07c7f7c&=&format=webp&quality=lossless&width=550&height=311"];
+            const problem = ["67ac9ee19f9d74872a80119b"]
+            const viewer = "private";
+            const startTime = Date.now();
+            const endTime = Date.now() + 1000000000;
+            const secret_code = "1234";
+            const reward = [1000,500,200];
+
+            const challengeResult = await createChallenge(
+                title,
+                description,
+                thumbnail,
+                images,
+                problem,
+                viewer,
+                startTime,
+                endTime,
+                secret_code,
+                reward
+            );
            
         });
     });
@@ -16,12 +38,12 @@ async function createChallenge(
     description: string,
     thumbnail: string,
     images: string[],
-    problem: object[],
+    problem: string[],
     viewer: string,
     startTime: number,
     endTime: number,
     secret_code?: string,
-    reward?: string[]
+    reward?: Number[]
 ) {
     try {
         const body = {
