@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { IChallenge } from "@/interface/challenges.interface";
 
 const ChallengeSchema = new Schema(
   {
@@ -47,12 +48,12 @@ const ChallengeSchema = new Schema(
         required: true,
         default: "active",
     },
-    starttime: {
+    startTime: {
         type: Number,
         required: true,
         default: "active",
     },
-    endtime: {
+    endTime: {
         type: Number,
         required: true,
         default: "active",
@@ -62,3 +63,6 @@ const ChallengeSchema = new Schema(
 );
 
 export const ChallengeModel = model("challenges", ChallengeSchema);
+
+export const createChallenge = async (value: IChallenge) => 
+    new ChallengeModel(value).save().then((challenge) => challenge.toObject());
