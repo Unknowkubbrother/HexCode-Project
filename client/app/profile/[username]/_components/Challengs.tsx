@@ -32,7 +32,10 @@ export default function Challengs({itself} : {itself: boolean}) {
                             key={index}
                             className="pl-3 md:basis-1/2 lg:basis-1/4"
                         >
-                            <CardChallenge />
+                            {/* <CardChallenge /> */}
+                            <div>
+                                {index+1}
+                            </div>
                         </CarouselItem>
                     ))}
                 </CarouselContent>
