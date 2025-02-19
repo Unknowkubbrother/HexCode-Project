@@ -1,6 +1,8 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { createChallenge } from "../models/challenges.model";
+import { ProblemModel } from "@/models/problems.model";
+import { toArray } from "lodash";
 
 export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
   .use(clerkPlugin())
@@ -11,7 +13,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(401, "Unauthorized");
       }
 
-      const { title, description, thumbnail, images, problem, viewer, secret_code, reward, startTime, endTime } = body;
+      const { title, description, thumbnail, images, problem, viewer, reward, startTime, endTime } = body;
 
       if (startTime < Date.now() || startTime > Date.now() || endTime < Date.now() || endTime > Date.now()) {
         return error(404, "Invalid Time");
@@ -25,6 +27,11 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "Invalid Viewer");
       }
 
+        const problemcount = await ProblemModel.countDocuments({_id: {$in:problem},status:"active"})
+        if(problemcount!=problem.length){
+            return error(404, "problem incorrect");
+        }
+
       const challengeCreated = await createChallenge({
         clerkId: auth.userId,
         title,
@@ -34,7 +41,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         problem,
         viewer,
         ...(viewer == "private" && {
-          secret_code: secret_code?.trim(),
+          secret_code: Math.random().toString(36).substring(2, 8),
         }),
         ...(reward && {
           reward
@@ -66,7 +73,6 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         images: t.Array(t.String()),
         problem: t.Array(t.String()),
         viewer: t.String(),
-        secret_code: t.Optional(t.String()),
         reward: t.Optional(t.Array(t.String())),
         startTime: t.Number(),
         endTime: t.Number(),
