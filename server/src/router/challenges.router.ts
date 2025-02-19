@@ -9,33 +9,34 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
   .post("/create", async ({ body, auth, error }) => {
     try {
 
-      console.log(body);
       if (!auth?.userId) {
         return error(401, "Unauthorized");
       }
 
       const { title, description, thumbnail, images, problem, viewer, reward, startTime, endTime } = body;
 
-      if (startTime < Date.now() || startTime > Date.now() || endTime < Date.now() || endTime > Date.now()) {
+      const timeCurrent = Date.now();
+
+      if (startTime < timeCurrent || endTime < startTime) {
         return error(404, "Invalid Time");
       }
 
-      if (startTime > endTime) {
-        return error(404, "Invalid Time");
-      }
+  
 
       if (viewer !== "public" && viewer !== "private") {
         return error(404, "Invalid Viewer");
       }
+      
 
-      const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active" , clerkId: auth.userId });
+      const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active" , clerkId: auth?.userId });
+      
       
       if (problemcount != problem.length) {
         return error(404, "problem incorrect");
       }
-
+      
       const challengeCreated = await createChallenge({
-        clerkId: auth.userId,
+        clerkId: auth?.userId,
         title,
         description,
         thumbnail,
@@ -75,7 +76,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       images: t.Array(t.String()),
       problem: t.Array(t.String()),
       viewer: t.String(),
-      reward: t.Optional(t.Array(t.Number())),
+      reward: t.Optional(t.Array(t.String())),
       startTime: t.Number(),
       endTime: t.Number(),
     }),

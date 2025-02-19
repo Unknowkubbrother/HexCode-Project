@@ -44,19 +44,17 @@ const ChallengeSchema = new Schema(
         default: [],
     },
     status: {
-        type: Number,
+        type: String,
         required: true,
         default: "active",
     },
     startTime: {
         type: Number,
         required: true,
-        default: "active",
     },
     endTime: {
         type: Number,
         required: true,
-        default: "active",
     }
   },
   { timestamps: true }
