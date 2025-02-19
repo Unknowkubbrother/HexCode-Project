@@ -7,7 +7,7 @@ export interface IChallenge {
     problem: Array<String>;
     viewer: string;
     secret_code?: string;
-    reward?: Array<String>;
+    reward?: Array<Number>;
     status?: string;
     startTime: number;
     endTime: number;
