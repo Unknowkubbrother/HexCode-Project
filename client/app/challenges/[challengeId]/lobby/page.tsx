@@ -22,6 +22,7 @@ export default async function Page({
     params: Promise<{ challengeId: string }>;
 }) {
     const challengeId: string = (await params).challengeId;
+    console.log(challengeId);
 
     return (
         <main className="w-full h-full">

@@ -1,5 +1,6 @@
 import Challengs from "./_components/Challengs"
 import { getChallenges } from "@/actions/challengeAction"
+
 const page = async () => {
 
   const { result } = await getChallenges();

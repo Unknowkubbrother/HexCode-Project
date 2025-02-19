@@ -1,12 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { EllipsisVertical, Dot } from 'lucide-react';
+import {  Dot } from 'lucide-react';
 import { IListChallenge } from '@/interface/challenges';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function CardChallenge({ data }: { data: IListChallenge }) {
     return (
         <Link className='w-full flex flex-col h-fit p-2 hover:scale-105 duration-300' href={`/challenges/${data._id}`}>
-            <img src={data.thumbnail} alt="ChallengsPhoto" width={400} height={300} className='rounded-lg object-contain' />
+            <Image src={data.thumbnail} unoptimized alt="ChallengsPhoto" width={400} height={300} className='rounded-lg object-contain' />
             <div className='flex gap-3 mt-2'>
                 <Avatar className="h-5 w-5 mt-1">
                     <AvatarImage src={data.avatar} />
