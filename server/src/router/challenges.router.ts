@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { createChallenge } from "../models/challenges.model";
-import { ProblemModel } from "../models/problems.model";
+import { ProblemModel } from "@/models/problems.model";
 
 export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
   .use(clerkPlugin())
