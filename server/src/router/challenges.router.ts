@@ -24,7 +24,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
   
 
       if (viewer !== "public" && viewer !== "private") {
-        return error(404, "Invalid Viewer");
+        return error(404, "Invalid Viewer error");
       }
       
 
