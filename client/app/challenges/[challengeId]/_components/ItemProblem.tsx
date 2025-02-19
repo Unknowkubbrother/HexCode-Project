@@ -1,10 +1,10 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 // import { ListProblemInterface } from "@/interface/problems";
 import StatusDifficulty from "@/components/ui/StatusDifficulty";
 
-export default function ItemProblem ({key } : {key? : number}) {
+export default function ItemProblem (){
 
   return (
     <div
