@@ -3,6 +3,7 @@ import { clerkPlugin } from "elysia-clerk";
 import { ChallengeModel, createChallenge , getChallenges, updateChallenge } from "../models/challenges.model";
 import { ProblemModel } from "@/models/problems.model";
 import {getAccountbyClerkId} from "@/models/accounts.model";
+import { SubmissionModel } from "@/models/submissions.model";
 
 export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
   .use(clerkPlugin())
@@ -308,6 +309,65 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       return {
         status: 200,
         message: "Leave Challenge Success",
+      }
+      
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+  },
+  {
+    params: t.Object({
+      id: t.String(),
+    }),
+  })
+
+  .get("/leaderboard/:id", async ({ params,auth, error }) => {
+    try {
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+      const { id } = params;
+      const challenge = await ChallengeModel.findOne({_id:id,status:"active"})
+      if (!challenge) {
+        return error(404, "challenge not found");
+      }
+
+
+
+      const result = await SubmissionModel.aggregate([
+        {
+          $match: {
+            clerkId: { $in: challenge.player },
+            problemId:{$in:challenge.problem}
+          }
+        },
+        {
+          $group: {
+            _id: {clerkId: "$clerkId", problemId: "$problemId"},
+            maxScore: { $max: "$points" }
+          }
+        },
+        {
+          $group: {
+            _id: "$_id.clerkId",
+            total: { $sum: "$maxScore" }
+          }
+        },
+        {
+          $sort: { total: -1 }
+        },
+        {
+          $project: {
+            clerkId: "$_id",
+            total:1,
+            _id: 0
+          }
+        }
+      ]);
+      return {
+        status: 200,
+        score:result,
       }
       
     } catch (e) {
