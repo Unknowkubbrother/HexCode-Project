@@ -199,4 +199,124 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       console.log(e);
       return error(500, "Internal Server Error");
     }
+  })
+
+  .get("/remove/:id", async ({ params,auth, error }) => {
+    try {
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const { id } = params;
+
+      const challenge = await ChallengeModel.findOne({_id:id,clerkId:auth.userId,status:"active"})
+
+      if (!challenge) {
+        return error(404, "challenge not found");
+      }
+
+      const challengeUpeate = await ChallengeModel.findByIdAndUpdate(id, { status: "deleted" });
+      if (!challengeUpeate) {
+        return error(404, "remove error");
+      }
+
+
+      return {
+        status: 200,
+        message: "Remove Challenge Success",
+      }
+      
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+  },
+  {
+    params: t.Object({
+      id: t.String(),
+    }),
+  })
+
+  .get("/join/:id", async ({ params,auth, error }) => {
+    try {
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const { id } = params;
+
+      const challenge = await ChallengeModel.findOne({_id:id,status:"active"})
+      
+      if (!challenge) {
+        return error(404, "challenge not found");
+      }
+      if(challenge.endTime<Date.now()){
+        return error(404, "This challenge is ended");
+      }
+      if (challenge.player?.find(id=>id==auth.userId)) {
+        return error(404, "You joined this challenge");
+      }
+      if(challenge.startTime<Date.now()){
+        return error(404, "This challenge is started");
+      }
+
+      const challengeUpeate = await ChallengeModel.findByIdAndUpdate(id, { $push: { player: auth.userId } });
+      if (!challengeUpeate) {
+        return error(404, "join error");
+      }
+
+      return {
+        status: 200,
+        message: "Join Challenge Success",
+      }
+      
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+  },
+  {
+    params: t.Object({
+      id: t.String(),
+    }),
+  })
+
+  .get("/leave/:id", async ({ params,auth, error }) => {
+    try {
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const { id } = params;
+      const challenge = await ChallengeModel.findOne({_id:id,player: {$in:auth.userId},status:"active"})
+      
+      if (!challenge) {
+        return error(404, "challenge not found");
+      }
+      if(challenge.endTime<Date.now()){
+        return error(404, "This challenge is ended");
+      }
+      if(challenge.startTime<Date.now()){
+        return error(404, "This challenge is started");
+      }
+
+      const challengeUpeate = await ChallengeModel.findByIdAndUpdate(id, { $pull: { player: auth.userId } });
+      if (!challengeUpeate) {
+        return error(404, "leave error");
+      }
+
+      return {
+        status: 200,
+        message: "Leave Challenge Success",
+      }
+      
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+  },
+  {
+    params: t.Object({
+      id: t.String(),
+    }),
   });
