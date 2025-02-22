@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { createChallenge , getChallenges } from "../models/challenges.model";
+import { ChallengeModel, createChallenge , getChallenges, updateChallenge } from "../models/challenges.model";
 import { ProblemModel } from "@/models/problems.model";
 import {getAccountbyClerkId} from "@/models/accounts.model";
 
@@ -31,6 +31,13 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       if (problemcount != problem.length && problemcount>30) {
         return error(404, "problem incorrect");
       }
+      let key
+      let getkey
+
+      do{
+        key = Math.random().toString(36).substring(2, 8)
+        getkey = await ChallengeModel.find({secret_code:key,status:"active"})
+      }while(getkey.length>=1)
 
       const challengeCreated = await createChallenge({
         clerkId: auth?.userId,
@@ -40,9 +47,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         images,
         problem,
         viewer,
-        ...(viewer == "private" && {
-          secret_code: Math.random().toString(36).substring(2, 8),
-        }),
+        secret_code:key,
         ...(reward && {
           reward
         }),
@@ -83,18 +88,13 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
   .post("/edit", async ({ body, auth, error }) => {
     try {
 
-      console.log(body);
       if (!auth?.userId) {
         return error(401, "Unauthorized");
       }
 
-      const { title, description, thumbnail, images, problem, viewer, reward, startTime, endTime } = body;
+      const { challengeId,title, description, thumbnail, images, problem, viewer, reward, startTime, endTime } = body;
 
-      if (startTime < Date.now() || startTime > Date.now() || endTime < Date.now() || endTime > Date.now()) {
-        return error(404, "Invalid Time");
-      }
-
-      if (startTime > endTime) {
+      if (startTime < Date.now() || endTime < startTime) {
         return error(404, "Invalid Time");
       }
 
@@ -102,23 +102,24 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "Invalid Viewer");
       }
 
-      const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active" , clerkId: auth.userId });
+      const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active" , clerkId: "user_2rUiuozLxAsIaUw4LzORMyu5ZtJ" });
       
       if (problemcount != problem.length && problemcount > 30) {
         return error(404, "problem incorrect");
       }
 
-      const challengeCreated = await createChallenge({
-        clerkId: auth.userId,
+      const challengecheck = await ChallengeModel.find({clerkId:auth.userId,_id:challengeId})
+      if(!challengecheck.length){
+        return error(404, "cant find challenge");
+      }
+
+      const challengeCreated = await updateChallenge(challengeId,{
         title,
         description,
         thumbnail,
         images,
         problem,
         viewer,
-        ...(viewer == "private" && {
-          secret_code: Math.random().toString(36).substring(2, 8),
-        }),
         ...(reward && {
           reward
         }),
@@ -128,12 +129,12 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
 
 
       if (!challengeCreated) {
-        return error(404, "create challenge error");
+        return error(404, "edit challenge error");
       }
 
       return {
         status: 200,
-        message: "Create Challenge Success",
+        message: "Edit Challenge Success",
       }
 
     } catch (e) {
@@ -143,6 +144,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
   },
   {
     body: t.Object({
+      challengeId:t.String(),
       title: t.String(),
       description: t.String(),
       thumbnail: t.String(),

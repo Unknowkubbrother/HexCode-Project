@@ -69,6 +69,7 @@ export const ChallengeModel = model("challenges", ChallengeSchema);
 
 export const createChallenge = async (value: IChallenge) => 
     new ChallengeModel(value).save().then((challenge) => challenge.toObject());
-
+export const updateChallenge = (id: string, values: object) =>
+  ChallengeModel.findByIdAndUpdate(id, values);
 export const getChallenges = async () =>
     ChallengeModel.find().then((challenges) => challenges.map((challenge) => challenge.toObject()));
