@@ -42,7 +42,7 @@ export default async function Page({
     return (
         <main className="w-full h-full">
             <header className="w-full flex justify-between px-10 mt-5">
-                <span className="text-xl font-bold">{result?.title || "HEXCODE Challenge"}</span>
+                {/* <span className="text-xl font-bold">{result?.title || "HEXCODE Challenge"}</span> */}
                 <span className="flex justify-center items-center gap-3 text-lg">
                     <span className="text-primary">TIME LEFT - </span>
                     {result && <CountDownTimer date={Number(result?.endTime || 0)} className="text-rose-400" />}
