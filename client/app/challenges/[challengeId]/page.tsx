@@ -1,6 +1,5 @@
 import Hub from "./_components/Hub";
 import {getChallengesById} from "@/actions/challengeAction";
-import { redirect } from 'next/navigation'
 
 export default async function Page({
   params,

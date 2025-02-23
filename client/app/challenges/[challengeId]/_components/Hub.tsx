@@ -138,7 +138,7 @@ export default function Hub({ data, isJoined }: { data: IChallenge, isJoined: bo
             }
             {!Joined ?
               <Button
-                onClick={() => 
+                onClick={() =>
                   data.viewer == 'private' ? setIsShowInputSecrectCode(true) : handlerJoinChallenge()
                 }
               >Join Challenge</Button>
@@ -230,12 +230,20 @@ export default function Hub({ data, isJoined }: { data: IChallenge, isJoined: bo
           <header>
             <h1>Secret Code</h1>
           </header>
-          <Input type="text" placeholder="Enter Secret Code" onChange={(e) => setSecretCode(e.target.value)} className="border-2 border-primary text-center" />
-          <Button
-            onClick={handlerJoinChallenge}
-          >
-            Join
-          </Button>
+          <Input type="text" placeholder="Enter Secret Code" onChange={(e) => setSecretCode(e.target.value)} className="border-2 border-primary text-center" value={secretCode}/>
+          <div className="flex justify-center items-center gap-3">
+            <Button
+              onClick={handlerJoinChallenge}
+            >
+              Join
+            </Button>
+            <Button
+              onClick={() => setIsShowInputSecrectCode(false)}
+              className="bg-rose-400"
+            >
+              Cancel
+            </Button>
+          </div>
         </div>}
     </main>
   );
