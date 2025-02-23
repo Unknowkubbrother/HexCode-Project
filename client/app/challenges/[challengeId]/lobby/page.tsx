@@ -1,10 +1,10 @@
 import CountDownTimer from "@/components/ui/CountDownTimer";
 import ItemProblem from "../_components/ItemProblem";
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar";
+// import {
+//     Avatar,
+//     AvatarFallback,
+//     AvatarImage,
+// } from "@/components/ui/avatar";
 // import {
 //     Table,
 //     TableBody,
