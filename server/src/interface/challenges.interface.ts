@@ -1,3 +1,9 @@
+interface IPlayer{
+    clerkId : string;
+    username : string;
+    avatar : string;
+}
+
 export interface IChallenge {
     clerkId: string;
     title: string;
@@ -7,9 +13,9 @@ export interface IChallenge {
     problem: Array<String>;
     viewer: string;
     secret_code?: string;
-    reward?: Array<Number>;
+    reward?: Array<String>;
     status?: string;
     startTime: number;
     endTime: number;
-    player?: Array<String>;
+    player?: Array<String | IPlayer>;
 }
