@@ -123,9 +123,15 @@ export default function Hub({ data, isJoined }: { data: IChallenge, isJoined: bo
           <span className="flex gap-3 items-center justify-center">
             <span className="text-2xl font-bold">{data.title}</span>
             <span className="p-1 border-2 rounded-lg border-primary text-xs">{data.viewer}</span>
-            <span className="text-lg font-semibold text-primary">
-              <span>Opening time - </span>
-              <span className="text-green-400">Now - {coverTimeString(Number(data.startTime))}</span>
+            <span className="text-lg font-semibold">
+              {Date.now() < data.startTime ?
+              <span className="text-primary">Opening time - </span>
+              :  
+              <span className="text-rose-400">Closed </span>
+              }
+              {Date.now() < data.startTime && (
+                <span className="text-green-400">Now - {coverTimeString(Number(data.startTime))}</span>
+              )}
             </span>
           </span>
           <div className="flex justify-start items-center gap-3">
