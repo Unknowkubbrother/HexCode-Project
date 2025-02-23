@@ -98,6 +98,10 @@ export default function Hub({ data, isJoined }: { data: IChallenge, isJoined: bo
         theme: "light",
       });
       setJoined(false);
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } else {
       toast.error("Leave Challenge Fail!!", {
         position: "top-right",
