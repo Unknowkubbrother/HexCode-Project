@@ -5,13 +5,17 @@ import { getProblemById } from "@/actions/problemAction";
 import Submissions from "./Submissions";
 import { getChallengesById} from "@/actions/challengeAction";
 import { redirect } from "next/navigation";
-
+import {IChallengeProblem} from "@/interface/challenges";
 
 export default async function Problem({ problemId , challengeId}: {problemId : string ,challengeId : string}) {
   const { result } = await getProblemById(problemId);
   const challenge = await getChallengesById(challengeId);
 
   if (!challenge.isJoined) {
+    return redirect(`/challenges/${challengeId}`);
+  }
+
+  if (!challenge.result.problem.filter((problem: IChallengeProblem ) => problem.problemId === problemId)) {
     return redirect(`/challenges/${challengeId}`);
   }
 
