@@ -1,4 +1,11 @@
+export interface IPlayer{
+    clerkId : string;
+    username : string;
+    avatar : string;
+}
+
 export interface IChallenge {
+    _id: string;
     clerkId: string;
     title: string;
     description: string;
@@ -7,11 +14,11 @@ export interface IChallenge {
     problem: Array<String>;
     viewer: string;
     secret_code?: string;
-    reward?: Array<Number>;
+    reward?: Array<String>;
     status?: string;
     startTime: number;
     endTime: number;
-    player?: Array<String>;
+    player?: Array<String | IPlayer[]>;
     createdAt?: string;
     updatedAt?: string;
 }

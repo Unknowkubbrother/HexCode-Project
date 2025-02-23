@@ -73,3 +73,6 @@ export const updateChallenge = (id: string, values: object) =>
   ChallengeModel.findByIdAndUpdate(id, values);
 export const getChallenges = async () =>
     ChallengeModel.find().then((challenges) => challenges.map((challenge) => challenge.toObject()));
+
+export const getChallengeById = async (id: string) =>
+    ChallengeModel.findById(id).then((challenge) => challenge?.toObject());

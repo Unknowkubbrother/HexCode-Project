@@ -4,13 +4,13 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import CardChallenge from "@/components/ui/CardChallenge"
 import {IListChallenge} from '@/interface/challenges'
-import { getAllChallenges } from "@/actions/challengeAction";
+import { getChallenges } from "@/actions/challengeAction";
 
 export default function Challengs() {
     const [data, setData] = useState<IListChallenge[]>([]);
     useEffect(() => {
         const fetchData = async () => {
-            const {result} = await getAllChallenges();
+            const {result} = await getChallenges();
             setData(result);
         }
         fetchData();

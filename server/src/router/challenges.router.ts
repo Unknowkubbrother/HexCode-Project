@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { ChallengeModel, createChallenge , getChallenges, updateChallenge } from "../models/challenges.model";
+import { ChallengeModel, createChallenge , getChallenges, updateChallenge,getChallengeById } from "../models/challenges.model";
 import { ProblemModel } from "@/models/problems.model";
 import {getAccountbyClerkId} from "@/models/accounts.model";
 import { SubmissionModel } from "@/models/submissions.model";
@@ -20,8 +20,6 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       if (startTime < Date.now() || endTime < startTime) {
         return error(404, "Invalid Time");
       }
-
-      console.log("pass");
 
       if (viewer !== "public" && viewer !== "private") {
         return error(404, "Invalid Viewer error");
@@ -79,7 +77,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       images: t.Array(t.String()),
       problem: t.Array(t.String()),
       viewer: t.String(),
-      reward: t.Optional(t.Array(t.Number())),
+      reward: t.Optional(t.Array(t.String())),
       startTime: t.Number(),
       endTime: t.Number(),
     }),
@@ -152,7 +150,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       images: t.Array(t.String()),
       problem: t.Array(t.String()),
       viewer: t.String(),
-      reward: t.Optional(t.Array(t.Number())),
+      reward: t.Optional(t.Array(t.String())),
       startTime: t.Number(),
       endTime: t.Number(),
     }),
@@ -202,6 +200,65 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
     }
   })
 
+  .get("/get/:challengeId", async ({ params,auth, error }) => {
+    try {
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const { challengeId } = params;
+
+      let challenge = await getChallengeById(challengeId);
+
+      if (!challenge) {
+        return error(404, "Not found challenge");
+      }
+
+
+      const isJoined = challenge.player?.includes(auth.userId);
+
+      challenge.player = challenge.player ? await Promise.all(challenge.player.map(async (player) => {
+          const account = await getAccountbyClerkId(String(player));
+          if (!account) {
+            return null;
+          }
+          return {
+            clerkId: account.clerkId,
+            username: account.username,
+            avatar: account.avatar,
+          };
+      })) : [];
+
+      return {
+        status: 200,
+        message: "List Challenge Success",
+        result: {
+          _id: challenge._id,
+          title: challenge.title,
+          description: challenge.description,
+          thumbnail: challenge.thumbnail,
+          images: challenge.images,
+          problem: challenge.problem,
+          viewer: challenge.viewer,
+          reward: challenge.reward,
+          startTime: challenge.startTime,
+          endTime: challenge.endTime,
+          player: challenge.player,
+        },
+        isJoined: isJoined,
+      }
+      
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+  },
+  {
+    params: t.Object({
+      challengeId: t.String(),
+    }),
+  })
+
   .get("/remove/:id", async ({ params,auth, error }) => {
     try {
       if (!auth?.userId) {
@@ -238,7 +295,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
     }),
   })
 
-  .get("/join/:id", async ({ params,auth, error }) => {
+  .post("/join/:id", async ({ params,auth, error , body}) => {
     try {
       if (!auth?.userId) {
         return error(401, "Unauthorized");
@@ -246,17 +303,28 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
 
       const { id } = params;
 
-      const challenge = await ChallengeModel.findOne({_id:id,status:"active"})
-      
+      const challenge = await ChallengeModel.findOne({ _id: id, status: "active" });
+
       if (!challenge) {
         return error(404, "challenge not found");
       }
+
+      if (challenge.viewer === "private" && challenge.secret_code !== body.secret_code) {
+          return error(404, "Invalid Secret Code");
+      }
+
+      if (challenge.viewer === "private" && challenge.secret_code !== body.secret_code) {
+        return error(404, "Invalid Secret Code");
+      }
+
       if(challenge.endTime<Date.now()){
         return error(404, "This challenge is ended");
       }
-      if (challenge.player?.find(id=>id==auth.userId)) {
+
+      if (challenge.player?.includes(auth.userId)) {
         return error(404, "You joined this challenge");
       }
+
       if(challenge.startTime<Date.now()){
         return error(404, "This challenge is started");
       }
@@ -280,9 +348,12 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
     params: t.Object({
       id: t.String(),
     }),
+    body: t.Object({
+      secret_code: t.Optional(t.String())
+    }),
   })
 
-  .get("/leave/:id", async ({ params,auth, error }) => {
+  .post("/leave/:id", async ({ params,auth, error }) => {
     try {
       if (!auth?.userId) {
         return error(401, "Unauthorized");
