@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table";
 import { getChallengesById, getLeaderboardById } from "@/actions/challengeAction";
 import { redirect } from "next/navigation";
-import { IChallengeProblem, IPlayer } from "@/interface/challenges";
+import { IChallengeProblem, IPlayer, IChallenge } from "@/interface/challenges";
 
 export default async function Page({
     params,
@@ -25,35 +25,38 @@ export default async function Page({
 }) {
     const challengeId: string = (await params).challengeId;
 
-    console.log(challengeId);
-    
-    const challenge = await getChallengesById(challengeId);
+    const { result, isJoined }: { result: IChallenge, isJoined: boolean } = await getChallengesById(challengeId);
 
-    if (!challenge || !challenge.result || !challenge.isJoined) {
+    if (!isJoined) {
         return redirect(`/challenges/${challengeId}`);
     }
 
     const leaderboard = await getLeaderboardById(challengeId);
 
+    if (!leaderboard || !leaderboard.result) {
+        return redirect(`/challenges/${challengeId}`);
+    }
+
+
     return (
         <main className="w-full h-full">
             <header className="w-full flex justify-between px-10 mt-5">
-                <span className="text-xl font-bold">{challenge?.title || "HEXCODE Challenge"}</span>
+                <span className="text-xl font-bold">{result?.title || "HEXCODE Challenge"}</span>
                 <span className="flex justify-center items-center gap-3 text-lg">
                     <span className="text-primary">TIME LEFT - </span>
-                    {challenge?.result && <CountDownTimer date={Number(challenge?.result?.endTime || 0)} className="text-rose-400" />}
+                    {result && <CountDownTimer date={Number(result?.endTime || 0)} className="text-rose-400" />}
                 </span>
             </header>
             <div className="w-full px-10 grid grid-cols-2 mt-10 gap-x-10">
                 <div className="w-full h-fit overflow-y-auto">
                     <div className="w-full h-fit grid grid-cols-1 gap-3">
-                        {
-                            challenge?.result?.problem?.map((item: IChallengeProblem, index: number) => (
-                                <div key={index}>
-                                    <ItemProblem data={item} challengeId={challengeId} />
-                                </div>
-                            )) || <p>No problems found</p>
-                        }
+                        {(result && result.problem && result.problem.length > 0) ?
+                        (
+                            (result.problem as IChallengeProblem[]).map((problem: IChallengeProblem, index: number) => (
+                                <ItemProblem key={index} data={problem} challengeId={challengeId} />
+                            ))
+                        )
+                        : <p>No problem available</p>}
                     </div>
                 </div>
 
@@ -94,16 +97,17 @@ export default async function Page({
                     <div className="w-full h-fit bg-bgsecondary rounded-lg p-5">
                         <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">Player</h1></div>
                         <div className="w-full grid grid-cols-6 mt-5 gap-y-5">
-                            {
-                                challenge.result?.player?.map((player: IPlayer, index: number) => (
-                                    <span key={index} className="flex flex-col justify-center items-center gap-1">
-                                        <Avatar className="w-10 h-10">
-                                            <AvatarImage src={player.avatar} alt={player.username} />
-                                            <AvatarFallback>{player.username}</AvatarFallback>
-                                        </Avatar>
-                                        <span className="text-xs">{player.username}</span>
-                                    </span>
-                                )) || <p>No players available</p>
+                            {(result && result.player && result.player.length > 0) ?
+                            (
+                                (result.player as unknown as IPlayer[]).map((player: IPlayer, index: number) => (
+                                    <Avatar key={index} className="w-10 h-10">
+                                        <AvatarImage src={player.avatar} alt={player.username} />
+                                        <AvatarFallback>{player.username}</AvatarFallback>
+                                    </Avatar>
+                                ))
+                            )
+                            :
+                            <></>
                             }
                         </div>
                     </div>
