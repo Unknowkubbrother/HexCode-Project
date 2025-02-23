@@ -7,7 +7,7 @@ import {
     BreadcrumbSeparator,
   } from "@/components/ui/breadcrumb"
 
-export default function Navigate({problemName}: {problemName: string}) {
+export default function Navigate({problemName, challengeId}: {problemName: string, challengeId : string}) {
   return (
     <Breadcrumb>
     <BreadcrumbList>
@@ -20,7 +20,7 @@ export default function Navigate({problemName}: {problemName: string}) {
       </BreadcrumbItem>
       <BreadcrumbSeparator />
       <BreadcrumbItem>
-        <BreadcrumbLink href="/challenges/123/lobby">Lobby</BreadcrumbLink>
+        <BreadcrumbLink href={`/challenges/${challengeId}/lobby`}>Lobby</BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />
       <BreadcrumbItem>
