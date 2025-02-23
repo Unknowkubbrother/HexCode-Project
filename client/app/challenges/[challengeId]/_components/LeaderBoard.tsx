@@ -1,6 +1,6 @@
 "use client";
 import {useState,useEffect} from 'react'
-import { getLeaderboardById , getChallengesById} from "@/actions/challengeAction";
+import { getLeaderboardById} from "@/actions/challengeAction";
 import CountDownTimer from "@/components/ui/CountDownTimer";
 import {
     Avatar,
@@ -16,10 +16,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { IPlayer,IChallenge } from '@/interface/challenges';
+import { IPlayer, IChallenge } from '@/interface/challenges';
 
-export default function LeaderBoard({ challengeId }: { challengeId: string }) {
-    const [challenge, setChallenge] = useState<IChallenge>();
+export default function LeaderBoard({ challengeId , challenge }: { challengeId: string , challenge: IChallenge }) {
     const [leaderboard, setLeaderboard] = useState<{ result: IPlayer[] }>({ result: [] });
 
     useEffect(() => {
@@ -34,14 +33,6 @@ export default function LeaderBoard({ challengeId }: { challengeId: string }) {
         return () => clearInterval(interval);
     }, [challengeId]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const {result} = await getChallengesById(challengeId);
-            setChallenge(result);
-        };
-        fetchData();
-    }, [challengeId]);
-
     return (
         <div className='w-full h-fit flex flex-col gap-5'>
         <header>
@@ -49,7 +40,7 @@ export default function LeaderBoard({ challengeId }: { challengeId: string }) {
                 <span className="text-xl font-bold">{challenge?.title}</span>
                 <span className="flex justify-center items-center gap-3 text-lg">
                     <span className="text-primary">TIME LEFT - </span>
-                    <CountDownTimer date={Number(challenge?.endTime)} className="text-rose-400" />
+                    <CountDownTimer date={Number(challenge?.endTime) || 0 } className="text-rose-400" />
                 </span>
             </div>
         </header>
