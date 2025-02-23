@@ -3,7 +3,7 @@ import { clerkPlugin } from "elysia-clerk";
 import { ChallengeModel, createChallenge, getChallenges, updateChallenge, getChallengeById } from "../models/challenges.model";
 import { ProblemModel } from "@/models/problems.model";
 import { getAccountbyClerkId } from "@/models/accounts.model";
-import { SubmissionModel } from "@/models/submissions.model";
+import { SubmissionModel,getTopSubmissionByProblemAndClerkId } from "@/models/submissions.model";
 import { getSumPointByProblemId } from "@/models/testcases.model";
 
 export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
@@ -234,6 +234,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       challenge.problem = challenge.problem ? await Promise.all(challenge.problem.map(async (problem) => {
         const problemData = await ProblemModel.findOne({ _id: problem, status: "active" });
         const points = await getSumPointByProblemId(problem);
+        const myPoints = await getTopSubmissionByProblemAndClerkId(problem, auth.userId);
         if (!problemData) {
           return null;
         }
@@ -242,7 +243,9 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
           title: problemData.title,
           difficulty: problemData.difficulty,
           points: points[0]?.total || 0,
+          solved: (Number(myPoints?.points || 0) == Number(points[0]?.total || 0)) ? 1 : 0,
         };
+
       })) : [];
 
       return {

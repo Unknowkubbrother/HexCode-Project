@@ -38,7 +38,6 @@ export default async function Page({
         return redirect(`/challenges/${challengeId}`);
     }
 
-
     return (
         <main className="w-full h-full">
             <header className="w-full flex justify-between px-10 mt-5">
@@ -54,7 +53,7 @@ export default async function Page({
                         {(result && result.problem && result.problem.length > 0) ?
                             (
                                 (result.problem as IChallengeProblem[]).map((problem: IChallengeProblem, index: number) => (
-                                    <ItemProblem key={index} data={problem} challengeId={challengeId} />
+                                    <ItemProblem key={index} data={problem} challengeId={challengeId}/>
                                 ))
                             )
                             : <p>No problem available</p>}

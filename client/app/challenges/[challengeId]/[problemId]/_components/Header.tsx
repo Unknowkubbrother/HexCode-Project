@@ -16,7 +16,7 @@ export default function Header({ title, points, maxPoints,difficulty , challenge
   return (
     <div className="w-full h-fit py-5 bg-bgsecondary flex justify-around items-center">
       <div className="flex flex-col gap-2">
-        <Navigate problemName={title} />
+        <Navigate problemName={title} challengeId={challengeData._id}/>
         <h1 className="text-xl font-semibold tracking-wide">
            {title}
         </h1>

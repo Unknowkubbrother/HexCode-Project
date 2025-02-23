@@ -1,10 +1,11 @@
-
+"use client";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import StatusDifficulty from "@/components/ui/StatusDifficulty";
 import { IChallengeProblem } from '@/interface/challenges'
+import { useRouter } from 'next/navigation';
 
 export default function ItemProblem({ data, challengeId }: { data: IChallengeProblem, challengeId: string }) {
+  const router = useRouter();
 
   return (
     <div
@@ -20,11 +21,15 @@ export default function ItemProblem({ data, challengeId }: { data: IChallengePro
         </span>
       </span>
 
-      <Link href={`/challenges/${challengeId}/${data.problemId}`} passHref>
-        <Button variant="default" size="sm" asChild className="absolute top-1/2 right-0 transform -translate-x-1/4 -translate-y-1/2 hover:scale-105 duration-300 cursor-pointer"
-        >
-          <span>Solve problem</span>
-        </Button></Link>
+      <Button variant="default" size="sm" asChild className={`absolute top-1/2 right-0 transform -translate-x-1/4 -translate-y-1/2 hover:scale-105 duration-300 cursor-pointer ${data.solved ? "bg-green-500" : "bg-primary"}`}
+        onClick={() => {
+          if (!data.solved){
+            router.push(`/challenges/${challengeId}/${data.problemId}`)}
+          }
+        }
+      >
+        <span>{data.solved ? "Solved" : "Solve Problem"}</span>
+      </Button>
     </div>
   );
 };

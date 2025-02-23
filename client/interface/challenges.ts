@@ -11,6 +11,7 @@ export interface IChallengeProblem{
     title : string;
     difficulty: number;
     points: number;
+    solved: number;
 }
 
 export interface IChallenge {
