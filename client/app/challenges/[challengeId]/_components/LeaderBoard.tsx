@@ -44,7 +44,7 @@ export default function LeaderBoard({ challengeId , challenge }: { challengeId: 
                 </span>
             </div>
         </header>
-        <div className="w-[80%] m-auto h-[650px] bg-bgsecondary rounded-lg p-5 overflow-hidden">
+        <div className="w-[80%] m-auto min-h-[800px] bg-bgsecondary rounded-lg p-5 overflow-hidden">
             <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">LeaderBoard</h1></div>
             <div className="w-full h-[400px] overflow-y-auto">
                 <Table>

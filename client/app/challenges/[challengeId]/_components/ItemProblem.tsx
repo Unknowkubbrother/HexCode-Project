@@ -23,9 +23,7 @@ export default function ItemProblem({ data, challengeId }: { data: IChallengePro
 
       <Button variant="default" size="sm" asChild className={`absolute top-1/2 right-0 transform -translate-x-1/4 -translate-y-1/2 hover:scale-105 duration-300 cursor-pointer ${data.solved ? "bg-green-500" : "bg-primary"}`}
         onClick={() => {
-          if (!data.solved){
-            router.push(`/challenges/${challengeId}/${data.problemId}`)}
-          }
+          router.push(`/challenges/${challengeId}/${data.problemId}`)}
         }
       >
         <span>{data.solved ? "Solved" : "Solve Problem"}</span>
