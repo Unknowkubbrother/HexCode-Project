@@ -1,4 +1,4 @@
-// import CountDownTimer from "@/components/ui/CountDownTimer";
+import CountDownTimer from "@/components/ui/CountDownTimer";
 // import ItemProblem from "../_components/ItemProblem";
 // import {
 //     Avatar,
@@ -43,10 +43,10 @@ export default async function Page({
     return (
         <main className="w-full h-full">
             <header className="w-full flex justify-between px-10 mt-5">
-                {/* <span className="text-xl font-bold">{result?.title || "HEXCODE Challenge"}</span> */}
+                <span className="text-xl font-bold">{result?.title || "HEXCODE Challenge"}</span>
                 <span className="flex justify-center items-center gap-3 text-lg">
                     <span className="text-primary">TIME LEFT - </span>
-                    {/* {result && <CountDownTimer date={Number(result?.endTime || 0)} className="text-rose-400" />} */}
+                    {result && <CountDownTimer date={Number(result?.endTime || 0)} className="text-rose-400" />}
                 </span>
             </header>
             <div className="w-full px-10 grid grid-cols-2 mt-10 gap-x-10">
