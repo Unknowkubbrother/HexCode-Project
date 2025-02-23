@@ -62,7 +62,7 @@ export default async function Page({
 
                 {/*  */}
                 <div className="w-full h-fit flex flex-col gap-5">
-                    <div className="w-full h-[500px] bg-bgsecondary rounded-lg p-5 overflow-hidden">
+                    <div className="w-full h-[650px] bg-bgsecondary rounded-lg p-5 overflow-hidden">
                         <div className="w-full flex justify-center items-center flex-col gap-2 mb-2">
                             <h1 className="text-lg font-semibold">LeaderBoard</h1>
                             <Link href={`/challenges/${challengeId}/leaderboard`} className="hover:text-primary text-xs">REALTIME (CLICK)</Link>
