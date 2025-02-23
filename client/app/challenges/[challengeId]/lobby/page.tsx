@@ -25,11 +25,18 @@ export default async function Page({
     params: Promise<{ challengeId: string }>;
 }) {
     const challengeId: string = (await params).challengeId;
+
+    console.log(challengeId);
+    
     const { result, isJoined }: { result: IChallenge, isJoined: boolean } = await getChallengesById(challengeId);
 
     if (!isJoined) {
         return redirect(`/challenges/${challengeId}`);
     }
+
+    // if (result.startTime > Date.now()) {
+    //     return redirect(`/challenges/${challengeId}`);
+    // }
 
     const leaderboard = await getLeaderboardById(challengeId);
 
