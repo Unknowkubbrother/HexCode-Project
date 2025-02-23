@@ -17,7 +17,7 @@ import {
 // import Marquee from "react-fast-marquee";
 import { getChallengesById, getLeaderboardById } from "@/actions/challengeAction";
 import { redirect } from "next/navigation";
-import { IChallenge, IChallengeProblem, IPlayer } from "@/interface/challenges";
+import { IChallengeProblem, IPlayer } from "@/interface/challenges";
 
 export default async function Page({
     params,
@@ -28,15 +28,15 @@ export default async function Page({
 
     console.log(challengeId);
     
-    const { result, isJoined }: { result: IChallenge, isJoined: boolean } = await getChallengesById(challengeId);
+    const challenge = await getChallengesById(challengeId);
 
-    if (!isJoined) {
+    if (!challenge) {
         return redirect(`/challenges/${challengeId}`);
     }
 
-    // if (result.startTime > Date.now()) {
-    //     return redirect(`/challenges/${challengeId}`);
-    // }
+    if (!challenge.isJoined) {
+        return redirect(`/challenges/${challengeId}`);
+    }
 
     const leaderboard = await getLeaderboardById(challengeId);
 
@@ -46,7 +46,7 @@ export default async function Page({
                 <span className="text-xl font-bold">Google Challenge</span>
                 <span className="flex justify-center items-center gap-3 text-lg">
                     <span className="text-primary">TIME LEFT - </span>
-                    <CountDownTimer date={result.endTime} className="text-rose-400" />
+                    <CountDownTimer date={Number(challenge.result.endTime)} className="text-rose-400" />
                 </span>
             </header>
             {/* <div className="w-[95%] m-auto bg-bgsecondary h-[70px] mt-5 rounded-lg px-5 flex justify-start items-center">
@@ -59,7 +59,7 @@ export default async function Page({
                 <div className="w-full h-fit overflow-y-auto">
                     <div className="w-full h-fit grid grid-cols-1 gap-3">
                         {
-                            (result.problem as IChallengeProblem[])?.map((item, index) => (
+                            (challenge.result.problem as IChallengeProblem[])?.map((item, index) => (
                                 <div key={index}>
                                     <ItemProblem data={item} challengeId={challengeId} />
                                 </div>
@@ -106,7 +106,7 @@ export default async function Page({
                         <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">Player</h1></div>
                         <div className="w-full grid grid-cols-6 mt-5 gap-y-5">
                             {
-                                (result.player as unknown as IPlayer[])?.map((player, index) => (
+                                (challenge.result.player as unknown as IPlayer[])?.map((player, index) => (
                                     <span key={index} className="flex flex-col justify-center items-center gap-1">
                                         <Avatar className="w-10 h-10">
                                             <AvatarImage src={player.avatar} alt={player.username} />
