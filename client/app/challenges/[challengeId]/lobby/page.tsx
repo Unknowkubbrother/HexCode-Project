@@ -5,15 +5,15 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar";
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
+// import {
+//     Table,
+//     TableBody,
+//     TableCaption,
+//     TableCell,
+//     TableHead,
+//     TableHeader,
+//     TableRow,
+// } from "@/components/ui/table";
 import { getChallengesById, getLeaderboardById } from "@/actions/challengeAction";
 import { redirect } from "next/navigation";
 import { IChallengeProblem, IPlayer } from "@/interface/challenges";
@@ -25,9 +25,11 @@ export default async function Page({
 }) {
     const challengeId: string = (await params).challengeId;
 
-    console.log(challengeId);
+    // console.log(challengeId);
     
     const challenge = await getChallengesById(challengeId);
+
+    console.log(challenge);
 
     if (!challenge || !challenge.result || !challenge.isJoined) {
         return redirect(`/challenges/${challengeId}`);
@@ -43,7 +45,7 @@ export default async function Page({
     return (
         <main className="w-full h-full">
             <header className="w-full flex justify-between px-10 mt-5">
-                <span className="text-xl font-bold">{challenge?.title || "HEXCODE Challenge"}</span>
+                <span className="text-xl font-bold">{challenge?.result?.title || "HEXCODE Challenge"}</span>
                 <span className="flex justify-center items-center gap-3 text-lg">
                     <span className="text-primary">TIME LEFT - </span>
                     {challenge?.result && <CountDownTimer date={Number(challenge?.result?.endTime || 0)} className="text-rose-400" />}
