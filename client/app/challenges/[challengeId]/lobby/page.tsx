@@ -1,19 +1,19 @@
 import CountDownTimer from "@/components/ui/CountDownTimer";
 import ItemProblem from "../_components/ItemProblem";
-// import {
-//     Avatar,
-//     AvatarFallback,
-//     AvatarImage,
-// } from "@/components/ui/avatar"
-// import {
-//     Table,
-//     TableBody,
-//     TableCaption,
-//     TableCell,
-//     TableHead,
-//     TableHeader,
-//     TableRow,
-// } from "@/components/ui/table"
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 import { getChallengesById, getLeaderboardById } from "@/actions/challengeAction";
 import { redirect } from "next/navigation";
 import { IChallengeProblem, IPlayer } from "@/interface/challenges";
@@ -29,24 +29,16 @@ export default async function Page({
     
     const challenge = await getChallengesById(challengeId);
 
-    if (!challenge) {
+    if (!challenge || !challenge.result || !challenge.isJoined) {
         return redirect(`/challenges/${challengeId}`);
     }
 
-    if (!challenge.result){
-        return redirect(`/challenges/${challengeId}`);
-    }
-
-    if (!challenge.isJoined) {
-        return redirect(`/challenges/${challengeId}`);
-    }
-
-    // const leaderboard = await getLeaderboardById(challengeId);
+    const leaderboard = await getLeaderboardById(challengeId);
 
     return (
         <main className="w-full h-full">
             <header className="w-full flex justify-between px-10 mt-5">
-                <span className="text-xl font-bold">Google Challenge</span>
+                <span className="text-xl font-bold">{challenge?.title || "HEXCODE Challenge"}</span>
                 <span className="flex justify-center items-center gap-3 text-lg">
                     <span className="text-primary">TIME LEFT - </span>
                     {challenge?.result && <CountDownTimer date={Number(challenge?.result?.endTime || 0)} className="text-rose-400" />}
@@ -56,17 +48,17 @@ export default async function Page({
                 <div className="w-full h-fit overflow-y-auto">
                     <div className="w-full h-fit grid grid-cols-1 gap-3">
                         {
-                            challenge?.result?.problem?.map((item : IChallengeProblem, index : number) => (
+                            challenge?.result?.problem?.map((item: IChallengeProblem, index: number) => (
                                 <div key={index}>
                                     <ItemProblem data={item} challengeId={challengeId} />
                                 </div>
-                            ))
+                            )) || <p>No problems found</p>
                         }
                     </div>
                 </div>
 
                 {/*  */}
-                {/* <div className="w-full h-fit flex flex-col gap-5">
+                <div className="w-full h-fit flex flex-col gap-5">
                     <div className="w-full h-[500px] bg-bgsecondary rounded-lg p-5 overflow-hidden">
                         <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">LeaderBoard</h1></div>
                         <div className="w-full h-[400px] overflow-y-auto">
@@ -81,7 +73,7 @@ export default async function Page({
                                 </TableHeader>
                                 <TableBody>
                                     {
-                                        leaderboard?.result?.map((player : IPlayer, index : number) => (
+                                        leaderboard?.result?.map((player: IPlayer, index: number) => (
                                             <TableRow key={index} className={`${index % 2 === 1 ? 'bg-bgsecondary' : ''}`}>
                                                 <TableCell className="font-medium text-center">#{index + 1}</TableCell>
                                                 <TableCell className="text-center flex justify-center items-center gap-2">
@@ -93,7 +85,7 @@ export default async function Page({
                                                 </TableCell>
                                                 <TableCell className="text-center">{player.total}</TableCell>
                                             </TableRow>
-                                        ))
+                                        )) || <p>No leaderboard data available</p>
                                     }
                                 </TableBody>
                             </Table>
@@ -103,7 +95,7 @@ export default async function Page({
                         <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">Player</h1></div>
                         <div className="w-full grid grid-cols-6 mt-5 gap-y-5">
                             {
-                                challenge?.result?.player?.map((player : IPlayer, index : number) => (
+                                challenge.result?.player?.map((player: IPlayer, index: number) => (
                                     <span key={index} className="flex flex-col justify-center items-center gap-1">
                                         <Avatar className="w-10 h-10">
                                             <AvatarImage src={player.avatar} alt={player.username} />
@@ -111,12 +103,11 @@ export default async function Page({
                                         </Avatar>
                                         <span className="text-xs">{player.username}</span>
                                     </span>
-                                ))
+                                )) || <p>No players available</p>
                             }
                         </div>
                     </div>
-
-                </div> */}
+                </div>
                 {/*  */}
             </div>
         </main>
