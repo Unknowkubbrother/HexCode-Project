@@ -1,19 +1,19 @@
 import CountDownTimer from "@/components/ui/CountDownTimer";
 import ItemProblem from "../_components/ItemProblem";
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar"
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
+// import {
+//     Avatar,
+//     AvatarFallback,
+//     AvatarImage,
+// } from "@/components/ui/avatar"
+// import {
+//     Table,
+//     TableBody,
+//     TableCaption,
+//     TableCell,
+//     TableHead,
+//     TableHeader,
+//     TableRow,
+// } from "@/components/ui/table"
 import { getChallengesById, getLeaderboardById } from "@/actions/challengeAction";
 import { redirect } from "next/navigation";
 import { IChallengeProblem, IPlayer } from "@/interface/challenges";
@@ -41,7 +41,7 @@ export default async function Page({
         return redirect(`/challenges/${challengeId}`);
     }
 
-    const leaderboard = await getLeaderboardById(challengeId);
+    // const leaderboard = await getLeaderboardById(challengeId);
 
     return (
         <main className="w-full h-full">
@@ -66,7 +66,7 @@ export default async function Page({
                 </div>
 
                 {/*  */}
-                <div className="w-full h-fit flex flex-col gap-5">
+                {/* <div className="w-full h-fit flex flex-col gap-5">
                     <div className="w-full h-[500px] bg-bgsecondary rounded-lg p-5 overflow-hidden">
                         <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">LeaderBoard</h1></div>
                         <div className="w-full h-[400px] overflow-y-auto">
@@ -116,7 +116,7 @@ export default async function Page({
                         </div>
                     </div>
 
-                </div>
+                </div> */}
                 {/*  */}
             </div>
         </main>
