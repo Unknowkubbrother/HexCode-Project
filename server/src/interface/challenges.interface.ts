@@ -4,13 +4,20 @@ interface IPlayer{
     avatar : string;
 }
 
+export interface IChallengeProblem{
+    problemId : string;
+    title : string;
+    difficulty: number;
+    points: number;
+}
+
 export interface IChallenge {
     clerkId: string;
     title: string;
     description: string;
     thumbnail: string;
     images: Array<String>;
-    problem: Array<String>;
+    problem: Array<String | IChallengeProblem>;
     viewer: string;
     secret_code?: string;
     reward?: Array<String>;

@@ -14,7 +14,10 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import Marquee from "react-fast-marquee";
+// import Marquee from "react-fast-marquee";
+import {getChallengesById} from "@/actions/challengeAction";
+import { redirect } from "next/navigation";
+import {IChallenge, IChallengeProblem, IPlayer} from "@/interface/challenges";
 
 export default async function Page({
     params,
@@ -22,7 +25,11 @@ export default async function Page({
     params: Promise<{ challengeId: string }>;
 }) {
     const challengeId: string = (await params).challengeId;
-    console.log(challengeId);
+    const {result,isJoined} : {result : IChallenge , isJoined : boolean} = await getChallengesById(challengeId);
+
+    if (!isJoined){
+        return redirect(`/challenges/${challengeId}`);
+    }
 
     return (
         <main className="w-full h-full">
@@ -30,23 +37,25 @@ export default async function Page({
                 <span className="text-xl font-bold">Google Challenge</span>
                 <span className="flex justify-center items-center gap-3 text-lg">
                     <span className="text-primary">TIME LEFT - </span>
-                    <CountDownTimer date={Date.now() + 10000000} className="text-rose-400" />
+                    <CountDownTimer date={result.endTime} className="text-rose-400" />
                 </span>
             </header>
-            <div className="w-[95%] m-auto bg-bgsecondary h-[70px] mt-5 rounded-lg px-5 flex justify-start items-center">
+            {/* <div className="w-[95%] m-auto bg-bgsecondary h-[70px] mt-5 rounded-lg px-5 flex justify-start items-center">
                 <span className="px-2 py-2 rounded-lg font-semibold mr-3 bg-sky-700">Announce</span>
                 <Marquee>
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit. Hic ipsum officiis nisi quod unde consequatur velit quis libero inventore maiores, itaque explicabo aperiam, ut deleniti enim aspernatur beatae voluptatum architecto.
                 </Marquee>
-            </div>
+            </div> */}
             <div className="w-full px-10 grid grid-cols-2 mt-10 gap-x-10">
                 <div className="w-full h-fit overflow-y-auto">
                     <div className="w-full h-fit grid grid-cols-1 gap-3">
-                        {Array.from({ length: 10 }).map((_, idx) => (
-                            <div key={idx}>
-                                <ItemProblem />
-                            </div>
-                        ))}
+                        {
+                            (result.problem as IChallengeProblem[])?.map((item, index) => (
+                                <div key={index}>
+                                    <ItemProblem data={item} challengeId={challengeId}/>
+                                </div>
+                            ))
+                        }
                     </div>
                 </div>
 
@@ -85,15 +94,17 @@ export default async function Page({
                     <div className="w-full h-fit bg-bgsecondary rounded-lg p-5">
                         <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">Player</h1></div>
                         <div className="w-full grid grid-cols-6 mt-5 gap-y-5">
-                            {Array.from({ length: 10 }).map((_, idx) => (
-                                <span key={idx} className="flex flex-col justify-center items-center gap-1">
-                                    <Avatar className="w-10 h-10">
-                                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                                        <AvatarFallback>CN</AvatarFallback>
-                                    </Avatar>
-                                    <span className="text-xs">UserName {idx + 1}</span>
-                                </span>
-                            ))}
+                            {
+                                (result.player as unknown as IPlayer[])?.map((player, index) => (
+                                    <span key={index} className="flex flex-col justify-center items-center gap-1">
+                                        <Avatar className="w-10 h-10">
+                                            <AvatarImage src={player.avatar} alt={player.username} />
+                                            <AvatarFallback>{player.username}</AvatarFallback>
+                                        </Avatar>
+                                        <span className="text-xs">{player.username}</span>
+                                    </span>
+                                ))
+                            }
                         </div>
                     </div>
 
