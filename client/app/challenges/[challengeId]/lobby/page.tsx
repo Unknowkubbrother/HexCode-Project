@@ -46,7 +46,7 @@ export default async function Page({
                 <span className="text-xl font-bold">Google Challenge</span>
                 <span className="flex justify-center items-center gap-3 text-lg">
                     <span className="text-primary">TIME LEFT - </span>
-                    <CountDownTimer date={Number(challenge.result.endTime)} className="text-rose-400" />
+                    {challenge.result && <CountDownTimer date={Number(challenge.result.endTime)} className="text-rose-400" />}
                 </span>
             </header>
             {/* <div className="w-[95%] m-auto bg-bgsecondary h-[70px] mt-5 rounded-lg px-5 flex justify-start items-center">
@@ -59,7 +59,7 @@ export default async function Page({
                 <div className="w-full h-fit overflow-y-auto">
                     <div className="w-full h-fit grid grid-cols-1 gap-3">
                         {
-                            (challenge.result.problem as IChallengeProblem[])?.map((item, index) => (
+                            (challenge.result?.problem as IChallengeProblem[])?.map((item, index) => (
                                 <div key={index}>
                                     <ItemProblem data={item} challengeId={challengeId} />
                                 </div>
@@ -84,7 +84,7 @@ export default async function Page({
                                 </TableHeader>
                                 <TableBody>
                                     {
-                                        (leaderboard.result as IPlayer[]).map((player, index) => (
+                                        (leaderboard.result as IPlayer[])?.map((player, index) => (
                                             <TableRow key={index} className={`${index % 2 === 1 ? 'bg-bgsecondary' : ''}`}>
                                                 <TableCell className="font-medium text-center">#{index + 1}</TableCell>
                                                 <TableCell className="text-center flex justify-center items-center gap-2">
@@ -106,7 +106,7 @@ export default async function Page({
                         <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">Player</h1></div>
                         <div className="w-full grid grid-cols-6 mt-5 gap-y-5">
                             {
-                                (challenge.result.player as unknown as IPlayer[])?.map((player, index) => (
+                                (challenge.result?.player as unknown as IPlayer[])?.map((player, index) => (
                                     <span key={index} className="flex flex-col justify-center items-center gap-1">
                                         <Avatar className="w-10 h-10">
                                             <AvatarImage src={player.avatar} alt={player.username} />
