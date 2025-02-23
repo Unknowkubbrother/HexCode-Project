@@ -16,7 +16,7 @@ import {
 // } from "@/components/ui/table";
 import { getChallengesById } from "@/actions/challengeAction";
 import { redirect } from "next/navigation";
-import { IChallengeProblem, IPlayer } from "@/interface/challenges";
+import { IChallengeProblem } from "@/interface/challenges";
 
 export default async function Page({
     params,
