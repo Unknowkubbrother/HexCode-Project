@@ -24,14 +24,11 @@ export default async function Page({
     params: Promise<{ challengeId: string }>;
 }) {
     const challengeId: string = (await params).challengeId;
-
-    // console.log(challengeId);
     
-    const challenge = await getChallengesById(challengeId);
+    const {result , isJoined} = await getChallengesById(challengeId);
 
-    console.log(challenge);
 
-    if (!challenge || !challenge.result || !challenge.isJoined) {
+    if (!isJoined) {
         return redirect(`/challenges/${challengeId}`);
     }
 
@@ -45,17 +42,17 @@ export default async function Page({
     return (
         <main className="w-full h-full">
             <header className="w-full flex justify-between px-10 mt-5">
-                <span className="text-xl font-bold">{challenge?.result?.title || "HEXCODE Challenge"}</span>
+                <span className="text-xl font-bold">{result?.title || "HEXCODE Challenge"}</span>
                 <span className="flex justify-center items-center gap-3 text-lg">
                     <span className="text-primary">TIME LEFT - </span>
-                    {challenge?.result && <CountDownTimer date={Number(challenge?.result?.endTime || 0)} className="text-rose-400" />}
+                    {result && <CountDownTimer date={Number(result?.endTime || 0)} className="text-rose-400" />}
                 </span>
             </header>
             <div className="w-full px-10 grid grid-cols-2 mt-10 gap-x-10">
                 <div className="w-full h-fit overflow-y-auto">
                     <div className="w-full h-fit grid grid-cols-1 gap-3">
                         {
-                            challenge?.result?.problem?.map((item: IChallengeProblem, index: number) => (
+                            result?.problem?.map((item: IChallengeProblem, index: number) => (
                                 <div key={index}>
                                     <ItemProblem data={item} challengeId={challengeId} />
                                 </div>
@@ -102,7 +99,7 @@ export default async function Page({
                         <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">Player</h1></div>
                         <div className="w-full grid grid-cols-6 mt-5 gap-y-5">
                             {
-                                challenge.result?.player?.map((player: IPlayer, index: number) => (
+                                result?.player?.map((player: IPlayer, index: number) => (
                                     <span key={index} className="flex flex-col justify-center items-center gap-1">
                                         <Avatar className="w-10 h-10">
                                             <AvatarImage src={player.avatar} alt={player.username} />
