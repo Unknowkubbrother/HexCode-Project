@@ -28,12 +28,12 @@ export default async function Page({
     console.log(challengeId);
     
     const challenge = await getChallengesById(challengeId);
+    const leaderboard = await getLeaderboardById(challengeId);
 
-    if (!challenge || !challenge.result || !challenge.isJoined) {
+    if (!challenge || !challenge.result || !challenge.isJoined || !leaderboard) {
         return redirect(`/challenges/${challengeId}`);
     }
 
-    const leaderboard = await getLeaderboardById(challengeId);
 
     return (
         <main className="w-full h-full">
