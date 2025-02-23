@@ -100,14 +100,17 @@ export default async function Page({
                     </div>
                     <div className="w-full h-fit bg-bgsecondary rounded-lg p-5">
                         <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">Player</h1></div>
-                        <div className="w-full grid grid-cols-6 mt-5 gap-y-5">
+                        <div className="w-full grid grid-cols-7 mt-5 gap-y-5">
                             {(result && result.player && result.player.length > 0) ?
                                 (
                                     (result.player as unknown as IPlayer[]).map((player: IPlayer, index: number) => (
-                                        <Avatar key={index} className="w-10 h-10">
-                                            <AvatarImage src={player.avatar} alt={player.username} />
-                                            <AvatarFallback>{player.username}</AvatarFallback>
-                                        </Avatar>
+                                        <div className="flex flex-col justify-center items-center gap-3" key={index}>
+                                            <Avatar className="w-10 h-10">
+                                                <AvatarImage src={player.avatar} alt={player.username} />
+                                                <AvatarFallback>{player.username}</AvatarFallback>
+                                            </Avatar>
+                                            <span className="text-xs">{player.username}</span>
+                                        </div>
                                     ))
                                 )
                                 :
