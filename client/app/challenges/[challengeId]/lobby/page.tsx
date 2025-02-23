@@ -17,6 +17,7 @@ import {
 import { getChallengesById, getLeaderboardById } from "@/actions/challengeAction";
 import { redirect } from "next/navigation";
 import { IChallengeProblem, IPlayer, IChallenge } from "@/interface/challenges";
+import Link from "next/link";
 
 export default async function Page({
     params,
@@ -51,19 +52,22 @@ export default async function Page({
                 <div className="w-full h-fit overflow-y-auto">
                     <div className="w-full h-fit grid grid-cols-1 gap-3">
                         {(result && result.problem && result.problem.length > 0) ?
-                        (
-                            (result.problem as IChallengeProblem[]).map((problem: IChallengeProblem, index: number) => (
-                                <ItemProblem key={index} data={problem} challengeId={challengeId} />
-                            ))
-                        )
-                        : <p>No problem available</p>}
+                            (
+                                (result.problem as IChallengeProblem[]).map((problem: IChallengeProblem, index: number) => (
+                                    <ItemProblem key={index} data={problem} challengeId={challengeId} />
+                                ))
+                            )
+                            : <p>No problem available</p>}
                     </div>
                 </div>
 
                 {/*  */}
                 <div className="w-full h-fit flex flex-col gap-5">
                     <div className="w-full h-[500px] bg-bgsecondary rounded-lg p-5 overflow-hidden">
-                        <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">LeaderBoard</h1></div>
+                        <div className="w-full flex justify-center items-center flex-col gap-2 mb-2">
+                            <h1 className="text-lg font-semibold">LeaderBoard</h1>
+                            <Link href={`/challenges/${challengeId}/leaderboard`} className="hover:text-primary text-xs">REALTIME (CLICK)</Link>
+                        </div>
                         <div className="w-full h-[400px] overflow-y-auto">
                             <Table>
                                 <TableCaption>A list of LeaderBoard.</TableCaption>
@@ -98,16 +102,16 @@ export default async function Page({
                         <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">Player</h1></div>
                         <div className="w-full grid grid-cols-6 mt-5 gap-y-5">
                             {(result && result.player && result.player.length > 0) ?
-                            (
-                                (result.player as unknown as IPlayer[]).map((player: IPlayer, index: number) => (
-                                    <Avatar key={index} className="w-10 h-10">
-                                        <AvatarImage src={player.avatar} alt={player.username} />
-                                        <AvatarFallback>{player.username}</AvatarFallback>
-                                    </Avatar>
-                                ))
-                            )
-                            :
-                            <></>
+                                (
+                                    (result.player as unknown as IPlayer[]).map((player: IPlayer, index: number) => (
+                                        <Avatar key={index} className="w-10 h-10">
+                                            <AvatarImage src={player.avatar} alt={player.username} />
+                                            <AvatarFallback>{player.username}</AvatarFallback>
+                                        </Avatar>
+                                    ))
+                                )
+                                :
+                                <></>
                             }
                         </div>
                     </div>
