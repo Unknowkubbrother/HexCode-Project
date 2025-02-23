@@ -17,7 +17,7 @@ import {
 // import Marquee from "react-fast-marquee";
 import { getChallengesById, getLeaderboardById } from "@/actions/challengeAction";
 import { redirect } from "next/navigation";
-import { IChallenge, IChallengeProblem, IPlayer } from "@/interface/challenges";
+import { IChallengeProblem, IPlayer } from "@/interface/challenges";
 
 export default async function Page({
     params,
