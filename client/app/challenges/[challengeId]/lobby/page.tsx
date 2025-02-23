@@ -15,9 +15,9 @@ import {
     TableRow,
 } from "@/components/ui/table"
 // import Marquee from "react-fast-marquee";
-import {getChallengesById} from "@/actions/challengeAction";
+import { getChallengesById, getLeaderboardById } from "@/actions/challengeAction";
 import { redirect } from "next/navigation";
-import {IChallenge, IChallengeProblem, IPlayer} from "@/interface/challenges";
+import { IChallenge, IChallengeProblem, IPlayer } from "@/interface/challenges";
 
 export default async function Page({
     params,
@@ -25,11 +25,13 @@ export default async function Page({
     params: Promise<{ challengeId: string }>;
 }) {
     const challengeId: string = (await params).challengeId;
-    const {result,isJoined} : {result : IChallenge , isJoined : boolean} = await getChallengesById(challengeId);
+    const { result, isJoined }: { result: IChallenge, isJoined: boolean } = await getChallengesById(challengeId);
 
-    if (!isJoined){
+    if (!isJoined) {
         return redirect(`/challenges/${challengeId}`);
     }
+
+    const leaderboard = await getLeaderboardById(challengeId);
 
     return (
         <main className="w-full h-full">
@@ -52,7 +54,7 @@ export default async function Page({
                         {
                             (result.problem as IChallengeProblem[])?.map((item, index) => (
                                 <div key={index}>
-                                    <ItemProblem data={item} challengeId={challengeId}/>
+                                    <ItemProblem data={item} challengeId={challengeId} />
                                 </div>
                             ))
                         }
@@ -74,19 +76,21 @@ export default async function Page({
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {Array.from({ length: 10 }).map((_, idx) => (
-                                        <TableRow key={idx}>
-                                            <TableCell className="text-center">#{idx + 1}</TableCell>
-                                            <TableCell className="text-center flex justify-center items-center gap-2">
-                                                <Avatar key={idx} className="w-5 h-5">
-                                                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                                                    <AvatarFallback>CN</AvatarFallback>
-                                                </Avatar>
-                                               <span>username{idx + 1}</span>
-                                            </TableCell>
-                                            <TableCell className="text-center">{100 + idx}</TableCell>
-                                        </TableRow>
-                                    ))}
+                                    {
+                                        (leaderboard.result as IPlayer[]).map((player, index) => (
+                                            <TableRow key={index} className={`${index % 2 === 1 ? 'bg-bgsecondary' : ''}`}>
+                                                <TableCell className="font-medium text-center">#{index + 1}</TableCell>
+                                                <TableCell className="text-center flex justify-center items-center gap-2">
+                                                    <Avatar className="w-5 h-5">
+                                                        <AvatarImage src={player.avatar} alt={player.username} />
+                                                        <AvatarFallback>{player.username}</AvatarFallback>
+                                                    </Avatar>
+                                                    <span>{player.username}</span>
+                                                </TableCell>
+                                                <TableCell className="text-center">{player.total}</TableCell>
+                                            </TableRow>
+                                        ))
+                                    }
                                 </TableBody>
                             </Table>
                         </div>

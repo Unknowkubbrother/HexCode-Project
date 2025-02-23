@@ -1,7 +1,6 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-// import { ListProblemInterface } from "@/interface/problems";
 import StatusDifficulty from "@/components/ui/StatusDifficulty";
 import { IChallengeProblem } from '@/interface/challenges'
 

@@ -21,7 +21,6 @@ import { IJudge0Submission } from "@/interface/judge0";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
 import logo from "@/assets/logo.svg";
-
 import MarkDown from "@/components/ui/MarkDown";
 
 interface ISubmission {
@@ -31,7 +30,7 @@ interface ISubmission {
   success: boolean
 }
 
-export default function TabProblem({ problemData }: { problemData: IProblem }) {
+export default function TabProblem({ problemData }: { problemData: IProblem}) {
   const [language, setLanguage] = useState<string>("javascript");
   const [code, setCode] = useState<string>(customLanguages[language].template);
   const [InputCode, setInputCode] = useState<string>("");

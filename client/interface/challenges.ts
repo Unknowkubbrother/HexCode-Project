@@ -2,6 +2,7 @@ export interface IPlayer{
     clerkId : string;
     username : string;
     avatar : string;
+    total?: number;
 }
 
 

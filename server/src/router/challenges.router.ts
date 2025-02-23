@@ -275,6 +275,39 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       }),
     })
 
+
+  .get("/isJoined/:challengeId", async ({ params, auth, error }) => {
+    try {
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const { challengeId } = params;
+
+      let challenge = await getChallengeById(challengeId);
+
+      if (!challenge) {
+        return error(404, "Not found challenge");
+      }
+
+      const isJoined = challenge.player?.includes(auth.userId);
+
+      return {
+        status: 200,
+        isJoined: isJoined,
+      }
+
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+  },
+    {
+      params: t.Object({
+        challengeId: t.String(),
+      }),
+    })
+
   .get("/remove/:id", async ({ params, auth, error }) => {
     try {
       if (!auth?.userId) {
@@ -420,7 +453,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "challenge not found");
       }
 
-      const result = await SubmissionModel.aggregate([
+      let result = await SubmissionModel.aggregate([
         {
           $match: {
             clerkId: { $in: challenge.player },
@@ -450,6 +483,22 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
           }
         }
       ]);
+
+      result = await Promise.all(result.map(async (item) => {
+        const account = await getAccountbyClerkId(item.clerkId);
+        if (!account) {
+          return null;
+        }
+
+        return {
+          clerkId: account.clerkId,
+          username: account.username,
+          avatar: account.avatar,
+          total: item.total,
+        }
+
+      }));
+
       return {
         status: 200,
         result: result,
