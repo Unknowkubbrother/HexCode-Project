@@ -14,7 +14,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-// import Marquee from "react-fast-marquee";
 import { getChallengesById, getLeaderboardById } from "@/actions/challengeAction";
 import { redirect } from "next/navigation";
 import { IChallengeProblem, IPlayer } from "@/interface/challenges";
@@ -50,20 +49,14 @@ export default async function Page({
                 <span className="text-xl font-bold">Google Challenge</span>
                 <span className="flex justify-center items-center gap-3 text-lg">
                     <span className="text-primary">TIME LEFT - </span>
-                    {challenge.result && <CountDownTimer date={Number(challenge?.result?.endTime || 0)} className="text-rose-400" />}
+                    {challenge?.result && <CountDownTimer date={Number(challenge?.result?.endTime || 0)} className="text-rose-400" />}
                 </span>
             </header>
-            {/* <div className="w-[95%] m-auto bg-bgsecondary h-[70px] mt-5 rounded-lg px-5 flex justify-start items-center">
-                <span className="px-2 py-2 rounded-lg font-semibold mr-3 bg-sky-700">Announce</span>
-                <Marquee>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Hic ipsum officiis nisi quod unde consequatur velit quis libero inventore maiores, itaque explicabo aperiam, ut deleniti enim aspernatur beatae voluptatum architecto.
-                </Marquee>
-            </div> */}
             <div className="w-full px-10 grid grid-cols-2 mt-10 gap-x-10">
                 <div className="w-full h-fit overflow-y-auto">
                     <div className="w-full h-fit grid grid-cols-1 gap-3">
                         {
-                            challenge.result?.problem?.map((item : IChallengeProblem, index : number) => (
+                            challenge?.result?.problem?.map((item : IChallengeProblem, index : number) => (
                                 <div key={index}>
                                     <ItemProblem data={item} challengeId={challengeId} />
                                 </div>
@@ -88,7 +81,7 @@ export default async function Page({
                                 </TableHeader>
                                 <TableBody>
                                     {
-                                        leaderboard.result?.map((player : IPlayer, index : number) => (
+                                        leaderboard?.result?.map((player : IPlayer, index : number) => (
                                             <TableRow key={index} className={`${index % 2 === 1 ? 'bg-bgsecondary' : ''}`}>
                                                 <TableCell className="font-medium text-center">#{index + 1}</TableCell>
                                                 <TableCell className="text-center flex justify-center items-center gap-2">
@@ -110,7 +103,7 @@ export default async function Page({
                         <div className="w-full flex justify-center items-center"><h1 className="text-lg font-semibold">Player</h1></div>
                         <div className="w-full grid grid-cols-6 mt-5 gap-y-5">
                             {
-                                challenge.result?.player?.map((player : IPlayer, index : number) => (
+                                challenge?.result?.player?.map((player : IPlayer, index : number) => (
                                     <span key={index} className="flex flex-col justify-center items-center gap-1">
                                         <Avatar className="w-10 h-10">
                                             <AvatarImage src={player.avatar} alt={player.username} />
