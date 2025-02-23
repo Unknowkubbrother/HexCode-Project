@@ -30,7 +30,7 @@ export default async function Page({
     const challenge = await getChallengesById(challengeId);
     const leaderboard = await getLeaderboardById(challengeId);
 
-    if (!challenge || !challenge.result || !challenge.isJoined || !leaderboard) {
+    if (!challenge || !challenge.result || !challenge.isJoined || !leaderboard || !leaderboard.result) {
         return redirect(`/challenges/${challengeId}`);
     }
 
