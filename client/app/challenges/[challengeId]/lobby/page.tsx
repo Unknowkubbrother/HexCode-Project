@@ -1,5 +1,5 @@
 // import CountDownTimer from "@/components/ui/CountDownTimer";
-import ItemProblem from "../_components/ItemProblem";
+// import ItemProblem from "../_components/ItemProblem";
 // import {
 //     Avatar,
 //     AvatarFallback,
@@ -16,7 +16,7 @@ import ItemProblem from "../_components/ItemProblem";
 // } from "@/components/ui/table";
 import { getChallengesById } from "@/actions/challengeAction";
 import { redirect } from "next/navigation";
-import { IChallengeProblem } from "@/interface/challenges";
+// import { IChallengeProblem } from "@/interface/challenges";
 
 export default async function Page({
     params,
@@ -27,6 +27,7 @@ export default async function Page({
     
     const {result , isJoined} = await getChallengesById(challengeId);
 
+    console.log(result);
 
     if (!isJoined) {
         return redirect(`/challenges/${challengeId}`);
@@ -51,13 +52,13 @@ export default async function Page({
             <div className="w-full px-10 grid grid-cols-2 mt-10 gap-x-10">
                 <div className="w-full h-fit overflow-y-auto">
                     <div className="w-full h-fit grid grid-cols-1 gap-3">
-                        {
+                        {/* {
                             result?.problem?.map((item: IChallengeProblem, index: number) => (
                                 <div key={index}>
                                     <ItemProblem data={item} challengeId={challengeId} />
                                 </div>
                             )) || <p>No problems found</p>
-                        }
+                        } */}
                     </div>
                 </div>
 
