@@ -2,6 +2,15 @@ export interface IPlayer{
     clerkId : string;
     username : string;
     avatar : string;
+    total?: number;
+}
+
+
+export interface IChallengeProblem{
+    problemId : string;
+    title : string;
+    difficulty: number;
+    points: number;
 }
 
 export interface IChallenge {
@@ -11,7 +20,7 @@ export interface IChallenge {
     description: string;
     thumbnail: string;
     images: Array<String>;
-    problem: Array<String>;
+    problem: Array<String | IChallengeProblem>;
     viewer: string;
     secret_code?: string;
     reward?: Array<String>;
