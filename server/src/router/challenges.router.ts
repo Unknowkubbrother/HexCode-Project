@@ -165,7 +165,9 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
 
       const challenges = await getChallenges();
 
-      if (!challenges) {
+      const filterChallengeEndTime = challenges.filter((challenge) => challenge.endTime > Date.now());
+
+      if (!filterChallengeEndTime) {
         return error(404, "List Challenge Error");
       }
 
@@ -175,7 +177,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "Account not found");
       }
 
-      const filterChallenges = challenges.map((challenge) => {
+      const filterChallenges = filterChallengeEndTime.map((challenge) => {
         return {
           _id: challenge._id,
           avatar: account.avatar,
@@ -215,6 +217,9 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "Not found challenge");
       }
 
+      if (challenge.endTime < Date.now()) {
+        return error(404, "This challenge is ended");
+      }
 
       const isJoined = challenge.player?.includes(auth.userId);
 

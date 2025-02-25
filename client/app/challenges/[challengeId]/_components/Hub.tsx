@@ -125,9 +125,9 @@ export default function Hub({ data, isJoined }: { data: IChallenge, isJoined: bo
             <span className="p-1 border-2 rounded-lg border-primary text-xs">{data.viewer}</span>
             <span className="text-lg font-semibold">
               {Date.now() < data.startTime ?
-              <span className="text-primary">Opening time - </span>
-              :  
-              <span className="text-rose-400">Closed </span>
+                <span className="text-primary">Opening time - </span>
+                :
+                <span className="text-green-400"> 🔥 Starting . . .</span>
               }
               {Date.now() < data.startTime && (
                 <span className="text-green-400">Now - {coverTimeString(Number(data.startTime))}</span>
@@ -142,17 +142,18 @@ export default function Hub({ data, isJoined }: { data: IChallenge, isJoined: bo
                 Go To Lobby
               </Button>
             }
-            {!Joined ?
-              <Button
-                onClick={() =>
-                  data.viewer == 'private' ? setIsShowInputSecrectCode(true) : handlerJoinChallenge()
-                }
-              >Join Challenge</Button>
-              :
-              <Button
-                onClick={handlerLeaveChallenge}
-                className="bg-rose-400"
-              >Leave Challenge</Button>
+            {Date.now() < data.startTime &&
+              (!Joined ?
+                <Button
+                  onClick={() =>
+                    data.viewer == 'private' ? setIsShowInputSecrectCode(true) : handlerJoinChallenge()
+                  }
+                >Join Challenge</Button> :
+                <Button
+                  onClick={handlerLeaveChallenge}
+                  className="bg-rose-400"
+                >Leave Challenge</Button>
+              )
             }
           </div>
         </header>
@@ -236,7 +237,7 @@ export default function Hub({ data, isJoined }: { data: IChallenge, isJoined: bo
           <header>
             <h1>Secret Code</h1>
           </header>
-          <Input type="text" placeholder="Enter Secret Code" onChange={(e) => setSecretCode(e.target.value)} className="border-2 border-primary text-center" value={secretCode}/>
+          <Input type="text" placeholder="Enter Secret Code" onChange={(e) => setSecretCode(e.target.value)} className="border-2 border-primary text-center" value={secretCode} />
           <div className="flex justify-center items-center gap-3">
             <Button
               onClick={handlerJoinChallenge}
