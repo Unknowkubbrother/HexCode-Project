@@ -59,7 +59,7 @@ export default function CreateProblem() {
   const [description, setDescription] = useState<string>("");
   const [viewer, setViewer] = useState<string>("public");
   const [docs, setDocs] = useState<File>();
-  const [cpuTimeLimit, setCpuTimeLimit] = useState<number>(60.00);
+  const [cpuTimeLimit, setCpuTimeLimit] = useState<number>(1.00);
   const [memoryLimit, setMemoryLimit] = useState<number>(64);
   const [stackLimit, setStackLimit] = useState<number>(64);
   const [maxFileSize, setMaxFileSize] = useState<number>(64);
