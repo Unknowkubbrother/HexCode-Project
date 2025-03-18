@@ -33,7 +33,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         const problemCreated = await createProblem({
           clerkId: auth.userId,
           title: title,
-          description: description,
+          ...description && { description: description },
           viewer: viewer,
           difficulty: Number(difficulty),
           type: toArray(JSON.parse(type)),
@@ -100,7 +100,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
     {
       body: t.Object({
         title: t.String(),
-        description: t.String(),
+        description: t.Optional(t.String()),
         difficulty: t.String(),
         type: t.String(),
         viewer: t.String(),

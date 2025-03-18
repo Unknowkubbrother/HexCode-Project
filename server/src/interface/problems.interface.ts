@@ -1,7 +1,7 @@
 export interface IProblem {
     clerkId: string;
     title: string;
-    description: string;
+    description?: string;
     difficulty: number;
     type: Array<number>;
     submissions?: number;
