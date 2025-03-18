@@ -74,7 +74,7 @@ export default function CreateProblem() {
       if (!newTestCases[index]) {
         newTestCases[index] = { input: undefined, output: undefined, points: 0 };
       }
-      newTestCases[index][type] = file;
+      newTestCases[index][type as "input" | "output"] = file;
       setTestCase(newTestCases);
     }
   };
@@ -84,7 +84,8 @@ export default function CreateProblem() {
     if (!newTestCases[index]) {
       newTestCases[index] = { input: undefined, output: undefined, points: 0 };
     }
-    newTestCases[index].points = parseInt(e.target.value) > 0 ? parseInt(e.target.value) : 0;
+    const points = parseInt(e.target.value);
+    newTestCases[index].points = !isNaN(points) && points > 0 ? points : 0;
     setTestCase(newTestCases);
   }
 
@@ -100,6 +101,7 @@ export default function CreateProblem() {
     } else {
       setTestCase(TestCase.slice(0, count));
     }
+    setCountTestCases(count);
   }
 
   const handlerCountHint = (count: number) => {
