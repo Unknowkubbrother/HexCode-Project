@@ -47,7 +47,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
             source_code: source_code,
             language_id: language_id,
             stdin: input,
-            ...(cpu_time_limit && { cpu_time_limit: min(cpu_time_limit as number, 30) }),
+            ...(cpu_time_limit && { cpu_time_limit: min(cpu_time_limit as number, 60) }),
             ...(memory_limit && { memory_limit }),
             ...(stack_limit && { stack_limit }),
             ...(max_file_size && { max_file_size }),
@@ -56,13 +56,13 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
 
           return await new Promise((resolve, reject) => {
             const worker = new Worker(`${import.meta.dir}/worker.ts`);
-            worker.postMessage({ token, delay: min((cpu_time_limit as number) + 5,30) });
+            worker.postMessage({ token, delay: min((cpu_time_limit as number) + 15,60) });
 
             worker.onmessage = (event) => {
                 resolve({
                 ...event.data,
                 testcaseId: idx,
-                points: event.data.status.description === "Accepted" ? testcase.points : 0,
+                points: event.data.status.description != "Accepted" ? 0 : testcase.points,
                 });
               worker.terminate();
             };
