@@ -42,6 +42,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           ...(memory_limit && { memory_limit: Number(memory_limit) }),
           ...(stack_limit && { stack_limit: Number(stack_limit) }),
           ...(max_file_size && { max_file_size: Number(max_file_size) }),
+          ...((viewer == "public") && { status: "pending" }),
         });
 
         if (!problemCreated) {
@@ -134,6 +135,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           ...(difficulty.length && { difficulty: { $in: difficulty } }),
           ...(type.length && { type: { $in: type } }),
           ...(search.length && { title: { $regex: search, $options: 'i' } }),
+          status: "active",
         };
 
         if(query.solve){
@@ -212,6 +214,10 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         const problem = await getProblemById(id);
 
         if (!problem) {
+          return error(404, "problem not found");
+        }
+
+        if (problem.status != "active") {
           return error(404, "problem not found");
         }
 
