@@ -226,9 +226,7 @@ export default function EditProblem({ problemData }: { problemData: IProblem }) 
         formProblem.append("title", title);
         formProblem.append("difficulty", difficulty.toString());
         formProblem.append("type", JSON.stringify(type));
-        if (description) {
-            formProblem.append("description", description);
-        }
+        formProblem.append("description", description || "");
         formProblem.append("viewer", viewer);
         if (docs) {
             formProblem.append("docs", docs as Blob);

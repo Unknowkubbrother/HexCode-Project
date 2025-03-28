@@ -378,7 +378,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
 
       const problemData = {
         title: String(title),
-        ...description && { description: description },
+        description: description,
         viewer: String(viewer),
         status: (problem.viewer == "private" && viewer == "public") ? "pending" : "active",
         difficulty: Number(difficulty),
