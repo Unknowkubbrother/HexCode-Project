@@ -13,6 +13,15 @@ export interface ListProblemInterface {
     points: number;
 }
 
+export interface ITestcase  {
+    _id: string;
+    id: number;
+    problemId: string;
+    input: string;
+    output: string;
+    points: number;
+}
+
 export interface IProblem {
     _id: string;
     clerkId: string;
@@ -36,6 +45,7 @@ export interface IProblem {
     myMaxPoints?: number;
     createdAt?: string;
     updatedAt?: string;
+    testcase?: Array<ITestcase>;
 }
 
 interface TestcaseFile {

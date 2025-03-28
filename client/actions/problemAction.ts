@@ -63,3 +63,44 @@ export const createProblem = async (data: FormData) => {
         console.error(error);
     }
 };
+
+export const updateProblem = async (data: FormData) => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_END_POINT}/problem/update`, data, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+        return response.data;
+    }catch(error){
+        console.error(error);
+    }
+};
+
+
+export const getProblemEditById = async (id: string) => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_END_POINT}/problem/getedit/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+
+        return response.data;
+    }catch(error){
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+            redirect('/problems');
+        }
+        console.log(error);
+    }
+};
