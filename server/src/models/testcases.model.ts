@@ -35,6 +35,18 @@ export const TestCaseModel = model(
 export const createProblemTestcase = (values: ITestCase) =>
   new TestCaseModel(values).save().then((problem) => problem.toObject());
 
+export const updateProblemTestcase = (id : string, problemId: string, values: ITestCase) =>
+  TestCaseModel.findOneAndUpdate(
+    { _id: id, problemId: problemId },
+    { $set: values },
+    { new: true }
+  ).then((problem) => problem?.toObject()).catch(() => null);
+
+export const deleteProblemTestcase = (id: string, problemId: string) =>
+  TestCaseModel.findOneAndDelete({ _id: id, problemId: problemId })
+    .then((problem) => problem?.toObject())
+    .catch(() => null);
+
 export const getTestCasesByProblemId = (problemId: string) => TestCaseModel.find({
     problemId: problemId,
 }).then((testcases) => testcases.map((testcase) => testcase.toObject()));
@@ -45,6 +57,14 @@ export const getProblemByIdCaseAndProblemId = (
 ) => TestCaseModel.findOne({
     problemId: problemId,
     id: idcase,
+}).then((problem) => problem?.toObject()).catch(() => null);
+
+export const getProblemByIdAndProblemId = (
+  id: string,
+  problemId: string
+) => TestCaseModel.findOne({
+    problemId: problemId,
+    _id: id,
 }).then((problem) => problem?.toObject()).catch(() => null);
 
 export const getSumPointByProblemId = (problemId: string) =>
