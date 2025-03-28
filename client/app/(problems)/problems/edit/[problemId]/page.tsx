@@ -8,12 +8,10 @@ export default async function Page({
   const problemId : string = (await params).problemId;
     const {result} = await getProblemEditById(problemId);
 
-    console.log(result);
-
   return (
     <div className="w-full h-full">
         <main className="w-[90%] m-auto flex flex-col gap-10">
-            {/* <EditProblem problemData={result} /> */}
+            <EditProblem problemData={result} />
         </main>
     </div>
   );

@@ -90,7 +90,7 @@ export default function TabProblem({ problemData,setMyPoints}: { problemData: IP
       language_id: customLanguages[language].language_id,
     });
 
-    const sumPoints = response.testcases.reduce((acc: any, testcase: { status: { description: string; }; points: any; }) => {
+    const sumPoints = response.testcases.reduce((acc: number, testcase: { status: { description: string; }; points: number; }) => {
       if (testcase.status.description === "Accepted") {
         return acc + testcase.points;
       }
