@@ -42,7 +42,7 @@ export default function ItemProblem({ problem, itself }: { problem: ListProblemI
           </Button>
         </Link>
         {itself && (
-          <Link href={`/problem/edit/${problem.id}`} passHref>
+          <Link href={`/problems/edit/${problem.id}`} passHref>
             <Button variant="default" size="sm" className="bg-yellow-500 hover:scale-105 duration-300">
               <span>Edit</span>
             </Button>

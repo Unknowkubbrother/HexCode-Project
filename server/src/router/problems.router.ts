@@ -233,6 +233,57 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
             difficulty: problem.difficulty,
             submissions: problem.submissions,
             accepted: problem.accepted,
+            viewer: problem.viewer,
+            hint: problem.hint,
+            type: problem.type,
+            cpu_time_limit: problem.cpu_time_limit,
+            memory_limit: problem.memory_limit,
+            stack_limit: problem.stack_limit,
+            max_file_size: problem.max_file_size,
+            maxPoints: point[0]?.total || 0,
+            myMaxPoints: TopPointMySubmission?.points || 0,
+          },
+        };
+      } catch (e) {
+        console.log(e);
+        return error(500, "Internal Server Error");
+      }
+    },
+    {
+      params: t.Object({
+        id: t.String(),
+      }),
+    })
+
+    .get("getedit/:id", async ({ params, error , auth}) => {
+      try {
+
+        if (!auth?.userId) {
+          return error(401, "Unauthorized");
+        }
+
+        const { id } = params;
+
+        const problem = await getProblemById(id);
+
+        if (!problem) {
+          return error(404, "problem not found");
+        }
+
+        console.log(problem)
+
+        const point = await getSumPointByProblemId(problem._id.toString());
+        const TopPointMySubmission = await getTopSubmissionByProblemAndClerkId(problem._id.toString(),auth.userId);
+
+        return {
+          result: {
+            _id: problem._id,
+            title: problem.title,
+            description: problem.description,
+            difficulty: problem.difficulty,
+            submissions: problem.submissions,
+            accepted: problem.accepted,
+            viewer: problem.viewer,
             hint: problem.hint,
             type: problem.type,
             cpu_time_limit: problem.cpu_time_limit,
