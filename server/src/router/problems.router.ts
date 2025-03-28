@@ -426,21 +426,21 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
     }),
   })
 
-  .get("remove/:id", async ({ params, auth, error }) => {
+  .post("delete", async ({ body, auth, error }) => {
     try {
       if (!auth?.userId) {
         return error(401, "Unauthorized");
       }
 
-      const { id } = params;
+      const { _id } = body;
 
-      const problem = await ProblemModel.findOne({ _id: id, clerkId: auth.userId, status: "active" })
+      const problem = await ProblemModel.findOne({ _id: _id, clerkId: auth.userId, status: "active" })
 
       if (!problem) {
         return error(404, "problem not found");
       }
 
-      const problemUpeate = await updateProblem(id, { status: "deleted" });
+      const problemUpeate = await updateProblem(_id, { status: "deleted" });
       if (!problemUpeate) {
         return error(404, "remove error");
       }
@@ -454,7 +454,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
       return error(500, "Internal Server Error");
     }
   }, {
-    params: t.Object({
-      id: t.String(),
+    body: t.Object({
+      _id: t.String(),
     }),
   });

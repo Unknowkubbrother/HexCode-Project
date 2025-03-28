@@ -24,13 +24,15 @@ import {
     ToggleGroup,
     ToggleGroupItem,
 } from "@/components/ui/toggle-group"
-import { updateProblem } from "@/actions/problemAction"
+import { updateProblem,deleteProblem } from "@/actions/problemAction"
 import { toast } from 'react-toastify';
 import { updateTestCase, deleteTestCase } from "@/actions/TestCaseAction"
 import Loader from "@/components/ui/Loader";
 import { IProblem } from "@/interface/problems";
 import Link from "next/link";
 import { CodeBlock } from "@/components/ui/code-block";
+import { useRouter } from "next/navigation";
+import Swal from 'sweetalert2'
 
 const SchemaDifficulty: {
     [key: number]: string[];
@@ -53,6 +55,7 @@ const SolutionType: {
 
 export default function EditProblem({ problemData }: { problemData: IProblem }) {
     const { user } = useUser();
+    const router = useRouter();
     const [countTestCases, setCountTestCases] = useState<number>(problemData.testcase?.length || 1);
     const [countHint, setCountHint] = useState<number>(problemData.hint?.length || 1);
 
@@ -124,6 +127,54 @@ export default function EditProblem({ problemData }: { problemData: IProblem }) 
         } else {
             setType([...type, value]);
         }
+    }
+
+    const DeleteProblem = async () => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You cann't recover this problem!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+                setLoading(true);
+                const deletedProblem = await deleteProblem(problemData._id);
+        
+                if (!deletedProblem) {
+                    toast.error("Failed to delete problem. Please try again.", {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                    return;
+                }
+        
+                setLoading(false);
+                toast.success("Problem deleted successfully.", {
+                    position: "top-right",
+                    autoClose: 1500,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+        
+                setTimeout(() => {
+                    router.push("/");
+                }, 2000);
+            }
+          });
+        
     }
 
     const DeleteTestCase = async (index: number) => {
@@ -517,7 +568,7 @@ export default function EditProblem({ problemData }: { problemData: IProblem }) 
                 </div>
 
                 <div className="w-full mt-5 flex justify-end items-center gap-3">
-                    <Button variant="default" onClick={SaveProblem} className="bg-rose-400">Delete Problem</Button>
+                    <Button variant="default" onClick={DeleteProblem} className="bg-rose-400">Delete Problem</Button>
                     <Button variant="default" onClick={SaveProblem}>Save Problem</Button>
                 </div>
             </main>
