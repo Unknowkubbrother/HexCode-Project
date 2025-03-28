@@ -56,7 +56,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
 
           return await new Promise((resolve, reject) => {
             const worker = new Worker(`${import.meta.dir}/worker.ts`);
-            worker.postMessage({ token, delay: min((cpu_time_limit as number) + 15,60) });
+            worker.postMessage({ token, delay: min((cpu_time_limit as number) + 5,60) });
 
             worker.onmessage = (event) => {
                 resolve({

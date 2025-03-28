@@ -136,6 +136,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           ...(type.length && { type: { $in: type } }),
           ...(search.length && { title: { $regex: search, $options: 'i' } }),
           status: "active",
+          viewer: "public",
         };
 
         if(query.solve){
