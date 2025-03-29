@@ -9,6 +9,7 @@ import { fileRoute } from "@/router/file.router";
 import { AccountRoute } from "@/router/accounts.router";
 import { ProfileRoute } from "@/router/profile.router";
 import { ChallengeRoute } from "./router/challenges.router";
+import { VerifyRoute } from "./router/verifications.router";
 
 /**
 * @author clerkId Test go
@@ -31,6 +32,7 @@ const app = new Elysia()
   .use(AccountRoute)
   .use(ProfileRoute)
   .use(ChallengeRoute)
+  .use(VerifyRoute)
   .get("/", () =>{
     return {message: "Hello, Elysia! by HEX CODE"};
   })

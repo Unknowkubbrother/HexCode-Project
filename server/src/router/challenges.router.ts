@@ -559,4 +559,29 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       params: t.Object({
         id: t.String(),
       }),
-    });
+    })
+
+    .post("/search", async ({ body, auth, error }) => {
+      try {
+        if (!auth?.userId) {
+          return error(401, "Unauthorized");
+        }
+  
+        const { key } = body;
+        const challenges = await ChallengeModel.find({title: { $regex: key?key:"", $options: 'i' },viewer:"public"})
+
+        return {
+          status: 200,
+          challenges:challenges,
+        }
+  
+      } catch (e) {
+        console.log(e);
+        return error(500, "Internal Server Error");
+      }
+    },
+      {
+        body: t.Object({
+          key: t.String(),
+        }),
+      })
