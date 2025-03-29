@@ -1,4 +1,3 @@
-import React from 'react'
 import Link from 'next/link'
 import { Newspaper } from 'lucide-react';
 import {
@@ -10,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import CardChallenge from '@/components/ui/CardChallenge';
 import { IListChallenge } from '@/interface/challenges';
+import { Pen } from 'lucide-react';
 
 export default function Challengs({ itself, challenges }: { itself: boolean, challenges: IListChallenge[] }) {
     return (
@@ -35,7 +35,19 @@ export default function Challengs({ itself, challenges }: { itself: boolean, cha
                                     key={index}
                                     className="pl-3 md:basis-1/2 lg:basis-1/4"
                                 >
-                                    <CardChallenge key={index} data={item} />
+                                    {
+                                        !itself ?
+                                            <CardChallenge key={index} data={item} />
+                                            :
+                                            <div className='w-full h-fit relative'>
+                                                <CardChallenge key={index} data={item} />
+                                                <Link className='absolute top-0 right-2 text-primary cursor-pointer hover:scale-105 duration-300 bg-white rounded-full p-1 h-7 w-7 hover:text-green-400'
+                                                    href={`/challenges/edit/${item._id}`}
+                                                >
+                                                    <Pen size={20} />
+                                                </Link>
+                                            </div>
+                                    }
                                     {/* <div key={index}>
                                     {index+1}
                                 </div> */}
