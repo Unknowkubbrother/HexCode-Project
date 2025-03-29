@@ -102,6 +102,17 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "Invalid Viewer");
       }
 
+      const challenge = await getChallengeById(challengeId);
+
+      if (!challenge) {
+        return error(404, "Not found challenge");
+      }
+
+      if (challenge.clerkId !== auth.userId) {
+        return error(401, "Unauthorized");
+      }
+
+
       const challengeUpdated = await updateChallenge(challengeId, {
         title,
         description,
@@ -205,7 +216,6 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       if (!challenge) {
         return error(404, "Not found challenge");
       }
-
 
       if (challenge.clerkId !== auth.userId) {
         return error(401, "Unauthorized");
