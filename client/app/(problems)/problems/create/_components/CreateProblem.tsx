@@ -309,7 +309,7 @@ export default function CreateProblem() {
             </Label>
             <nav>
               <ul className="flex gap-2 justify-start items-center">
-                <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
+                <li className="px-5 py-2 text-xs rounded-lg flex flex-col justify-center items-center gap-1">
                   <div className="flex justify-center items-center gap-1">
                     <Cpu size={13} />
                     <span>TIME_LIMIT <span className="text-primary">(s)</span></span>
@@ -318,7 +318,7 @@ export default function CreateProblem() {
                     value={cpuTimeLimit} onChange={(e) => setCpuTimeLimit(parseFloat(e.target.value) > 0 ? parseFloat(e.target.value) : 0)}
                   />
                 </li>
-                <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
+                <li className="px-5 py-2 text-xs rounded-lg flex flex-col justify-center items-center gap-1">
                   <div className="flex justify-center items-center gap-1">
                     <Database size={13} />
                     <span>MEMORY_LIMIT <span className="text-primary">(MiB)</span></span>
@@ -327,7 +327,7 @@ export default function CreateProblem() {
                     value={memoryLimit} onChange={(e) => setMemoryLimit(parseInt(e.target.value) > 0 ? parseInt(e.target.value) : 0)}
                   />
                 </li>
-                <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
+                <li className="px-5 py-2 text-xs rounded-lg flex flex-col justify-center items-center gap-1">
                   <div className="flex justify-center items-center gap-1">
                     <Database size={13} />
                     <span>STACK_LIMIT <span className="text-primary">(MiB)</span></span>
@@ -336,7 +336,7 @@ export default function CreateProblem() {
                     value={stackLimit} onChange={(e) => setStackLimit(parseInt(e.target.value) > 0 ? parseInt(e.target.value) : 0)}
                   />
                 </li>
-                <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
+                <li className="px-5 py-2 text-xs rounded-lg flex flex-col justify-center items-center gap-1">
                   <div className="flex justify-center items-center gap-1">
                     <File size={13} />
                     <span>FILESIZE_LIMIT <span className="text-primary">(MiB)</span></span>
