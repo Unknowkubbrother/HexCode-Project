@@ -24,15 +24,18 @@ import Image from 'next/image'
 import { Label } from '@/components/ui/label'
 import { getMyProblemChallenges } from '@/actions/problemAction'
 import { toast } from 'react-toastify';
-import { updateChallenge } from '@/actions/challengeAction'
+import { updateChallenge , deleteChallenge} from '@/actions/challengeAction'
 import Loader from "@/components/ui/Loader";
 import {IChallenge} from '@/interface/challenges'
+import { useRouter } from "next/navigation";
+import Swal from 'sweetalert2'
 
 
 export default function EditChallenge({challengeData} : {challengeData: IChallenge}) {
+    const router = useRouter();
     const [title, setTitle] = useState<string>(challengeData.title || "");
-    const [startTime, setStartTime] = useState<string>(challengeData.startTime ? new Date(challengeData.startTime).toISOString().slice(0, 16) : "");
-    const [endTime, setEndTime] = useState<string>(challengeData.endTime ? new Date(challengeData.endTime).toISOString().slice(0, 16) : "");
+    const [startTime, setStartTime] = useState<string>(challengeData.startTime ? new Date(new Date(challengeData.startTime).getTime() + 7 * 60 * 60 * 1000).toISOString().slice(0, 16) : "");
+    const [endTime, setEndTime] = useState<string>(challengeData.endTime ? new Date(new Date(challengeData.endTime).getTime() + 7 * 60 * 60 * 1000).toISOString().slice(0, 16) : "");
     const [description, setDescription] = useState<string>(challengeData.description || "");
     const [viewer, setViewer] = useState<string>(challengeData.viewer || "public");
     const [countProblems, setCountProblems] = useState<number>(challengeData.problem.length || 1);
@@ -89,6 +92,54 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
         setUrlImages(urls);
         console.log(urlImages);
     }
+
+    const DeleteChallenge = async () => {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You cann't recover this challenge!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+              }).then(async (result) => {
+                if (result.isConfirmed) {
+                    setLoading(true);
+                    const deletedProblem = await deleteChallenge(challengeData._id);
+            
+                    if (!deletedProblem) {
+                        toast.error("Failed to challenge problem. Please try again.", {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: false,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                        });
+                        return;
+                    }
+            
+                    setLoading(false);
+                    toast.success("Challenge deleted successfully.", {
+                        position: "top-right",
+                        autoClose: 1500,
+                        hideProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+            
+                    setTimeout(() => {
+                        router.push("/challenges");
+                    }, 2000);
+                }
+              });
+            
+        }
 
     const handlereditChallenge = async () => {
         if (!title  || !viewer || !description || !urlThumbnail || !startTime || !endTime || !problems.length || !urlImages.length || !problems.every((p) => p) || !urlImages.every((u) => u)) {
@@ -333,6 +384,7 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
                     </div>
                 </div>
                 <div className="w-full mt-5 flex justify-end items-center gap-3">
+                <Button variant="default" onClick={DeleteChallenge} className="bg-rose-400">Delete Challenge</Button>
                     <Button variant="default" onClick={handlereditChallenge}>Edit Challenge</Button>
                 </div>
             </div>

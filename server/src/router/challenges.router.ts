@@ -94,7 +94,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
 
       const { challengeId, title, description, thumbnail, images, problem, viewer, reward, startTime, endTime } = body;
 
-      if (startTime < Date.now() || endTime < startTime) {
+      if (endTime < startTime) {
         return error(404, "Invalid Time");
       }
 
@@ -351,25 +351,25 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       }),
     })
 
-  .get("/remove/:id", async ({ params, auth, error }) => {
+  .post("/delete", async ({ body, auth, error }) => {
     try {
       if (!auth?.userId) {
         return error(401, "Unauthorized");
       }
 
-      const { id } = params;
+      const { _id } = body;
 
-      const challenge = await ChallengeModel.findOne({ _id: id, clerkId: auth.userId, status: "active" })
+      const challenge = await ChallengeModel.findOne({ _id: _id, clerkId: auth.userId, status: "active" })
 
       if (!challenge) {
         return error(404, "challenge not found");
       }
 
-      const challengeUpeate = await ChallengeModel.findByIdAndUpdate(id, { status: "deleted" });
+      const challengeUpeate = await ChallengeModel.findByIdAndUpdate(_id, { status: "deleted" });
+      
       if (!challengeUpeate) {
         return error(404, "remove error");
       }
-
 
       return {
         status: 200,
@@ -382,8 +382,8 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
     }
   },
     {
-      params: t.Object({
-        id: t.String(),
+      body: t.Object({
+        _id: t.String(),
       }),
     })
 

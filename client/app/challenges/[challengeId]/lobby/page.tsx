@@ -44,7 +44,14 @@ export default async function Page({
                 <span className="text-xl font-bold">{result?.title || "HEXCODE Challenge"}</span>
                 <span className="flex justify-center items-center gap-3 text-lg">
                     <span className="text-primary">TIME LEFT - </span>
-                    {result && <CountDownTimer date={Number(result?.endTime || 0)} className="text-rose-400" />}
+                    {result &&
+                        Date.now() < result?.startTime ?
+                        <span>
+                            <span>The challenge to start in </span>
+                            <CountDownTimer date={Number(result?.startTime || 0)} className="text-rose-400" />
+                        </span> :
+                        <CountDownTimer date={Number(result?.endTime || 0)} className="text-rose-400" />
+                    }
                 </span>
             </header>
             <div className="w-full px-10 grid grid-cols-2 mt-10 gap-x-10">
@@ -53,7 +60,7 @@ export default async function Page({
                         {(result && result.problem && result.problem.length > 0) ?
                             (
                                 (result.problem as IChallengeProblem[]).map((problem: IChallengeProblem, index: number) => (
-                                    <ItemProblem key={index} data={problem} challengeId={challengeId} startTime={Number(result.startTime)}/>
+                                    <ItemProblem key={index} data={problem} challengeId={challengeId} startTime={Number(result.startTime)} />
                                 ))
                             )
                             : <p>No problem available</p>}

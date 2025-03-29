@@ -23,7 +23,7 @@ export default function Header({ title, points, maxPoints,difficulty , challenge
       </div>
       <div className="flex flex-col gap-2 justify-center items-center">
         <span>Time Left</span>
-        <CountDownTimer date={Number(challengeData.endTime)} className="text-lg text-primary"/>
+        <CountDownTimer date={Number(challengeData.endTime)} className="text-lg text-rose-400"/>
       </div>
       <div className="w-fit flex flex-col gap-2">
         <div className="flex justify-start items-center gap-3">

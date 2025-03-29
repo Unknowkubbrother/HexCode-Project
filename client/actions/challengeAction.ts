@@ -181,3 +181,23 @@ export const getIsJoinedChallenge = async (id: string) => {
         console.log(error);
     }
 }
+
+export const deleteChallenge = async (id: string) => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_END_POINT}/challenge/delete`, {
+            _id: id
+        }, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+        return response.data;
+    }catch(error){
+        console.error(error);
+    }
+}

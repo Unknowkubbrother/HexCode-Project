@@ -170,7 +170,7 @@ export default function EditProblem({ problemData }: { problemData: IProblem }) 
                 });
         
                 setTimeout(() => {
-                    router.push("/");
+                    router.push("/problems");
                 }, 2000);
             }
           });
