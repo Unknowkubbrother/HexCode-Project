@@ -45,11 +45,13 @@ export const updateChallenge = async (data : ICreateChallenge) => {
     }
 }
 
-export const getChallenges = async () : Promise<any> => {
+export const getChallenges = async (searchParams : string) : Promise<any> => {
     try{
         const token = await getSession();
 
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_END_POINT}/challenge/gets`, {
+        const search = `?search=${searchParams}`;
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_END_POINT}/challenge/gets${search}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
 

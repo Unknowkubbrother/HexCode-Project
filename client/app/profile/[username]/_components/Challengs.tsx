@@ -15,7 +15,7 @@ export default function Challengs({ itself, challenges }: { itself: boolean, cha
     return (
         <main className='w-[80%] m-auto flex flex-col gap-3'>
             <header className='flex w-full justify-between items-center px-3'>
-                <span className='text-lg'>Challengs</span>
+                <span className='text-lg'>Challenges</span>
                 {itself && (
                     <Link href="/challenges/create" className='px-3 py-2 rounded-lg border border-input bg-background shadow-sm hover:text-accent-foreground border-sky-500 hover:bg-primary duration-300'>
                         <span className='flex justify-center items-center text-[13px] gap-2'>
@@ -48,9 +48,6 @@ export default function Challengs({ itself, challenges }: { itself: boolean, cha
                                                 </Link>
                                             </div>
                                     }
-                                    {/* <div key={index}>
-                                    {index+1}
-                                </div> */}
                                 </CarouselItem>
                             ))}
                         </CarouselContent>

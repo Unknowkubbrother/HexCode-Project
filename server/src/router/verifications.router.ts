@@ -1,11 +1,11 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { ChallengeModel, createChallenge, getChallenges, updateChallenge, getChallengeById } from "../models/challenges.model";
+import { ChallengeModel} from "../models/challenges.model";
 import { getProblemById, ProblemModel } from "@/models/problems.model";
 import { AccountModel, getAccountbyClerkId } from "@/models/accounts.model";
-import { createVerify, VerifyModel } from "@/models/verifications.model";
+import { createVerify } from "@/models/verifications.model";
 import { IVerify } from "@/interface/verifications.interface";
-import { sendupdaetProblem } from "@lib/resendEmail";
+import { sendNotification } from "@lib/resendEmail";
 import { getTestCasesByProblemId } from "@/models/testcases.model";
 
 export const VerifyRoute = new Elysia({ prefix: "/verify" })
@@ -156,13 +156,13 @@ export const VerifyRoute = new Elysia({ prefix: "/verify" })
         if(!updateproblem){
           return error(404, "update problem error");
         }
-        sendupdaetProblem(userproblem.email,"Verify problem",`<p>เราขอแสดงความยินดีด้วย problem:${problem.title} ของคุณได้เข้าสู่สถานะ public แล้ว<br>เนื่องจาก<br>${detail}<br>ขอบคุณจาก HexCode</p>`)
+        sendNotification(userproblem.email,"Verify problem",`<p>เราขอแสดงความยินดีด้วย problem:${problem.title} ของคุณได้เข้าสู่สถานะ public แล้ว<br>เนื่องจาก<br>${detail}<br>ขอบคุณจาก HexCode</p>`)
       }else{
         const updateproblem = await ProblemModel.findByIdAndUpdate(problemId,{viewer:"private",status:"active"})
         if(!updateproblem){
           return error(404, "update problem error");
         }
-        sendupdaetProblem(userproblem.email,"Verify problem",`<p>เราขอแสดงความเสียใจด้วยเราไม่สามารถนำ problem: ${problem.title} ของคุณเข้าสู่สถานะ public ได้<br>เนื่องจาก<br>${detail}<br>ขอบคุณจาก HexCode</p>`)
+        sendNotification(userproblem.email,"Verify problem",`<p>เราขอแสดงความเสียใจด้วยเราไม่สามารถนำ problem: ${problem.title} ของคุณเข้าสู่สถานะ public ได้<br>เนื่องจาก<br>${detail}<br>ขอบคุณจาก HexCode</p>`)
       }
 
       const value:IVerify = {problemId:problemId,verifiyby:user.clerkId,detail:detail,success:success,verifiyDate:Date.now()}
