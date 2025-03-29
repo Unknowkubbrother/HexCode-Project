@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import {
     Table,
     TableBody,
-    TableCaption,
+    // TableCaption,
     TableCell,
     TableHead,
     TableHeader,
