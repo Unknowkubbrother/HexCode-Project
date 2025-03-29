@@ -26,6 +26,15 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "Invalid Viewer error");
       }
 
+      const account = await getAccountbyClerkId(auth.userId);
+      if (!account) {
+        return error(404, "Account not found");
+      }
+
+      if (account.role == "member"){
+        return error(404, "You are not allowed to create challenge");
+      }
+
       const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active", clerkId: auth?.userId });
 
       if (problemcount != problem.length && problemcount > 30) {
