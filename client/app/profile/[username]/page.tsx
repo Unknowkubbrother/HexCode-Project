@@ -11,13 +11,13 @@ const page = async ({
 
   const username = (await params).username;
   const data = await getProfileByUsername(username);
-  const { account, problem, itself , myfollowed } = data;
+  const { account, problem, itself , myfollowed , challenge } = data;
 
   return (
     <main className="w-full flex flex-col gap-5">
       <Profile account={account} itself={itself} myfollowed={myfollowed}/>
       {account.role == 'premium' && (
-        <Challengs itself={itself} />
+        <Challengs itself={itself} challenges={challenge}/>
       )}
       <Problem problem={problem} itself={itself} />
     </main>

@@ -1,5 +1,6 @@
 import Problem from "./_components/Problem";
 import { getProblemById } from "@/actions/problemAction";
+import { redirect } from 'next/navigation'
 
 export default async function Page({
   params,
@@ -8,6 +9,10 @@ export default async function Page({
 }) {
   const problemId : string = (await params).problemId;
   const {result} = await getProblemById(problemId);
+
+  if (result.viewer == "challenge") {
+    redirect('/problems');
+  }
   
 
   return (

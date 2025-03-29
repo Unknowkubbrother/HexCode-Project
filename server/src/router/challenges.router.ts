@@ -85,7 +85,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
     }
   )
 
-  .post("/edit", async ({ body, auth, error }) => {
+  .post("/update", async ({ body, auth, error }) => {
     try {
 
       if (!auth?.userId) {
@@ -102,18 +102,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "Invalid Viewer");
       }
 
-      const problemcount = await ProblemModel.countDocuments({ _id: { $in: problem }, status: "active", clerkId: "user_2rUiuozLxAsIaUw4LzORMyu5ZtJ" });
-
-      if (problemcount != problem.length && problemcount > 30) {
-        return error(404, "problem incorrect");
-      }
-
-      const challengecheck = await ChallengeModel.find({ clerkId: auth.userId, _id: challengeId })
-      if (!challengecheck.length) {
-        return error(404, "cant find challenge");
-      }
-
-      const challengeCreated = await updateChallenge(challengeId, {
+      const challengeUpdated = await updateChallenge(challengeId, {
         title,
         description,
         thumbnail,
@@ -128,7 +117,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       });
 
 
-      if (!challengeCreated) {
+      if (!challengeUpdated) {
         return error(404, "edit challenge error");
       }
 
@@ -202,6 +191,42 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       return error(500, "Internal Server Error");
     }
   })
+
+  .get("/getedit/:challengeId", async ({ params, auth, error }) => {
+    try {
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const { challengeId } = params;
+
+      let challenge = await getChallengeById(challengeId);
+
+      if (!challenge) {
+        return error(404, "Not found challenge");
+      }
+
+
+      if (challenge.clerkId !== auth.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      return {
+        status: 200,
+        message: "GET EDIT Challenge Success",
+        result : challenge
+      }
+
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+  },
+    {
+      params: t.Object({
+        challengeId: t.String(),
+      }),
+    })
 
   .get("/get/:challengeId", async ({ params, auth, error }) => {
     try {

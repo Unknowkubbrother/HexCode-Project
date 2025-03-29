@@ -10,7 +10,7 @@ import { useUser } from "@clerk/nextjs";
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { BookCheck, BookKey, Cpu, Database, File, Minus, Plus, CircleAlert } from 'lucide-react';
+import { BookCheck, BookKey, Cpu, Database, File, Minus, Plus, CircleAlert,Swords } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -294,6 +294,18 @@ export default function CreateProblem() {
                 </div>
               </div>
             </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="challenge" id="challenge" />
+              <div className="flex gap-3 justify-start items-center">
+                <Swords size={30} />
+                <div className="flex flex-col mt-2">
+                  <Label htmlFor="challenge" className="text-primary">Challenge</Label>
+                  <span className="text-sm">
+                  Only you and the people you invite can view this challenge
+                  </span>
+                </div>
+              </div>
+            </div>
           </RadioGroup>
         </div>
 
@@ -309,7 +321,7 @@ export default function CreateProblem() {
             </Label>
             <nav>
               <ul className="flex gap-2 justify-start items-center">
-                <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
+                <li className="px-5 py-2 text-xs rounded-lg flex flex-col justify-center items-center gap-1">
                   <div className="flex justify-center items-center gap-1">
                     <Cpu size={13} />
                     <span>TIME_LIMIT <span className="text-primary">(s)</span></span>
@@ -318,7 +330,7 @@ export default function CreateProblem() {
                     value={cpuTimeLimit} onChange={(e) => setCpuTimeLimit(parseFloat(e.target.value) > 0 ? parseFloat(e.target.value) : 0)}
                   />
                 </li>
-                <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
+                <li className="px-5 py-2 text-xs rounded-lg flex flex-col justify-center items-center gap-1">
                   <div className="flex justify-center items-center gap-1">
                     <Database size={13} />
                     <span>MEMORY_LIMIT <span className="text-primary">(MiB)</span></span>
@@ -327,7 +339,7 @@ export default function CreateProblem() {
                     value={memoryLimit} onChange={(e) => setMemoryLimit(parseInt(e.target.value) > 0 ? parseInt(e.target.value) : 0)}
                   />
                 </li>
-                <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
+                <li className="px-5 py-2 text-xs rounded-lg flex flex-col justify-center items-center gap-1">
                   <div className="flex justify-center items-center gap-1">
                     <Database size={13} />
                     <span>STACK_LIMIT <span className="text-primary">(MiB)</span></span>
@@ -336,7 +348,7 @@ export default function CreateProblem() {
                     value={stackLimit} onChange={(e) => setStackLimit(parseInt(e.target.value) > 0 ? parseInt(e.target.value) : 0)}
                   />
                 </li>
-                <li className="px-5 py-2 text-xs bg-background rounded-lg flex flex-col justify-center items-center gap-1">
+                <li className="px-5 py-2 text-xs rounded-lg flex flex-col justify-center items-center gap-1">
                   <div className="flex justify-center items-center gap-1">
                     <File size={13} />
                     <span>FILESIZE_LIMIT <span className="text-primary">(MiB)</span></span>
