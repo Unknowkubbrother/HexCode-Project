@@ -24,6 +24,27 @@ export const createChallenge = async (data : ICreateChallenge ) => {
     }
 }
 
+
+export const updateChallenge = async (data : ICreateChallenge) => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_END_POINT}/challenge/update`, {
+            ...data,
+        }, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+        return response.data;
+    }catch(error){
+        console.log(error);
+    }
+}
+
 export const getChallenges = async () : Promise<any> => {
     try{
         const token = await getSession();

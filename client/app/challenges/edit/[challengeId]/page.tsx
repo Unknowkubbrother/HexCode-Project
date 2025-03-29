@@ -9,8 +9,6 @@ export default async function Page({
   const challengeId : string = (await params).challengeId;
   const {result} = await getChallengeEditById(challengeId);
 
-  console.log(result);
-
   return (
     <EditChallenge challengeData={result}/>
   );

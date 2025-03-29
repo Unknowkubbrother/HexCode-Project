@@ -7,6 +7,7 @@ export interface IPlayer{
 
 
 export interface ICreateChallenge {
+    challengeId?: string;
     title: string;
     description: string;
     thumbnail: string;

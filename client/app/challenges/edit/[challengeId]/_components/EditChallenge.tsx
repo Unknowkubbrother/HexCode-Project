@@ -24,26 +24,24 @@ import Image from 'next/image'
 import { Label } from '@/components/ui/label'
 import { getMyProblemChallenges } from '@/actions/problemAction'
 import { toast } from 'react-toastify';
-import { createChallenge } from '@/actions/challengeAction'
+import { updateChallenge } from '@/actions/challengeAction'
 import Loader from "@/components/ui/Loader";
 import {IChallenge} from '@/interface/challenges'
 
 
 export default function EditChallenge({challengeData} : {challengeData: IChallenge}) {
-    const [title, setTitle] = useState<string>("");
-    const [startTime, setStartTime] = useState<string>("");
-    const [endTime, setEndTime] = useState<string>("");
-    const [description, setDescription] = useState<string>("");
-    const [viewer, setViewer] = useState<string>("public");
-    const [countProblems, setCountProblems] = useState<number>(1);
-    const [problems, setProblems] = useState<string[]>([]);
-    const [countRewards, setCountRewards] = useState<number>(0);
-    const [rewards, setRewards] = useState<string[]>([]);
-    const [urlThumbnail, setUrlThumbnail] = useState<string>("");
-    const [urlImages, setUrlImages] = useState<string[]>([]);
+    const [title, setTitle] = useState<string>(challengeData.title || "");
+    const [startTime, setStartTime] = useState<string>(challengeData.startTime ? new Date(challengeData.startTime).toISOString().slice(0, 16) : "");
+    const [endTime, setEndTime] = useState<string>(challengeData.endTime ? new Date(challengeData.endTime).toISOString().slice(0, 16) : "");
+    const [description, setDescription] = useState<string>(challengeData.description || "");
+    const [viewer, setViewer] = useState<string>(challengeData.viewer || "public");
+    const [countProblems, setCountProblems] = useState<number>(challengeData.problem.length || 1);
+    const [problems, setProblems] = useState<string[]>(challengeData.problem.length > 0 ? (challengeData.problem as string[]) : [""]);
+    const [countRewards, setCountRewards] = useState<number>(challengeData.reward ? challengeData.reward.length : 0);
+    const [rewards, setRewards] = useState<string[]>(challengeData.reward ? challengeData.reward.map(String) : []);
+    const [urlThumbnail, setUrlThumbnail] = useState<string>(challengeData.thumbnail || "");
+    const [urlImages, setUrlImages] = useState<string[]>(challengeData.images.length > 0 ? (challengeData.images as string[]) : [""]);
     const [loading, setLoading] = useState<boolean>(false);
-
-    console.log("challengeData", challengeData);
 
     const [MyProblemChallengess, setMyProblemChallenges] = useState<{ id: string, title: string }[]>([]);
 
@@ -92,7 +90,7 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
         console.log(urlImages);
     }
 
-    const handlercreateChallenge = async () => {
+    const handlereditChallenge = async () => {
         if (!title  || !viewer || !description || !urlThumbnail || !startTime || !endTime || !problems.length || !urlImages.length || !problems.every((p) => p) || !urlImages.every((u) => u)) {
             toast.error("Please fill in all the required fields.", {
               position: "top-right",
@@ -110,6 +108,7 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
           setLoading(true);
 
           const data = {
+            challengeId: challengeData._id,
             title,
             description,
             thumbnail: urlThumbnail,
@@ -123,10 +122,10 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
             endTime: new Date(endTime).getTime(),
           };
 
-        const createdChallenge = await createChallenge(data);
+        const updatedChallenge = await updateChallenge(data);
 
-        if (!createdChallenge) {
-            toast.error("Failed to create challenge. Please try again.", {
+        if (!updatedChallenge) {
+            toast.error("Failed to update challenge. Please try again.", {
               position: "top-right",
               autoClose: 5000,
               hideProgressBar: false,
@@ -141,7 +140,7 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
 
           setLoading(false);
 
-          toast.success("Challenge created successfully.", {
+          toast.success("Challenge updated successfully.", {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -163,7 +162,7 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
 
             <div className={`w-[70%] m-auto my-10 ${loading ? 'blur pointer-events-none select-none' : ''}`}>
                 <header className='text-xl font-bold border-b-2 pb-5'>
-                    <span className='text-primary'>Edit</span> Challenge
+                    <span className='text-primary'>Edit</span> Challenge {'=>'} <span>{challengeData.title}</span>
                 </header>
 
                 <div className='w-full'>
@@ -333,7 +332,7 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
                     </div>
                 </div>
                 <div className="w-full mt-5 flex justify-end items-center gap-3">
-                    <Button variant="default" onClick={handlercreateChallenge}>Create Challenge</Button>
+                    <Button variant="default" onClick={handlereditChallenge}>Edit Challenge</Button>
                 </div>
             </div>
         </main>
