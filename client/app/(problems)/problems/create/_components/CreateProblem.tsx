@@ -10,7 +10,7 @@ import { useUser } from "@clerk/nextjs";
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { BookCheck, BookKey, Cpu, Database, File, Minus, Plus, CircleAlert } from 'lucide-react';
+import { BookCheck, BookKey, Cpu, Database, File, Minus, Plus, CircleAlert,Swords } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -290,6 +290,18 @@ export default function CreateProblem() {
                   <Label htmlFor="private" className="text-primary">Private</Label>
                   <span className="text-sm">
                     Only you and the people you invite can view this problem
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="challenge" id="challenge" />
+              <div className="flex gap-3 justify-start items-center">
+                <Swords size={30} />
+                <div className="flex flex-col mt-2">
+                  <Label htmlFor="challenge" className="text-primary">Challenge</Label>
+                  <span className="text-sm">
+                  Only you and the people you invite can view this challenge
                   </span>
                 </div>
               </div>
