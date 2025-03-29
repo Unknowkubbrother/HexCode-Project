@@ -6,6 +6,18 @@ export interface IPlayer{
 }
 
 
+export interface ICreateChallenge {
+    title: string;
+    description: string;
+    thumbnail: string;
+    images: Array<String>;
+    problem: Array<String>;
+    viewer: string;
+    reward?: Array<String>;
+    startTime: number;
+    endTime: number;
+}
+
 export interface IChallengeProblem{
     problemId : string;
     title : string;

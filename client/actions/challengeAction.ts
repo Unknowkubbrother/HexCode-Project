@@ -2,6 +2,27 @@
 import axios from 'axios';
 import getSession from "@/hooks/use-session";
 import { redirect } from 'next/navigation'
+import { ICreateChallenge } from '@/interface/challenges';
+
+export const createChallenge = async (data : ICreateChallenge ) => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_END_POINT}/challenge/create`, {
+            ...data,
+        }, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+        return response.data;
+    }catch(error){
+        console.log(error);
+    }
+}
 
 export const getChallenges = async () : Promise<any> => {
     try{

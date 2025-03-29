@@ -53,7 +53,7 @@ export default async function Page({
                         {(result && result.problem && result.problem.length > 0) ?
                             (
                                 (result.problem as IChallengeProblem[]).map((problem: IChallengeProblem, index: number) => (
-                                    <ItemProblem key={index} data={problem} challengeId={challengeId}/>
+                                    <ItemProblem key={index} data={problem} challengeId={challengeId} startTime={Number(result.startTime)}/>
                                 ))
                             )
                             : <p>No problem available</p>}

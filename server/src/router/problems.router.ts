@@ -457,4 +457,36 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
     body: t.Object({
       _id: t.String(),
     }),
+  })
+
+  .get("getmychallenge", async ({ auth, error }) => {
+    try {
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+
+      const problems = await ProblemModel.find({ clerkId: auth.userId, status: "active", viewer: "challenge" });
+
+      if (!problems) {
+        return error(404, "problem not found");
+      }
+
+
+      const filterProblems = problems.map((problem) => {
+        return {
+          id: problem._id.toString(),
+          title: problem.title,
+        }
+      })
+      
+      return {
+        status: 200,
+        message: "get my challenge success",
+        result: filterProblems
+      };
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
   });
