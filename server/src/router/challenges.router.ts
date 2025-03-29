@@ -177,18 +177,21 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "Account not found");
       }
 
-      const filterChallenges = filterChallengeEndTime.map((challenge) => {
+      const filterChallenges = await Promise.all(
+        filterChallengeEndTime.map(async (challenge) => {
+        const userCreate = await getAccountbyClerkId(challenge.clerkId);
+
         return {
           _id: challenge._id,
-          avatar: account.avatar,
-          username: account.username,
+          avatar: userCreate?.avatar,
+          username: userCreate?.username,
           title: challenge.title,
           thumbnail: challenge.thumbnail,
           countPlayer: challenge.player?.length || 0,
           createdAt: challenge.createdAt,
           updatedAt: challenge.updatedAt,
         }
-      });
+      }));
 
 
       return {
