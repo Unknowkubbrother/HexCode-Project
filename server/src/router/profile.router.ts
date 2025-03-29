@@ -1,5 +1,5 @@
 import { getProblemByClerkIdAndStatus } from "@/models/problems.model";
-import { getAccountbyUsername, updateFolllowByClerkIdAndTargetClerkId,updateAccountDetail } from "@/models/accounts.model";
+import { getAccountbyUsername, updateFolllowByClerkIdAndTargetClerkId,updateAccountDetail ,getAccountbyClerkId} from "@/models/accounts.model";
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { getSumPointByProblemId } from "@/models/testcases.model";
@@ -131,6 +131,42 @@ export const ProfileRoute = new Elysia({ 'prefix': '/profile' })
       }),
     }
   )
+
+  .get("/getmyaccount", async ({ auth, error }) => {
+    try {
+
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const account = await getAccountbyClerkId(auth.userId);
+
+      if (!account) {
+        return error(404, "Account Not Found");
+      }
+
+      const filterAccount = {
+        clerkId: account.clerkId,
+        username: account.username,
+        email: account.email,
+        role: account.role,
+        avatar: account.avatar,
+        detail: account.detail,
+        status: account.status,
+        followers: account.followers?.length,
+        following: account.following?.length,
+        createdAt: account.createdAt,
+        updatedAt: account.updatedAt,
+      }
+      return {
+        status: 200,
+        account: filterAccount,
+      };
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+  })
 
   .put("/accountDetail", async ({ body, auth, error }) => {
     try {
