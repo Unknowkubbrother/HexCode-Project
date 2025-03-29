@@ -77,7 +77,8 @@ export const getChallengeEditById = async (id: string) => {
 
         return response.data;
     }catch(error){
-        if (axios.isAxiosError(error) && error.response?.status === 404) {
+        // console.log(error.response?.status);
+        if (axios.isAxiosError(error) && error.response?.status !== 200) {
             redirect('/challenges');
         }
         console.log(error);

@@ -167,6 +167,7 @@ export default function CreateProblem() {
         progress: undefined,
         theme: "light",
       });
+      setLoading(false);
       return;
     }
 
@@ -189,6 +190,7 @@ export default function CreateProblem() {
           progress: undefined,
           theme: "light",
         });
+        setLoading(false);
         return;
       }
     });
