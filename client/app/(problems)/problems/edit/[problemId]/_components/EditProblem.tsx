@@ -10,7 +10,7 @@ import { useUser } from "@clerk/nextjs";
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { BookCheck, BookKey, Cpu, Database, File, Minus, Plus, CircleAlert } from 'lucide-react';
+import { BookCheck, BookKey, Cpu, Database, File, Minus, Plus, CircleAlert ,Swords} from 'lucide-react';
 import {
     Select,
     SelectContent,
@@ -24,7 +24,7 @@ import {
     ToggleGroup,
     ToggleGroupItem,
 } from "@/components/ui/toggle-group"
-import { updateProblem,deleteProblem } from "@/actions/problemAction"
+import { updateProblem, deleteProblem } from "@/actions/problemAction"
 import { toast } from 'react-toastify';
 import { updateTestCase, deleteTestCase } from "@/actions/TestCaseAction"
 import Loader from "@/components/ui/Loader";
@@ -138,11 +138,11 @@ export default function EditProblem({ problemData }: { problemData: IProblem }) 
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-          }).then(async (result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
                 setLoading(true);
                 const deletedProblem = await deleteProblem(problemData._id);
-        
+
                 if (!deletedProblem) {
                     toast.error("Failed to delete problem. Please try again.", {
                         position: "top-right",
@@ -156,7 +156,7 @@ export default function EditProblem({ problemData }: { problemData: IProblem }) 
                     });
                     return;
                 }
-        
+
                 setLoading(false);
                 toast.success("Problem deleted successfully.", {
                     position: "top-right",
@@ -168,13 +168,13 @@ export default function EditProblem({ problemData }: { problemData: IProblem }) 
                     progress: undefined,
                     theme: "light",
                 });
-        
+
                 setTimeout(() => {
                     router.push("/problems");
                 }, 2000);
             }
-          });
-        
+        });
+
     }
 
     const DeleteTestCase = async (index: number) => {
@@ -182,7 +182,7 @@ export default function EditProblem({ problemData }: { problemData: IProblem }) 
         const formTestcase = new FormData();
         const _id = problemData.testcase?.filter((_, i) => i === index)[0]?._id;
         if (!_id) return;
-        formTestcase.append("_id", _id );
+        formTestcase.append("_id", _id);
         formTestcase.append("problemId", problemData._id);
         const deletedTestcase = await deleteTestCase(formTestcase);
 
@@ -257,7 +257,7 @@ export default function EditProblem({ problemData }: { problemData: IProblem }) 
 
         await TestCase.forEach(async (TestCase, index) => {
             const formTestcase = new FormData();
-            const _id = problemData.testcase?.filter((value) => value.input == TestCase.input )[0]?._id;
+            const _id = problemData.testcase?.filter((value) => value.input == TestCase.input)[0]?._id;
             if (_id) {
                 formTestcase.append("_id", _id);
             }
@@ -387,6 +387,18 @@ export default function EditProblem({ problemData }: { problemData: IProblem }) 
                                     <Label htmlFor="private" className="text-primary">Private</Label>
                                     <span className="text-sm">
                                         Only you and the people you invite can view this problem
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="challenge" id="challenge" />
+                            <div className="flex gap-3 justify-start items-center">
+                                <Swords size={30} />
+                                <div className="flex flex-col mt-2">
+                                    <Label htmlFor="challenge" className="text-primary">Challenge</Label>
+                                    <span className="text-sm">
+                                        Only you and the people you invite can view this challenge
                                     </span>
                                 </div>
                             </div>
