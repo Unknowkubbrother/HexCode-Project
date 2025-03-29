@@ -9,7 +9,6 @@ export default function ItemProblem({ data, challengeId,startTime}: { data: ICha
 
   return (
     <div
-      // key={key}
       className="w-full bg-bgsecondary h-fit rounded-2xl p-5 flex flex-col gap-1 relative"
     >
       <span className="flex gap-2 justify-start items-center">

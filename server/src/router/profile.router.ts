@@ -3,6 +3,7 @@ import { getAccountbyUsername, updateFolllowByClerkIdAndTargetClerkId,updateAcco
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { getSumPointByProblemId } from "@/models/testcases.model";
+import {getChallengeByClerkId} from "@/models/challenges.model";
 
 export const ProfileRoute = new Elysia({ 'prefix': '/profile' })
   .use(clerkPlugin())
@@ -57,11 +58,27 @@ export const ProfileRoute = new Elysia({ 'prefix': '/profile' })
         })
       );
 
+      const challenges = await getChallengeByClerkId(account.clerkId);
+      const filterChallengeEndTime = challenges.filter((challenge) => challenge.endTime > Date.now());
+      const filterChallenge = filterChallengeEndTime.map((challenge) => {
+        return {
+          _id: challenge._id.toString(),
+          avatar: account.avatar,
+          username: account.username,
+          title: challenge.title,
+          thumbnail: challenge.thumbnail,
+          countPlayer: challenge.player?.length || 0,
+          createdAt: challenge.createdAt,
+          updatedAt: challenge.updatedAt,
+        };
+      })
+
 
       return {
         status: 200,
         account: filterAccount,
         problem: filterProblem,
+        challenge: filterChallenge,
         myfollowed: myfollowed,
         itself: account.clerkId == auth.userId,
       };
