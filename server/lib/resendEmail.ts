@@ -12,3 +12,14 @@ export const sendNotification = async (email: string, subject: string, html: str
         html: html,
     });
 }
+
+export const sendupdaetProblem = async (email: string, subject: string, html: string) => {
+    if (process.env.NODE_ENV === 'development') return;
+
+    resend.emails.send({
+        from: 'noreply@email.unknowkubbrother.net',
+        to: email,
+        subject: 'HEXCODE - ' + subject,
+        html: html,
+    });
+}

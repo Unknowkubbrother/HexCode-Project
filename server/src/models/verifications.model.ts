@@ -2,13 +2,9 @@
 import { IVerify } from "@/interface/verifications.interface";
 import { Schema, model } from "mongoose";
 
-const ProblemSchema = new Schema(
+const VerifySchema = new Schema(
   {
-    clerkId: {
-      type: String,
-      required: true,
-    },
-    itemId: {
+    problemId: {
       type: String,
       required: true,
     },
@@ -21,10 +17,6 @@ const ProblemSchema = new Schema(
       type: String,
       required: true,
     },
-    type: {
-      type: String,
-      required: true,
-    },
     verifiyDate: {
       type: Number,
       required: true,
@@ -33,22 +25,12 @@ const ProblemSchema = new Schema(
     success: {
       type: Number,
       required: true,
-    },
-    status: {
-      type: String,
-      required: true,
-      default: "pending",
-    },
-    result: {
-      type: String,
-      required: true,
-      default: "",
-    },
+    }
   },
   { timestamps: true }
 );
 
-export const VerifyModel = model("verify", ProblemSchema);
+export const VerifyModel = model("verify", VerifySchema);
 
-export const createProblem = (values: IVerify) =>
+export const createVerify = (values: IVerify) =>
   new VerifyModel(values).save().then((verify) => verify.toObject());

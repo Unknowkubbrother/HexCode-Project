@@ -24,14 +24,14 @@ import Image from 'next/image'
 import { Label } from '@/components/ui/label'
 import { getMyProblemChallenges } from '@/actions/problemAction'
 import { toast } from 'react-toastify';
-import { updateChallenge , deleteChallenge} from '@/actions/challengeAction'
+import { updateChallenge, deleteChallenge } from '@/actions/challengeAction'
 import Loader from "@/components/ui/Loader";
-import {IChallenge} from '@/interface/challenges'
+import { IChallenge } from '@/interface/challenges'
 import { useRouter } from "next/navigation";
 import Swal from 'sweetalert2'
 
 
-export default function EditChallenge({challengeData} : {challengeData: IChallenge}) {
+export default function EditChallenge({ challengeData }: { challengeData: IChallenge }) {
     const router = useRouter();
     const [title, setTitle] = useState<string>(challengeData.title || "");
     const [startTime, setStartTime] = useState<string>(challengeData.startTime ? new Date(new Date(challengeData.startTime).getTime() + 7 * 60 * 60 * 1000).toISOString().slice(0, 16) : "");
@@ -94,37 +94,23 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
     }
 
     const DeleteChallenge = async () => {
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You cann't recover this challenge!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-              }).then(async (result) => {
-                if (result.isConfirmed) {
-                    setLoading(true);
-                    const deletedProblem = await deleteChallenge(challengeData._id);
-            
-                    if (!deletedProblem) {
-                        toast.error("Failed to challenge problem. Please try again.", {
-                            position: "top-right",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: false,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "light",
-                        });
-                        return;
-                    }
-            
-                    setLoading(false);
-                    toast.success("Challenge deleted successfully.", {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You cann't recover this challenge!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                setLoading(true);
+                const deletedProblem = await deleteChallenge(challengeData._id);
+
+                if (!deletedProblem) {
+                    toast.error("Failed to challenge problem. Please try again.", {
                         position: "top-right",
-                        autoClose: 1500,
+                        autoClose: 5000,
                         hideProgressBar: false,
                         closeOnClick: false,
                         pauseOnHover: true,
@@ -132,33 +118,47 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
                         progress: undefined,
                         theme: "light",
                     });
-            
-                    setTimeout(() => {
-                        router.push("/challenges");
-                    }, 2000);
+                    return;
                 }
-              });
-            
-        }
+
+                setLoading(false);
+                toast.success("Challenge deleted successfully.", {
+                    position: "top-right",
+                    autoClose: 1500,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+
+                setTimeout(() => {
+                    router.push("/challenges");
+                }, 2000);
+            }
+        });
+
+    }
 
     const handlereditChallenge = async () => {
-        if (!title  || !viewer || !description || !urlThumbnail || !startTime || !endTime || !problems.length || !urlImages.length || !problems.every((p) => p) || !urlImages.every((u) => u)) {
+        if (!title || !viewer || !description || !urlThumbnail || !startTime || !endTime || !problems.length || !urlImages.length || !problems.every((p) => p) || !urlImages.every((u) => u)) {
             toast.error("Please fill in all the required fields.", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
             });
             return;
-          }
-      
-          setLoading(true);
+        }
 
-          const data = {
+        setLoading(true);
+
+        const data = {
             challengeId: challengeData._id,
             title,
             description,
@@ -168,31 +168,31 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
             viewer,
             ...(rewards && {
                 reward: rewards,
-              }),
+            }),
             startTime: new Date(startTime).getTime(),
             endTime: new Date(endTime).getTime(),
-          };
+        };
 
         const updatedChallenge = await updateChallenge(data);
 
         if (!updatedChallenge) {
             toast.error("Failed to update challenge. Please try again.", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
             });
             setLoading(false);
             return;
-          }
+        }
 
-          setLoading(false);
+        setLoading(false);
 
-          toast.success("Challenge updated successfully.", {
+        toast.success("Challenge updated successfully.", {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -201,11 +201,11 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
             draggable: true,
             progress: undefined,
             theme: "light",
-          });
-      
-          setTimeout(() => {
+        });
+
+        setTimeout(() => {
             window.location.reload();
-          }, 3500);
+        }, 3500);
     }
 
     return (
@@ -235,6 +235,13 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
                             <label htmlFor="startTime" className="text-sm">endTime <span className="text-primary">*</span></label>
                             <Input id="endTime" type="datetime-local" placeholder="endTime of the challenge" className="w-full" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
                         </div>
+
+                        {challengeData.viewer == "private" &&
+                            <div className="flex flex-col gap-2 mt-3">
+                                <label htmlFor="startTime" className="text-sm text-primary">Secret_Code</label>
+                                <Input id="secret_code" type="text" placeholder="" className="w-full" value={challengeData.secret_code} readOnly />
+                            </div>
+                        }
                     </div>
 
 
@@ -384,8 +391,8 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
                     </div>
                 </div>
                 <div className="w-full mt-5 flex justify-end items-center gap-3">
-                <Button variant="default" onClick={DeleteChallenge} className="bg-rose-400">Delete Challenge</Button>
-                    <Button variant="default" onClick={handlereditChallenge}>Edit Challenge</Button>
+                    <Button variant="default" onClick={DeleteChallenge} className="bg-rose-400">Delete Challenge</Button>
+                    <Button variant="default" onClick={handlereditChallenge}>Save Challenge</Button>
                 </div>
             </div>
         </main>
