@@ -133,6 +133,7 @@ export default function CreateChallenge() {
               progress: undefined,
               theme: "light",
             });
+            setLoading(false);
             return;
           }
 

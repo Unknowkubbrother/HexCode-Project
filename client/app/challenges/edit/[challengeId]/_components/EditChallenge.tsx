@@ -135,6 +135,7 @@ export default function EditChallenge({challengeData} : {challengeData: IChallen
               progress: undefined,
               theme: "light",
             });
+            setLoading(false);
             return;
           }
 
