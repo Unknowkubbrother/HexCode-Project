@@ -1,11 +1,7 @@
 export interface IVerify {
-    clerkId: string;
-    itemId: string;
+    problemId: string;
     verifiyby: string;
     detail: string;
-    type: string;
-    verifiyDate: string;
+    verifiyDate: Number;
     success : boolean;
-    status : string;
-    result : string;
 }
