@@ -40,8 +40,8 @@ export default function Hub({ data, isJoined }: { data: IChallenge, isJoined: bo
 
 
   const coverTimeString = (time: number) => {
-    const date = new Date(time);
-    return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+    const date = new Date(new Date(time).getTime() + 7 * 60 * 60 * 1000).toISOString().slice(0, 16);
+    return date.replace("T", " - ");
   }
 
   const handlerJoinChallenge = async () => {
