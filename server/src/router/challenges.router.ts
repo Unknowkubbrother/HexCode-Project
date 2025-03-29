@@ -157,13 +157,21 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       }),
     })
 
-  .get("/gets", async ({ auth, error }) => {
+  .get("/gets", async ({ query, auth, error }) => {
     try {
       if (!auth?.userId) {
         return error(401, "Unauthorized");
       }
 
-      const challenges = await getChallenges();
+      const search = query.search ? query.search : "";
+      
+      const filter = {
+        ...(search.length && { title: { $regex: search, $options: 'i' } }),
+        status: "active",
+        viewer: "public",
+      };
+
+      const challenges = await getChallenges(filter);
 
       const filterChallengeEndTime = challenges.filter((challenge) => challenge.endTime > Date.now());
 
@@ -204,7 +212,15 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       console.log(e);
       return error(500, "Internal Server Error");
     }
-  })
+  },
+      {
+        query: t.Optional(
+          t.Object({
+            search: t.Optional(t.String()),
+          })
+        ),
+      }
+    )
 
   .get("/getedit/:challengeId", async ({ params, auth, error }) => {
     try {

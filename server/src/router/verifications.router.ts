@@ -1,15 +1,14 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { ChallengeModel, createChallenge, getChallenges, updateChallenge, getChallengeById } from "../models/challenges.model";
-import { ProblemModel } from "@/models/problems.model";
+import { ChallengeModel} from "../models/challenges.model";
+import { getProblemById, ProblemModel } from "@/models/problems.model";
 import { AccountModel, getAccountbyClerkId } from "@/models/accounts.model";
-import { SubmissionModel,getTopSubmissionByProblemAndClerkId } from "@/models/submissions.model";
-import { getSumPointByProblemId } from "@/models/testcases.model";
-import { createVerify, VerifyModel } from "@/models/verifications.model";
+import { createVerify } from "@/models/verifications.model";
 import { IVerify } from "@/interface/verifications.interface";
-import { sendupdaetProblem } from "@lib/resendEmail";
+import { sendNotification } from "@lib/resendEmail";
+import { getTestCasesByProblemId } from "@/models/testcases.model";
 
-export const ChallengeRoute = new Elysia({ prefix: "/verify" })
+export const VerifyRoute = new Elysia({ prefix: "/verify" })
   .use(clerkPlugin())
 
   .get("/get/:problemId", async ({ params, auth, error }) => {
@@ -25,15 +24,22 @@ export const ChallengeRoute = new Elysia({ prefix: "/verify" })
 
       const { problemId } = params;
 
-      const problem = await ProblemModel.findById(problemId);
+      const problem = await getProblemById(problemId);
       if(!problem){
         return error(404, "problem not found");
+      }
+
+      const testcase = await getTestCasesByProblemId(problem._id.toString())
+
+      if(!testcase){
+        return error(404, "testcase not found");
       }
 
       return {
         status: 200,
         message: "success",
-        problem:problem
+        problem:problem,
+        testcase:testcase.map((testcase)=>{return {input:testcase.input,output:testcase.output}})
       }
 
     } catch (e) {
@@ -65,10 +71,23 @@ export const ChallengeRoute = new Elysia({ prefix: "/verify" })
         return error(404, "problems not found");
       }
 
+      const res = await Promise.all( problems.map(async (problem) =>{
+        const account = await getAccountbyClerkId(problem.clerkId)
+        if(!account){
+          return
+        }
+        return {
+          problemid:problem.id,
+          username : account.username,
+          title:problem.title,
+          status:problem.status
+        }
+      }))
+
       return {
         status: 200,
         message: "success",
-        problems:problems
+        problems:res
       }
 
     } catch (e) {
@@ -112,7 +131,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/verify" })
   }
   )
 
-  .post("/verify", async ({ params,auth, error }) => {
+  .post("/verifyproblem", async ({ body,auth, error }) => {
     try {
       //verify admin
       if (!auth?.userId) {
@@ -123,7 +142,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/verify" })
         return error(401, "Unauthorized");
       }
 
-      const { problemId,success,detail } = params;
+      const { problemId,success,detail } = body;
       const problem = await ProblemModel.findById(problemId);
       if(!problem){
         return error(404, "problem not found");
@@ -137,13 +156,13 @@ export const ChallengeRoute = new Elysia({ prefix: "/verify" })
         if(!updateproblem){
           return error(404, "update problem error");
         }
-        sendupdaetProblem(userproblem.email,"Verify problem",`<p>เราขอแสดงความยินดีด้วย problem:${problem.title} ของคุณได้เข้าสู่สถานะ public แล้ว<br>เนื่องจาก<br>${detail}<br>ขอบคุณจาก HexCode</p>`)
+        sendNotification(userproblem.email,"Verify problem",`<p>เราขอแสดงความยินดีด้วย problem:${problem.title} ของคุณได้เข้าสู่สถานะ public แล้ว<br>เนื่องจาก<br>${detail}<br>ขอบคุณจาก HexCode</p>`)
       }else{
         const updateproblem = await ProblemModel.findByIdAndUpdate(problemId,{viewer:"private",status:"active"})
         if(!updateproblem){
           return error(404, "update problem error");
         }
-        sendupdaetProblem(userproblem.email,"Verify problem",`<p>เราขอแสดงความเสียใจด้วยเราไม่สามารถนำ problem: ${problem.title} ของคุณเข้าสู่สถานะ public ได้<br>เนื่องจาก<br>${detail}<br>ขอบคุณจาก HexCode</p>`)
+        sendNotification(userproblem.email,"Verify problem",`<p>เราขอแสดงความเสียใจด้วยเราไม่สามารถนำ problem: ${problem.title} ของคุณเข้าสู่สถานะ public ได้<br>เนื่องจาก<br>${detail}<br>ขอบคุณจาก HexCode</p>`)
       }
 
       const value:IVerify = {problemId:problemId,verifiyby:user.clerkId,detail:detail,success:success,verifiyDate:Date.now()}
@@ -163,7 +182,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/verify" })
     }
   },
   {
-    params: t.Object({
+    body: t.Object({
       problemId:t.String(),
       success:t.Boolean(),
       detail:t.String()

@@ -36,11 +36,11 @@ export default function Navbar({ setTheme }: NavbarProps) {
           Home
         </Link>
 
-        <Link href="/problems" className={`${pathname == '/problems' ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
+        <Link href="/problems" className={`${pathname.startsWith('/problems') ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
           Problems
         </Link>
 
-        <Link href="/challenges" className={`${pathname == '/challenges' ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
+        <Link href="/challenges" className={`${pathname.startsWith('/challenges')  ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
           Challenges
         </Link>
 
