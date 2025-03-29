@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { redirect } from "next/navigation";
 import AdminHome from "./_components/AdminHome";
 import { getMyAccount } from "@/actions/profileAction";
