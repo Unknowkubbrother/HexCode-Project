@@ -203,6 +203,42 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
     }
   })
 
+  .get("/getedit/:challengeId", async ({ params, auth, error }) => {
+    try {
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const { challengeId } = params;
+
+      let challenge = await getChallengeById(challengeId);
+
+      if (!challenge) {
+        return error(404, "Not found challenge");
+      }
+
+
+      if (challenge.clerkId !== auth.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      return {
+        status: 200,
+        message: "GET EDIT Challenge Success",
+        result : challenge
+      }
+
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+  },
+    {
+      params: t.Object({
+        challengeId: t.String(),
+      }),
+    })
+
   .get("/get/:challengeId", async ({ params, auth, error }) => {
     try {
       if (!auth?.userId) {

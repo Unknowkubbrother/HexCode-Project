@@ -42,6 +42,27 @@ export const getChallenges = async () : Promise<any> => {
     }
 };
 
+export const getChallengeEditById = async (id: string) => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_END_POINT}/challenge/getedit/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+        return response.data;
+    }catch(error){
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+            redirect('/challenges');
+        }
+        console.log(error);
+    }
+};
+
 export const getChallengesById = async (id: string) => {
     try{
         const token = await getSession();
