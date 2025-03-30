@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { Textarea } from '@/components/ui/textarea';
 import { useClerk } from '@clerk/clerk-react'
 import MarkDown from '@/components/ui/MarkDown';
+import Link from 'next/link';
 
 export default function Profile({ account, itself, myfollowed }: { account: IAccount, itself: boolean, myfollowed: boolean }) {
     const [followed, setFollowed] = useState(myfollowed);
@@ -150,16 +151,16 @@ export default function Profile({ account, itself, myfollowed }: { account: IAcc
                         </h1>
                         <span className='text-sm'>@{account?.username}</span>
                         <div className='flex gap-2 mt-[7px]'>
-                            <span className='flex gap-1 justify-center items-center text-sm'>
+                            <Link className='flex gap-1 justify-center items-center text-sm hover:text-green-400 duration-300' href={`/profile/${account.username}/followers`}>
                                 <Users size={15} />
                                 <span className='text-primary'>{account.followers}</span>
                                 <span>follower</span>
-                            </span>
-                            <span className='flex gap-1 justify-center items-center'>
+                            </Link>
+                            <Link className='flex gap-1 justify-center items-center hover:text-green-400 duration-300' href={`/profile/${account.username}/following`}>
                                 <Dot size={15} />
                                 <span className='text-primary'>{account.following}</span>
                                 <span className='text-sm'>following</span>
-                            </span>
+                            </Link>
                         </div>
                     </div>
                 </div>
