@@ -30,7 +30,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
       const { title, description, difficulty, viewer, type, docs, hint, source_code, cpu_time_limit, memory_limit, stack_limit, max_file_size } = body;
 
       const useraccount = await getAccountbyClerkId(auth.userId);
-      if(!useraccount){
+      if (!useraccount) {
         return error(401, "Unauthorized");
       }
       if (docs.type !== "application/pdf") {
@@ -93,10 +93,13 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
       if (!resultProblem) {
         return error(404, "get problem error");
       }
-      const emails = await AccountModel.find({ clerkId: { $in: useraccount.followers },status:"active"})
-      emails.map((user)=>{
-        sendNotification(user.email,"New problem",`<p>ผู้ใช้ ${useraccount.username} ได้ทำการอัพโหลด Problem : ${title} ใหม่แล้ว รีบเข้ามาดูเร็ว<p>`)
+
+      const emails = await AccountModel.find({ clerkId: { $in: useraccount.followers }, status: "active" })
+      emails.map((user) => {
+        sendNotification(user.email, "New problem", `<p>ผู้ใช้ ${useraccount.username} ได้ทำการอัพโหลด Problem : ${title} ใหม่แล้ว รีบเข้ามาดูเร็ว<p>`)
       })
+
+      
       return {
         result: resultProblem,
         status: 200,
@@ -336,7 +339,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         return error(401, "Unauthorized");
       }
 
-      const { id, title, description, difficulty, type, docs, hint, source_code, viewer ,cpu_time_limit , memory_limit, stack_limit, max_file_size } = body;
+      const { id, title, description, difficulty, type, docs, hint, source_code, viewer, cpu_time_limit, memory_limit, stack_limit, max_file_size } = body;
 
       const problem = await ProblemModel.findOne({ _id: id, clerkId: auth.userId, status: "active" })
 
@@ -374,7 +377,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           type: source_code.type,
           pathName: problem.source_code.pathName,
         };
-  
+
         const FileCreatedSourceCode = await Bun.write(source_codeData.pathName, source_code);
 
         if (!FileCreatedSourceCode) {
@@ -388,7 +391,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         title: String(title),
         description: description,
         viewer: String(viewer),
-        status: ((problem.viewer == "private" || problem.viewer == "challenge"  ) && viewer == "public") ? "pending" : "active",
+        status: ((problem.viewer == "private" || problem.viewer == "challenge") && viewer == "public") ? "pending" : "active",
         difficulty: Number(difficulty),
         ...(type && { type: toArray(JSON.parse(type)) }),
         ...(hint && { hint: toArray(JSON.parse(hint)) }),
@@ -487,7 +490,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
           title: problem.title,
         }
       })
-      
+
       return {
         status: 200,
         message: "get my challenge success",
