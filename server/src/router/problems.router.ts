@@ -392,8 +392,8 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
       const problemData = {
         title: String(title),
         description: description,
-        viewer: String(viewer),
-        status: ((problem.viewer == "private" || problem.viewer == "challenge") && viewer == "public") ? "pending" : "active",
+        viewer: (viewer != "public") ? viewer : "private",
+        status: (viewer != "private") ? "pending" : "active",
         difficulty: Number(difficulty),
         ...(type && { type: toArray(JSON.parse(type)) }),
         ...(hint && { hint: toArray(JSON.parse(hint)) }),
