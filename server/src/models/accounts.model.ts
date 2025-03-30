@@ -54,6 +54,9 @@ export const AccountModel = model("accounts", AccountSchema);
 export const createAccount = async (value: IAccount) => 
     new AccountModel(value).save().then((account) => account.toObject());
 
+export const getAccounts = async () =>
+    AccountModel.find().then((accounts) => accounts.map((account) => account.toObject()));
+
 
 export const getAccountbyClerkId = async (clerkId: string) => 
     AccountModel.findOne({ clerkId }).then((account) => account?.toObject());
