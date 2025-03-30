@@ -28,6 +28,15 @@ export default async function Page({
 
     const { result, isJoined }: { result: IChallenge, isJoined: boolean } = await getChallengesById(challengeId);
 
+    if (!result) {
+        return redirect(`/challenges`);
+    }
+
+
+    if (result.problem.filter((problem): problem is IChallengeProblem => typeof problem !== "string").some((problem) => problem == null)) {
+        return redirect(`/challenges/${challengeId}`);
+    }
+
     if (!isJoined) {
         return redirect(`/challenges/${challengeId}`);
     }
