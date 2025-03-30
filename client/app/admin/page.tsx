@@ -7,6 +7,7 @@ import {
 import { Users, ShieldPlus, ShieldCheck, FolderKanban } from 'lucide-react';
 import ManageUsers from "./_components/ManageUsers";
 import MangeVerify from "./_components/MangeVerify";
+import OverView from "./_components/OverView";
 
 export default function page() {
   return (
@@ -19,7 +20,7 @@ export default function page() {
           </span>
         </div>
       </header>
-      <Tabs defaultValue="verify" className="w-[90%] m-auto">
+      <Tabs defaultValue="overview" className="w-[90%] m-auto">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="overview">
             <div className="flex items-center justify-center">
@@ -41,7 +42,7 @@ export default function page() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="overview">
-          a
+          <OverView/>
         </TabsContent>
         <TabsContent value="users">
           <ManageUsers/>

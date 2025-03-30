@@ -1,9 +1,9 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { ChallengeModel } from "../models/challenges.model";
-import { getProblemById, ProblemModel } from "@/models/problems.model";
+import {  ProblemModel } from "@/models/problems.model";
 import { AccountModel, getAccountbyClerkId } from "@/models/accounts.model";
-import { createVerify } from "@/models/verifications.model";
+import { createVerify , getVerifies } from "@/models/verifications.model";
 import { IVerify } from "@/interface/verifications.interface";
 import { sendNotification } from "@lib/resendEmail";
 import { getTestCasesByProblemId } from "@/models/testcases.model";
@@ -92,7 +92,7 @@ export const VerifyRoute = new Elysia({ prefix: "/verify" })
   }
   )
 
-  .get("/status", async ({ auth, error }) => {
+  .get("/history", async ({ auth, error }) => {
     try {
       //verify admin
       if (!auth?.userId) {
@@ -103,20 +103,71 @@ export const VerifyRoute = new Elysia({ prefix: "/verify" })
         return error(401, "Unauthorized");
       }
 
-      const problems = await ProblemModel.countDocuments({ viewer: "public", status: "active" });
-      const users = await AccountModel.countDocuments({ status: "active" });
-      const challenges = await ChallengeModel.countDocuments({ viewer: "public", status: "active" })
+      const verifies = await getVerifies();
 
-      if (!problems || !users || !challenges) {
-        return error(404, "error cant count");
+      if (!verifies) {
+        return error(404, "verifies not found");
       }
+
+      const result = await Promise.all(verifies.map(async (v) => {
+
+        const problem = await ProblemModel.findById(v.problemId);
+        if (!problem) {
+          return
+        }
+
+        const account = await getAccountbyClerkId(v?.verifiyby);
+
+        if (!account) {
+          return
+        }
+
+        return {
+          _id: v._id,
+          problemName: problem.title,
+          verifiyby: account.username,
+          detail: v.detail,
+          success: v.success,
+          createdAt: v.createdAt,
+          updatedAt: v.updatedAt,
+        }
+      }))
 
       return {
         status: 200,
         message: "success",
-        problems: problems,
-        users: users,
-        challenges: challenges
+        result : result
+      }
+
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+  }
+  )
+
+  .get("/status", async ({ auth, error }) => {
+    try {
+      //verify admin
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+      const user = await AccountModel.findOne({ clerkId: auth.userId, role: "admin" });
+
+      if (!user) {
+        return error(401, "Unauthorized");
+      }
+
+      const problems = await ProblemModel.countDocuments({ viewer: "public", status: "active" });
+      const users = await AccountModel.countDocuments({ status: "active" });
+      const challenges = await ChallengeModel.countDocuments({ viewer: "public", status: "active" });
+
+      return {
+        status: 200,
+        message: "success",
+        problems: problems || 0,
+        users: users || 0,
+        challenges: challenges || 0
       }
 
     } catch (e) {

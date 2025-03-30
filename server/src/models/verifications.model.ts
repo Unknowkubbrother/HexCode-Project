@@ -29,3 +29,13 @@ export const VerifyModel = model("verification", VerifySchema);
 
 export const createVerify = (values: IVerify) =>
   new VerifyModel(values).save().then((verify) => verify.toObject());
+
+
+export const getVerifies = () =>
+  VerifyModel.find()
+    .then((verifies) => verifies.map((verify) => verify.toObject()))
+    .catch((err) => {
+      console.error(err);
+      return [];
+    });
+  
