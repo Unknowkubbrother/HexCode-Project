@@ -18,6 +18,7 @@ export const VerifyRoute = new Elysia({ prefix: "/verify" })
         return error(401, "Unauthorized");
       }
       const user = await AccountModel.findOne({clerkId:auth.userId,role:"admin"});
+      
       if(!user){
         return error(401, "Unauthorized");
       }
@@ -60,7 +61,9 @@ export const VerifyRoute = new Elysia({ prefix: "/verify" })
       if (!auth?.userId) {
         return error(401, "Unauthorized");
       }
+
       const user = await AccountModel.findOne({clerkId:auth.userId,role:"admin"});
+
       if(!user){
         return error(401, "Unauthorized");
       }

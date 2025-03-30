@@ -155,6 +155,19 @@ export const AccountRoute = new Elysia({ prefix: '/account' })
 
         const { clerkId, username, email, role, status, avatar } = body;
 
+        const myaccount = await getAccountbyClerkId(auth.userId);
+        if (!myaccount) {
+            return error(404, "Account not found");
+        }
+
+        if (myaccount.role !== "admin") {
+            return error(403, "Unauthorized");
+        }
+
+        if (myaccount.status !== "active") {
+            return error(403, "Account is banned");
+        }
+
         const account = await getAccountbyClerkId(String(clerkId));
 
         if (!account) {
