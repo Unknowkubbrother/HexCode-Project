@@ -293,10 +293,10 @@ export default function EditProblem({ problemData }: { problemData: IProblem }) 
             {loading && <Loader />}
 
             {viewerCode &&
-                <div className="fixed top-1/2 left-1/2 -mt-[20rem] -ml-[20rem] dark:bg-background bg-bgsecondary flex justify-center items-center rounded-xl z-50 border-2">
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 dark:bg-background bg-bgsecondary flex justify-center items-center rounded-xl z-50 border-2">
                     <div className="flex flex-col gap-3 p-5">
                         <span className="text-lg font-semibold">View Source Code</span>
-                        <div className="w-[750px] h-[500px] flex justify-start items-center gap-2">
+                        <div className="w-[800px] h-[500px] flex justify-start items-center gap-2">
                             <CodeBlock
                                 code={String(problemData.source_code)}
                                 language="cpp"
