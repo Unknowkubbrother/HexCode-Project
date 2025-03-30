@@ -547,22 +547,25 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         {
           $group: {
             _id: { clerkId: "$clerkId", problemId: "$problemId" },
-            maxScore: { $max: "$points" }
+            maxScore: { $max: "$points" },
+            createdAt: { $first: "$createdAt" }
           }
         },
         {
           $group: {
             _id: "$_id.clerkId",
-            total: { $sum: "$maxScore" }
+            total: { $sum: "$maxScore" },
+            createdAt: { $min: "$createdAt" }
           }
         },
         {
-          $sort: { total: -1 }
+          $sort: { total: -1, createdAt: 1 }
         },
         {
           $project: {
             clerkId: "$_id",
             total: 1,
+            createdAt: 1,
             _id: 0
           }
         }
