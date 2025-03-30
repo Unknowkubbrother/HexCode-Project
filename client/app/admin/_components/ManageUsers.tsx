@@ -35,7 +35,7 @@ import { toast } from 'react-toastify';
 export default function ManageUsers() {
     const [accounts, setAccounts] = useState<IAccount[]>([]);
     const [editUser, setEditUser] = useState<IAccount | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchAccounts = async () => {
@@ -192,7 +192,7 @@ export default function ManageUsers() {
                                         >
                                             <Pen size={20} />
                                         </Button>
-                                        {loading && <Button variant="ghost" className="flex items-center justify-center text-green-400 hover:scale-110 transition-all duration-200 ease-in-out"
+                                        {!loading && <Button variant="ghost" className="flex items-center justify-center text-green-400 hover:scale-110 transition-all duration-200 ease-in-out"
                                             onClick={handleUpdateUser}
                                         >
                                             <Save size={20} />

@@ -19,7 +19,7 @@ export default function page() {
           </span>
         </div>
       </header>
-      <Tabs defaultValue="verify" className="w-[90%] m-auto">
+      <Tabs defaultValue="overview" className="w-[90%] m-auto">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="overview">
             <div className="flex items-center justify-center">
