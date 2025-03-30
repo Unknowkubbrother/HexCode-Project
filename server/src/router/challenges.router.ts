@@ -2,9 +2,10 @@ import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { ChallengeModel, createChallenge, getChallenges, updateChallenge, getChallengeById } from "../models/challenges.model";
 import { ProblemModel } from "@/models/problems.model";
-import { getAccountbyClerkId } from "@/models/accounts.model";
+import { AccountModel, getAccountbyClerkId } from "@/models/accounts.model";
 import { SubmissionModel,getTopSubmissionByProblemAndClerkId } from "@/models/submissions.model";
 import { getSumPointByProblemId } from "@/models/testcases.model";
+import { sendNotification } from "@lib/resendEmail";
 
 export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
   .use(clerkPlugin())
@@ -17,6 +18,11 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       }
 
       const { title, description, thumbnail, images, problem, viewer, reward, startTime, endTime } = body;
+
+      const useraccount = await getAccountbyClerkId(auth.userId);
+      if (!useraccount) {
+        return error(401, "Unauthorized");
+      }
 
       if (startTime < Date.now() || endTime < startTime) {
         return error(404, "Invalid Time");
@@ -68,6 +74,11 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       if (!challengeCreated) {
         return error(404, "create challenge error");
       }
+
+      const emails = await AccountModel.find({ clerkId: { $in: useraccount.followers }, status: "active" })
+      emails.map((user) => {
+        sendNotification(user.email, "New Challenge", `<p>ผู้ใช้ ${useraccount.username} ได้ทำการอัพโหลด Challenge : ${title} ใหม่แล้ว รีบเข้ามาดูเร็ว<p>`)
+      })
 
       return {
         status: 200,
