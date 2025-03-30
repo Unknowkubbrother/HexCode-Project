@@ -231,7 +231,7 @@ export const VerifyRoute = new Elysia({ prefix: "/verify" })
           return error(404, "update problem error");
 
         }
-        sendNotification(userproblem.email, "Verify problem", `<p>เราขอแสดงความเสียใจด้วยเราไม่สามารถนำ problem: ${problem.title} ของคุณเข้าสู่สถานะ public ได้<br>เนื่องจาก<br>${detail}<br>ขอบคุณจาก HexCode</p>`)
+        sendNotification(userproblem.email, "Verify problem", `<p>เราขอแสดงความเสียใจด้วยเราไม่สามารถนำ problem: ${problem.title} ของคุณเข้าสู่สถานะ public หรือ challenge ได้<br>เนื่องจาก<br>${detail}<br>ขอบคุณจาก HexCode</p>`)
       }
 
       const value: IVerify = { problemId: problemId, verifiyby: user.clerkId, detail: detail, success: Boolean(success) }
