@@ -118,7 +118,7 @@ export default function ManageUsers() {
     return (
         <main className='w-full'>
             <Table>
-                <TableCaption>A list of your recent invoices.</TableCaption>
+                <TableCaption>A list of users.</TableCaption>
                 <TableHeader>
                     <TableRow>
                         <TableHead>Users</TableHead>

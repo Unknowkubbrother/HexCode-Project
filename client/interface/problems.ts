@@ -24,6 +24,7 @@ export interface ITestcase  {
 
 export interface IProblem {
     _id: string;
+    username?: string;
     clerkId: string;
     title: string;
     description: string;
