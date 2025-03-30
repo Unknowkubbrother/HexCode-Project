@@ -94,10 +94,12 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         return error(404, "get problem error");
       }
 
-      const emails = await AccountModel.find({ clerkId: { $in: useraccount.followers }, status: "active" })
-      emails.map((user) => {
-        sendNotification(user.email, "New problem", `<p>ผู้ใช้ ${useraccount.username} ได้ทำการอัพโหลด Problem : ${title} ใหม่แล้ว รีบเข้ามาดูเร็ว<p>`)
-      })
+      if (viewer == "private") {
+        const emails = await AccountModel.find({ clerkId: { $in: useraccount.followers }, status: "active" })
+        emails.map((user) => {
+          sendNotification(user.email, "New problem", `<p>ผู้ใช้ ${useraccount.username} ได้ทำการอัพโหลด Problem : ${title} ใหม่แล้ว รีบเข้ามาดูเร็ว<p>`)
+        })
+      }
 
 
       return {

@@ -1,9 +1,9 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
 import { ChallengeModel } from "../models/challenges.model";
-import {  ProblemModel } from "@/models/problems.model";
+import { ProblemModel } from "@/models/problems.model";
 import { AccountModel, getAccountbyClerkId } from "@/models/accounts.model";
-import { createVerify , getVerifies } from "@/models/verifications.model";
+import { createVerify, getVerifies } from "@/models/verifications.model";
 import { IVerify } from "@/interface/verifications.interface";
 import { sendNotification } from "@lib/resendEmail";
 import { getTestCasesByProblemId } from "@/models/testcases.model";
@@ -62,7 +62,7 @@ export const VerifyRoute = new Elysia({ prefix: "/verify" })
         }
 
         return {
-          username : account.username,
+          username: account.username,
           _id: problem._id,
           title: problem.title,
           description: problem.description,
@@ -136,7 +136,7 @@ export const VerifyRoute = new Elysia({ prefix: "/verify" })
       return {
         status: 200,
         message: "success",
-        result : result
+        result: result
       }
 
     } catch (e) {
@@ -201,28 +201,43 @@ export const VerifyRoute = new Elysia({ prefix: "/verify" })
         return error(404, "user not found");
       }
       if (success) {
-        const updateproblem = await ProblemModel.findByIdAndUpdate(problemId, { viewer: "public", status: "active" })
+        const tempproblem = await ProblemModel.findById(problemId);
+
+        if (!tempproblem) {
+          return error(404, "problem not found");
+        }
+
+        const viewer = tempproblem.viewer == "private" ? "public" : "challenge";
+
+        const updateproblem = await ProblemModel.findByIdAndUpdate(problemId, { viewer: viewer, status: "active" })
+
 
         if (!updateproblem) {
           return error(404, "update problem error");
         }
 
+        if (viewer == "public") {
+          const emails = await AccountModel.find({ clerkId: { $in: userproblem.followers }, status: "active" })
+          emails.map((user) => {
+            sendNotification(user.email, "New problem", `<p>ผู้ใช้ ${userproblem.username} ได้ทำการอัพโหลด Problem : ${problem.title} ใหม่แล้ว รีบเข้ามาดูเร็ว<p>`)
+          })
+        }
         sendNotification(userproblem.email, "Verify problem", `<p>เราขอแสดงความยินดีด้วย problem:${problem.title} ของคุณได้เข้าสู่สถานะ public แล้ว<br>เนื่องจาก<br>${detail}<br>ขอบคุณจาก HexCode</p>`)
       } else {
-        
+
         const updateproblem = await ProblemModel.findByIdAndUpdate(problemId, { viewer: "private", status: "active" })
-        
+
         if (!updateproblem) {
           return error(404, "update problem error");
-        
+
         }
         sendNotification(userproblem.email, "Verify problem", `<p>เราขอแสดงความเสียใจด้วยเราไม่สามารถนำ problem: ${problem.title} ของคุณเข้าสู่สถานะ public ได้<br>เนื่องจาก<br>${detail}<br>ขอบคุณจาก HexCode</p>`)
       }
 
       const value: IVerify = { problemId: problemId, verifiyby: user.clerkId, detail: detail, success: Boolean(success) }
-      
+
       const verify = await createVerify(value)
-      
+
       if (!verify) {
         return error(404, "verify error");
       }
