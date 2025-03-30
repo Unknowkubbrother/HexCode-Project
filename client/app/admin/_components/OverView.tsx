@@ -115,6 +115,10 @@ export default function OverView() {
 
 
             <div className='w-full h-full'>
+                <header className='my-10'>
+                    <h1 className='text-2xl font-bold'>History Verification</h1>
+                    <p className='text-sm text-muted-foreground'>List of verification history</p>
+                </header>
 
                 <Table>
                     <TableCaption>A list of verification.</TableCaption>

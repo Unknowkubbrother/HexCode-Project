@@ -49,7 +49,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         ...(memory_limit && { memory_limit: Number(memory_limit) }),
         ...(stack_limit && { stack_limit: Number(stack_limit) }),
         ...(max_file_size && { max_file_size: Number(max_file_size) }),
-        ...((viewer == "public") && { status: "pending" }),
+        ...((viewer == "public" || viewer == "challenge") && { status: "pending" }),
       });
 
       if (!problemCreated) {
@@ -94,12 +94,14 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         return error(404, "get problem error");
       }
 
-      const emails = await AccountModel.find({ clerkId: { $in: useraccount.followers }, status: "active" })
-      emails.map((user) => {
-        sendNotification(user.email, "New problem", `<p>ผู้ใช้ ${useraccount.username} ได้ทำการอัพโหลด Problem : ${title} ใหม่แล้ว รีบเข้ามาดูเร็ว<p>`)
-      })
+      if (viewer == "private") {
+        const emails = await AccountModel.find({ clerkId: { $in: useraccount.followers }, status: "active" })
+        emails.map((user) => {
+          sendNotification(user.email, "New problem", `<p>ผู้ใช้ ${useraccount.username} ได้ทำการอัพโหลด Problem : ${title} ใหม่แล้ว รีบเข้ามาดูเร็ว<p>`)
+        })
+      }
 
-      
+
       return {
         result: resultProblem,
         status: 200,
