@@ -3,7 +3,7 @@ import { clerkPlugin } from "elysia-clerk";
 import { ChallengeModel, createChallenge, getChallenges, updateChallenge, getChallengeById } from "../models/challenges.model";
 import { ProblemModel } from "@/models/problems.model";
 import { AccountModel, getAccountbyClerkId } from "@/models/accounts.model";
-import { SubmissionModel,getTopSubmissionByProblemAndClerkId } from "@/models/submissions.model";
+import { SubmissionModel, getTopSubmissionByProblemAndClerkId } from "@/models/submissions.model";
 import { getSumPointByProblemId } from "@/models/testcases.model";
 import { sendNotification } from "@lib/resendEmail";
 
@@ -37,7 +37,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "Account not found");
       }
 
-      if (account.role == "member"){
+      if (account.role == "member") {
         return error(404, "You are not allowed to create challenge");
       }
 
@@ -75,10 +75,12 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "create challenge error");
       }
 
-      const emails = await AccountModel.find({ clerkId: { $in: useraccount.followers }, status: "active" })
-      emails.map((user) => {
-        sendNotification(user.email, "New Challenge", `<p>ผู้ใช้ ${useraccount.username} ได้ทำการอัพโหลด Challenge : ${title} ใหม่แล้ว รีบเข้ามาดูเร็ว<p>`)
-      })
+      if (viewer == "public") {
+        const emails = await AccountModel.find({ clerkId: { $in: useraccount.followers }, status: "active" })
+        emails.map((user) => {
+          sendNotification(user.email, "New Challenge", `<p>ผู้ใช้ ${useraccount.username} ได้ทำการอัพโหลด Challenge : ${title} ใหม่แล้ว รีบเข้ามาดูเร็ว<p>`)
+        })
+      }
 
       return {
         status: 200,
@@ -184,7 +186,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       }
 
       const search = query.search ? query.search : "";
-      
+
       const filter = {
         ...(search.length && { title: { $regex: search, $options: 'i' } }),
         status: "active",
@@ -207,19 +209,19 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
 
       const filterChallenges = await Promise.all(
         filterChallengeEndTime.map(async (challenge) => {
-        const userCreate = await getAccountbyClerkId(challenge.clerkId);
+          const userCreate = await getAccountbyClerkId(challenge.clerkId);
 
-        return {
-          _id: challenge._id,
-          avatar: userCreate?.avatar,
-          username: userCreate?.username,
-          title: challenge.title,
-          thumbnail: challenge.thumbnail,
-          countPlayer: challenge.player?.length || 0,
-          createdAt: challenge.createdAt,
-          updatedAt: challenge.updatedAt,
-        }
-      }));
+          return {
+            _id: challenge._id,
+            avatar: userCreate?.avatar,
+            username: userCreate?.username,
+            title: challenge.title,
+            thumbnail: challenge.thumbnail,
+            countPlayer: challenge.player?.length || 0,
+            createdAt: challenge.createdAt,
+            updatedAt: challenge.updatedAt,
+          }
+        }));
 
 
       return {
@@ -233,14 +235,14 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       return error(500, "Internal Server Error");
     }
   },
-      {
-        query: t.Optional(
-          t.Object({
-            search: t.Optional(t.String()),
-          })
-        ),
-      }
-    )
+    {
+      query: t.Optional(
+        t.Object({
+          search: t.Optional(t.String()),
+        })
+      ),
+    }
+  )
 
   .get("/getedit/:challengeId", async ({ params, auth, error }) => {
     try {
@@ -263,7 +265,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       return {
         status: 200,
         message: "GET EDIT Challenge Success",
-        result : challenge
+        result: challenge
       }
 
     } catch (e) {
@@ -405,7 +407,7 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
       }
 
       const challengeUpeate = await ChallengeModel.findByIdAndUpdate(_id, { status: "deleted" });
-      
+
       if (!challengeUpeate) {
         return error(404, "remove error");
       }
