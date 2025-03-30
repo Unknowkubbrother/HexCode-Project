@@ -30,7 +30,6 @@ import {
 } from "@/components/ui/select"
 import { updateAccount } from '@/actions/accountAction';
 import { toast } from 'react-toastify';
-import { set } from 'lodash';
 
 
 export default function ManageUsers() {

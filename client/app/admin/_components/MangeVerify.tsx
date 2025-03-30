@@ -1,5 +1,5 @@
 "use client"
-import {useState , useEffect} from 'react'
+import { useEffect} from 'react'
 import { getVerifies } from '@/actions/verificationAction'
 
 export default function MangeVerify() {
