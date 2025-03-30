@@ -57,7 +57,6 @@ export const createAccount = async (value: IAccount) =>
 export const getAccounts = async () =>
     AccountModel.find().then((accounts) => accounts.map((account) => account.toObject()));
 
-
 export const getAccountbyClerkId = async (clerkId: string) => 
     AccountModel.findOne({ clerkId }).then((account) => account?.toObject());
 

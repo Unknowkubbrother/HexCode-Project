@@ -204,5 +204,97 @@ export const ProfileRoute = new Elysia({ 'prefix': '/profile' })
   )
 
 
+  .get("/getmyfollower/:username", async ({ params,auth, error }) => {
+    try {
+
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const { username } = params;
+
+      const account = await getAccountbyUsername(username);
+      if (!account) {
+        return error(404, "Account Not Found");
+      }
+      const myFollower = account.followers || [];
+      const filterFollower = await Promise.all(
+        myFollower.map(async (follower) => {
+          const account = await getAccountbyClerkId(follower);
+          if (!account) {
+            return;
+          }
+          return {
+            username: account.username,
+            avatar: account.avatar,
+          }
+        }
+        )
+      );
+
+      return {
+        status: 200,
+        followers: filterFollower,
+      };
+
+
+
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+
+  }, {
+    params: t.Object({
+      username: t.String(),
+    }),
+  })
+
+  .get("/getmyfollowing/:username", async ({ params,auth, error }) => {
+    try {
+
+      if (!auth?.userId) {
+        return error(401, "Unauthorized");
+      }
+
+      const { username } = params;
+
+      const account = await getAccountbyUsername(username);
+      if (!account) {
+        return error(404, "Account Not Found");
+      }
+      const myFollowing = account.following || [];
+      const filterFollowing = await Promise.all(
+        myFollowing.map(async (following) => {
+          const account = await getAccountbyClerkId(following);
+          if (!account) {
+            return;
+          }
+          return {
+            username: account.username,
+            avatar: account.avatar,
+          }
+        }
+        )
+      );
+
+      return {
+        status: 200,
+        followings: filterFollowing,
+      };
+
+
+
+    } catch (e) {
+      console.log(e);
+      return error(500, "Internal Server Error");
+    }
+
+  }, {
+    params: t.Object({
+      username: t.String(),
+    }),
+  });
+
 
 
