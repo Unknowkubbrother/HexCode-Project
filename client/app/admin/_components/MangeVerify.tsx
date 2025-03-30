@@ -111,7 +111,7 @@ export default function MangeVerify() {
   }
 
   const VerifyProblem = () => {
-    return (<div className="fixed top-1/2 left-1/2 -mt-[25rem] -ml-[44rem] dark:bg-background bg-bgsecondary rounded-xl z-30 border-2 p-5">
+    return (<div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 dark:bg-background bg-bgsecondary rounded-xl z-30 border-2 p-5 scale-90">
       <div className='flex justify-start items-center mb-5 gap-2'>
         <h1>Verification </h1>
         <StatusDifficulty difficulty={Number(problemVerify?.difficulty) || 1} />
@@ -121,7 +121,7 @@ export default function MangeVerify() {
           language="cpp"
           code={problemVerify?.source_code || ""}
           filename={""}
-          className="min-w-[700px] max-w-[700px] w-[700px] h-[600px] overflow-auto border-[3px]"
+          className="min-w-[500px] max-w-[700px] h-[600px] overflow-auto border-[3px]"
         />
 
         <div className='w-[700px] h-full flex flex-col justify-start items-start gap-5'>
@@ -236,11 +236,11 @@ export default function MangeVerify() {
           <VerifyProblem />
         )}
         {confirmSuccess != null && (
-          <div className='fixed top-1/2 left-1/2 -mt-[15rem] -ml-[20rem] bg-background rounded-xl z-50 border-2 p-5'>
+          <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background rounded-xl z-50 border-2 p-5'>
             <header className='flex justify-center items-center mb-5 gap-2'>
               <h1>Confirm Verification</h1>
             </header>
-            <Textarea value={confirmReason || ""} className='w-[500px] border-2 h-[200px] max-h-[300px]' onChange={(e) =>
+            <Textarea value={confirmReason || ""} className='w-[350px] border-2 h-[150px] max-h-[300px]' onChange={(e) =>
               setConfirmReason(e.target.value)}
               placeholder='Please enter the reason for verification'
             />
