@@ -36,7 +36,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         clerkId: auth.userId,
         title: title,
         ...description && { description: description },
-        viewer: viewer,
+        viewer: (viewer != "public") ? viewer : "private",
         difficulty: Number(difficulty),
         type: toArray(JSON.parse(type)),
         hint: toArray(JSON.parse(hint)),

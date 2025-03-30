@@ -17,20 +17,25 @@ const VerifySchema = new Schema(
       type: String,
       required: true,
     },
-    verifiyDate: {
-      type: Number,
-      required: true,
-      default: Date.now(),
-    },
     success: {
-      type: Number,
+      type: Boolean,
       required: true,
     }
   },
   { timestamps: true }
 );
 
-export const VerifyModel = model("verify", VerifySchema);
+export const VerifyModel = model("verification", VerifySchema);
 
 export const createVerify = (values: IVerify) =>
   new VerifyModel(values).save().then((verify) => verify.toObject());
+
+
+export const getVerifies = () =>
+  VerifyModel.find()
+    .then((verifies) => verifies.map((verify) => verify.toObject()))
+    .catch((err) => {
+      console.error(err);
+      return [];
+    });
+  
