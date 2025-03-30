@@ -8,6 +8,8 @@ import { fileExtension } from "@lib/utils";
 import { getTopSubmissionByProblemAndClerkId } from "@/models/submissions.model";
 import { getTestCasesByProblemId } from "@/models/testcases.model";
 import { join } from 'node:path';
+import { AccountModel, getAccountbyClerkId } from "@/models/accounts.model";
+import { sendNotification } from "@lib/resendEmail";
 
 /**
  * @description ProblemRoute
@@ -27,7 +29,10 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
 
       const { title, description, difficulty, viewer, type, docs, hint, source_code, cpu_time_limit, memory_limit, stack_limit, max_file_size } = body;
 
-
+      const useraccount = await getAccountbyClerkId(auth.userId);
+      if(!useraccount){
+        return error(401, "Unauthorized");
+      }
       if (docs.type !== "application/pdf") {
         return error(400, "docs must be a pdf file");
       }
@@ -88,7 +93,10 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
       if (!resultProblem) {
         return error(404, "get problem error");
       }
-
+      const emails = await AccountModel.find({ clerkId: { $in: useraccount.followers },status:"active"})
+      emails.map((user)=>{
+        sendNotification(user.email,"New problem",`<p>ผู้ใช้ ${useraccount.username} ได้ทำการอัพโหลด Problem : ${title} ใหม่แล้ว รีบเข้ามาดูเร็ว<p>`)
+      })
       return {
         result: resultProblem,
         status: 200,
