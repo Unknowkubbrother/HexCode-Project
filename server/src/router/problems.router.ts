@@ -49,7 +49,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         ...(memory_limit && { memory_limit: Number(memory_limit) }),
         ...(stack_limit && { stack_limit: Number(stack_limit) }),
         ...(max_file_size && { max_file_size: Number(max_file_size) }),
-        ...((viewer == "public") && { status: "pending" }),
+        ...((viewer == "public" || viewer == "challenge") && { status: "pending" }),
       });
 
       if (!problemCreated) {
@@ -99,7 +99,7 @@ export const ProblemRoute = new Elysia({ prefix: "/problem" })
         sendNotification(user.email, "New problem", `<p>ผู้ใช้ ${useraccount.username} ได้ทำการอัพโหลด Problem : ${title} ใหม่แล้ว รีบเข้ามาดูเร็ว<p>`)
       })
 
-      
+
       return {
         result: resultProblem,
         status: 200,
