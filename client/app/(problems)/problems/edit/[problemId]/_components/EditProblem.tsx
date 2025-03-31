@@ -477,7 +477,7 @@ export default function EditProblem({ problemData }: { problemData: IProblem }) 
                         </Button>
                         <div className="w-full flex justify-start items-center gap-2 ml-5 mt-3">
                             <span className="text-sm">Upload Soucre Code New</span>
-                            <Input id="source_code" type="file"
+                            <Input id="source_code" type="file" accept=".js,.py,.java,.c,.cpp,.rs,.rb,.go,.swift,.kt,.ts,.pl,.r,.lua"
                                 onChange={(e) => setSourceCode(e.target.files?.[0])}
                             />
                         </div>
