@@ -365,12 +365,12 @@ export default function CreateProblem() {
         </div>
 
         <div className="w-full mt-5 flex justify-between items-center pb-5 border-b-2">
-          <div className="grid w-full items-center gap-1.5">
+            <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="source_code">Source <span className="text-primary"> Code</span> FILE </Label>
-            <Input id="source_code" type="file" className="mt-3"
+            <Input id="source_code" type="file" className="mt-3" accept=".js,.py,.java,.c,.cpp,.rs,.rb,.go,.swift,.kt,.ts,.pl,.r,.lua"
               onChange={(e) => setSourceCode(e.target.files?.[0])}
             />
-          </div>
+            </div>
         </div>
 
         <div className="w-full mt-5 flex flex-col justify-start items-start gap-3 pb-5 border-b-2">
