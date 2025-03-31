@@ -124,14 +124,16 @@ export default function Hub({ data, isJoined }: { data: IChallenge, isJoined: bo
             <span className="text-2xl font-bold">{data.title}</span>
             <span className="p-1 border-2 rounded-lg border-primary text-xs">{data.viewer}</span>
             <span className="text-lg font-semibold">
-              {Date.now() < data.startTime ?
-                <span className="text-primary">Opening time - </span>
-                :
-                <span className="text-green-400"> 🔥 Starting . . .</span>
-              }
-              {Date.now() < data.startTime && (
-                <span className="text-green-400">Now - {coverTimeString(Number(data.startTime))}</span>
-              )}
+                {Date.now() < data.startTime ? (
+                <>
+                  <span className="text-primary">Opening time - </span>
+                  <span className="text-green-400">Now - {coverTimeString(Number(data.startTime))}</span>
+                </>
+                ) : Date.now() > data.endTime ? (
+                <span className="text-red-400">Challenge Ended</span>
+                ) : (
+                <span className="text-green-400">🔥 Starting . . .</span>
+                )}
             </span>
           </span>
           <div className="flex justify-start items-center gap-3">

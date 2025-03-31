@@ -293,9 +293,9 @@ export const ChallengeRoute = new Elysia({ prefix: "/challenge" })
         return error(404, "Not found challenge");
       }
 
-      if (challenge.endTime < Date.now()) {
-        return error(404, "This challenge is ended");
-      }
+      // if (challenge.endTime < Date.now()) {
+      //   return error(404, "This challenge is ended");
+      // }
 
       const isJoined = challenge.player?.includes(auth.userId);
 
