@@ -1,6 +1,7 @@
 'use server';
 import axios from 'axios';
 import getSession from "@/hooks/use-session";
+import { redirect } from 'next/navigation'
 
 export const runCodeTest = async (data: {
     source_code : string,
@@ -42,6 +43,9 @@ export const submitCode = async (data: {
 
         return response.data;
     }catch(error){
+        if (axios.isAxiosError(error) && error.response?.status !== 200) {
+            redirect(`/`);
+        }
         console.error(error);
     }
 }

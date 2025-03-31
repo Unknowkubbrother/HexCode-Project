@@ -79,3 +79,6 @@ export const getChallengeById = async (id: string) =>
 
 export const getChallengeByClerkId = async (clerkId: string) =>
     ChallengeModel.find({clerkId: clerkId, status: "active"}).then((challenges) => challenges.map((challenge) => challenge.toObject()));
+
+export const getProblemInChallenge = async (problemId: string) =>
+    ChallengeModel.findOne({ problem: problemId }).then((challenge) => challenge?.toObject());
