@@ -49,11 +49,18 @@ export default function ItemProblem({ problem, itself }: { problem: ListProblemI
             </Button>
           </Link>}
         {itself && (
-          <Link href={`/problems/edit/${problem.id}`} passHref>
-            <Button variant="default" size="sm" className="bg-yellow-500 hover:scale-105 duration-300">
-              <span>Edit</span>
-            </Button>
-          </Link>
+          <div className="flex justify-center items-center gap-2">
+            <Link href={`/problems/edit/${problem.id}`} passHref>
+              <Button variant="default" size="sm" className="bg-yellow-500 hover:scale-105 duration-300">
+                <span>Edit</span>
+              </Button>
+            </Link>
+            <Link href={`/problems/views/${problem.id}`} passHref>
+              <Button variant="default" size="sm" className="bg-emerald-500 hover:scale-105 duration-300">
+                <span>Views</span>
+              </Button>
+            </Link>
+          </div>
         )}
       </div>
     </div>

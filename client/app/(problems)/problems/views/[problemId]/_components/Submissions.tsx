@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getSubmissionByProblemIdAndClerkId } from "@/actions/submissionAction";
+import { getSubmissionByProblemId } from "@/actions/submissionAction";
 import { ISubmission } from "@/interface/submissions";
 import {
     Table,
@@ -15,6 +15,13 @@ import { CircleCheckBig, CircleX } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { CodeBlock } from "@/components/ui/code-block";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar"
+import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Submissions({ problemId }: { problemId: string }) {
 
@@ -23,7 +30,7 @@ export default function Submissions({ problemId }: { problemId: string }) {
     const [selectedViewsubmission, setSelectedViewSubmission] = useState<ISubmission | null>(null);
 
     useEffect(() => {
-        getSubmissionByProblemIdAndClerkId(problemId).then((data) => {
+        getSubmissionByProblemId(problemId).then((data) => {
             setSubmissions(data);
         });
     }, [problemId]);
@@ -40,12 +47,36 @@ export default function Submissions({ problemId }: { problemId: string }) {
         setSelectedViewSubmission(submission);
     }
 
+    const SkeletonLoading = () => {
+        return (
+            <TableRow>
+                <TableCell className='flex items-center gap-2'>
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                    <Skeleton className="h-4 w-32" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton className="h-4 w-32" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton className="h-4 w-24" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton className="h-4 w-24" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton className="h-4 w-24" />
+                </TableCell>
+            </TableRow>
+        )
+    }
+
     return (
         <div className="w-full h-full relative">
             <Table className={`w-[80%] m-auto mt-5 ${isAciveView ? "blur-sm" : ""}`}>
                 <TableCaption>A list of submissions</TableCaption>
                 <TableHeader>
                     <TableRow>
+                        <TableHead className="text-center">Username</TableHead>
                         <TableHead className="text-center">RESULT</TableHead>
                         <TableHead className="text-center">POINTS</TableHead>
                         <TableHead className="text-center">LANGUAGE</TableHead>
@@ -54,47 +85,64 @@ export default function Submissions({ problemId }: { problemId: string }) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {submissions.map((submission) => (
-                        <TableRow key={submission._id}>
-                            <TableCell className="text-center">{(submission.success) ?
-                                <span className="flex items-center justify-center gap-2 text-green-400">
-                                    <CircleCheckBig size={15} />
-                                    <span>Accepted</span>
-                                </span>
-                                :
-                                <span className="flex items-center justify-center gap-2 text-rose-400">
-                                    <CircleX size={15} />
-                                    <span>{Number(submission.points) > 0 ? "Wrong Answer" : "Rejected"}</span>
-                                </span>
-                            }</TableCell>
-                            <TableCell className="text-center">{Number(submission.points)}</TableCell>
-                            <TableCell className="text-center">{submission?.language_name}</TableCell>
-                            <TableCell className="text-center">
-                                {(() => {
-                                    const diff = Date.now() - new Date(submission?.createdAt || Date.now()).getTime();
-                                    const seconds = Math.floor(diff / 1000);
-                                    const minutes = Math.floor(seconds / 60);
-                                    const hours = Math.floor(minutes / 60);
-                                    const days = Math.floor(hours / 24);
+                    {
+                        submissions.length === 0 ? (
+                            <SkeletonLoading/>
+                        ) : (
+                            <>
+                                {submissions.map((submission) => (
+                                    <TableRow key={submission._id}>
+                                        <TableCell className="text-center">
+                                            <Link className="flex justify-center items-center gap-2 duration-300 hover:text-primary" href={`/profile/${submission.username}`}>
+                                                <Avatar className="h-8 w-8">
+                                                    <AvatarImage src={submission?.avatar} alt="Avatar" />
+                                                    <AvatarFallback>{String(submission?.username).charAt(0).toUpperCase()}</AvatarFallback>
+                                                </Avatar>
+                                                <span>{submission?.username}</span>
+                                            </Link>
+                                        </TableCell>
+                                        <TableCell className="text-center">{(submission.success) ?
+                                            <span className="flex items-center justify-center gap-2 text-green-400">
+                                                <CircleCheckBig size={15} />
+                                                <span>Accepted</span>
+                                            </span>
+                                            :
+                                            <span className="flex items-center justify-center gap-2 text-rose-400">
+                                                <CircleX size={15} />
+                                                <span>{Number(submission.points) > 0 ? "Wrong Answer" : "Rejected"}</span>
+                                            </span>
+                                        }</TableCell>
+                                        <TableCell className="text-center">{Number(submission.points)}</TableCell>
+                                        <TableCell className="text-center">{submission?.language_name}</TableCell>
+                                        <TableCell className="text-center">
+                                            {(() => {
+                                                const diff = Date.now() - new Date(submission?.createdAt || Date.now()).getTime();
+                                                const seconds = Math.floor(diff / 1000);
+                                                const minutes = Math.floor(seconds / 60);
+                                                const hours = Math.floor(minutes / 60);
+                                                const days = Math.floor(hours / 24);
 
-                                    if (days > 0) {
-                                        return `${days} day${days > 1 ? 's' : ''} ago`;
-                                    } else if (hours > 0) {
-                                        return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-                                    } else if (minutes > 0) {
-                                        return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-                                    } else {
-                                        return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
-                                    }
-                                })()}
-                            </TableCell>
-                            <TableCell className="text-center">
-                                <button className="text-primary"
-                                    onClick={() => handlerViewSubmission(submission)}
-                                >View</button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                                                if (days > 0) {
+                                                    return `${days} day${days > 1 ? 's' : ''} ago`;
+                                                } else if (hours > 0) {
+                                                    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+                                                } else if (minutes > 0) {
+                                                    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+                                                } else {
+                                                    return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+                                                }
+                                            })()}
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            <button className="text-primary"
+                                                onClick={() => handlerViewSubmission(submission)}
+                                            >View</button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </>
+                        )
+                    }
                 </TableBody>
             </Table>
             {isAciveView && selectedViewsubmission && (
