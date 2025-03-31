@@ -59,8 +59,7 @@ export const ProfileRoute = new Elysia({ 'prefix': '/profile' })
       );
 
       const challenges = await getChallengeByClerkId(account.clerkId);
-      const filterChallengeEndTime = challenges.filter((challenge) => challenge.endTime > Date.now());
-      const filterChallenge = filterChallengeEndTime.map((challenge) => {
+      const filterChallenge = challenges.map((challenge) => {
         return {
           _id: challenge._id.toString(),
           avatar: account.avatar,
