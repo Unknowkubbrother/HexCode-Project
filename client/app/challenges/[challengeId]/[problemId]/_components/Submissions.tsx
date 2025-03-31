@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getSubmissionByProblemId } from "@/actions/submissionAction";
+import { getSubmissionByProblemIdAndClerkId } from "@/actions/submissionAction";
 import { ISubmission } from "@/interface/submissions";
 import {
     Table,
@@ -23,7 +23,7 @@ export default function Submissions({ problemId }: { problemId: string }) {
     const [selectedViewsubmission, setSelectedViewSubmission] = useState<ISubmission | null>(null);
 
     useEffect(() => {
-        getSubmissionByProblemId(problemId).then((data) => {
+        getSubmissionByProblemIdAndClerkId(problemId).then((data) => {
             setSubmissions(data);
         });
     }, [problemId]);

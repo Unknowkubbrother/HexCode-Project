@@ -58,3 +58,5 @@ export const getIsAcceptedByProblemAndClerkId = (problemId: string, clerkId: str
 }
 
 export const getSubmitByProblemIdAndClerkId = (problemId: string,clerkId:string) => SubmissionModel.find({problemId:problemId,clerkId:clerkId});
+
+export const getSubmitbyProblemId = (problemId: string) => SubmissionModel.find({ problemId: problemId }).sort({ createdAt: -1 });
