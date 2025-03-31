@@ -195,7 +195,7 @@ export default function TabProblem({ problemData,setMyPoints}: { problemData: IP
             <div className="flex justify-start items-center gap-3">
               <div className="grid w-full max-w-sm items-center gap-1.5">
                 <label htmlFor="code" className="text-sm font-medium leading-none">Upload Code</label>
-                <Input id="code" type="file" placeholder="Upload Code" className="w-[300px]"
+                <Input id="code" type="file" placeholder="Upload Code" className="w-[300px]" accept=".js,.py,.java,.c,.cpp,.rs,.rb,.go,.swift,.kt,.ts,.pl,.r,.lua"
                   onChange={(e) => {
                     setFileCode("");
                     const file = e.target.files?.[0];
