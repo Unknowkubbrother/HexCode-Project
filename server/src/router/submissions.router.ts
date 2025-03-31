@@ -6,12 +6,13 @@ import { getTestCasesByProblemId } from "@/models/testcases.model";
 import {min} from "mathjs"
 import { IJudge0Submission } from "@/interface/judge0.interface";
 import {createSubmissionDB,getIsAcceptedByProblemAndClerkId,getSubmitByProblemIdAndClerkId} from "@/models/submissions.model"
+import { getProblemInChallenge } from "@/models/challenges.model";
 
 export const SubmissionRoute = new Elysia({ prefix: "/submission" })
   .use(clerkPlugin())
   .post(
     "/submit",
-    async ({ body, clerk, auth, error }) => {
+    async ({ body, auth, error }) => {
       try {
         if (!auth?.userId) {
           return error(401, "Unauthorized");
@@ -23,6 +24,21 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
         if (!problem) {
           return error(404, "Problem not found");
         }
+
+        const challenge = await getProblemInChallenge(problemId);
+        
+        if (challenge) {
+          if (challenge.startTime > Date.now()) {
+            return error(400, "Challenge not started yet");
+          }
+          if (challenge.endTime < Date.now()) {
+            return error(400, "Challenge ended");
+          }
+          if (challenge.status !== "active") {
+            return error(400, "Challenge is not active");
+          }
+        }
+
 
         const updatedProblem = await updateCountSubmissionByProblemId(problemId, { submissions: problem.submissions + 1 });
 
