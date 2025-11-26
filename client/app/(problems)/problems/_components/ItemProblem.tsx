@@ -38,7 +38,7 @@ export default function ItemProblem ({ value }: { value: ListProblemInterface })
           <AvatarImage src={value?.author?.avatar} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-        <span> {value?.author?.name}</span>
+        <Link href={`/profile/${value?.author?.name}`} className="hover:text-primary duration-300"> {value?.author?.name}</Link>
       </span>
 
       <Link href={`/problems/${value.id}`} passHref>

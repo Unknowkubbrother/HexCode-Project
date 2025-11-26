@@ -13,7 +13,7 @@ const ProblemSchema = new Schema(
     },
     description: {
       type: String,
-      required: true,
+      required: false,
     },
     difficulty: {
       type: Number,

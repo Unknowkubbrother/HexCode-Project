@@ -6,7 +6,8 @@ import Link from "next/link";
 import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
-import { usePathname  } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { getMyAccount } from "@/actions/profileAction";
 
 interface NavbarProps {
   setTheme: (theme: string) => void;
@@ -15,7 +16,19 @@ interface NavbarProps {
 export default function Navbar({ setTheme }: NavbarProps) {
   const { theme } = useTheme();
   const pathname = usePathname();
-  const {user} = useUser();
+  const { user } = useUser();
+  const [role, setRole] = React.useState<string>("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { account } = await getMyAccount();
+      setRole(account.role);
+    };
+
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
 
   useEffect(() => {
     setTheme(theme || "dark");
@@ -36,11 +49,11 @@ export default function Navbar({ setTheme }: NavbarProps) {
           Home
         </Link>
 
-        <Link href="/problems" className={`${pathname == '/problems' ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
+        <Link href="/problems" className={`${pathname.startsWith('/problems') ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
           Problems
         </Link>
 
-        <Link href="/challenges" className={`${pathname == '/challenges' ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
+        <Link href="/challenges" className={`${pathname.startsWith('/challenges') ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
           Challenges
         </Link>
 
@@ -49,6 +62,13 @@ export default function Navbar({ setTheme }: NavbarProps) {
             Profile
           </Link>
         </SignedIn>
+
+        {role === "admin" &&
+         <SignedIn>
+          <Link href={`/admin`} className={`${pathname.startsWith('/admin') ? 'px-2 py-1 text-primary rounded-lg' : ''} hover:text-primary duration-300`}>
+            Admin
+          </Link>
+        </SignedIn>}
 
         <ModeToggle />
 

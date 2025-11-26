@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getSubmissionByProblemId } from "@/actions/submissionAction";
+import { getSubmissionByProblemIdAndClerkId } from "@/actions/submissionAction";
 import { ISubmission } from "@/interface/submissions";
 import {
     Table,
@@ -23,7 +23,7 @@ export default function Submissions({ problemId }: { problemId: string }) {
     const [selectedViewsubmission, setSelectedViewSubmission] = useState<ISubmission | null>(null);
 
     useEffect(() => {
-        getSubmissionByProblemId(problemId).then((data) => {
+        getSubmissionByProblemIdAndClerkId(problemId).then((data) => {
             setSubmissions(data);
         });
     }, [problemId]);
@@ -98,7 +98,7 @@ export default function Submissions({ problemId }: { problemId: string }) {
                 </TableBody>
             </Table>
             {isAciveView && selectedViewsubmission && (
-                <div className="fixed top-1/2 left-1/2 -mt-[22rem] -ml-[44rem] dark:bg-background bg-bgsecondary flex justify-center items-center rounded-xl z-50 border-2">
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 dark:bg-background bg-bgsecondary flex justify-center items-center rounded-xl z-50 border-2 scale-90">
                     <div className="w-full h-fit p-5">
                         <div className="w-full flex gap-5">
                             <div>

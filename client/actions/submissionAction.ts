@@ -1,6 +1,7 @@
 'use server';
 import axios from 'axios';
 import getSession from "@/hooks/use-session";
+import { redirect } from 'next/navigation'
 
 export const runCodeTest = async (data: {
     source_code : string,
@@ -42,12 +43,36 @@ export const submitCode = async (data: {
 
         return response.data;
     }catch(error){
+        if (axios.isAxiosError(error) && error.response?.status !== 200) {
+            redirect(`/`);
+        }
         console.error(error);
     }
 }
 
 
 export const getSubmissionByProblemId = async (problemId: string) => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_END_POINT}/submission/gets/${problemId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+        
+        return response.data;
+    }catch(error){
+        if (axios.isAxiosError(error) && error.response?.status !== 200) {
+            redirect(`/`);
+        }
+        console.error(error);
+    }
+}
+
+export const getSubmissionByProblemIdAndClerkId = async (problemId: string) => {
     try{
         const token = await getSession();
 
@@ -61,6 +86,9 @@ export const getSubmissionByProblemId = async (problemId: string) => {
         
         return response.data;
     }catch(error){
+        if (axios.isAxiosError(error) && error.response?.status !== 200) {
+            redirect(`/`);
+        }
         console.error(error);
     }
 }

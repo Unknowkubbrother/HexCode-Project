@@ -26,6 +26,63 @@ export const getProfileByUsername = async (username: string) => {
     }
 };
 
+export const getMyFollower = async (username : string) => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_END_POINT}/profile/getmyfollower/${username}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+        return response.data;
+    }catch(error){
+        console.error(error);
+    }
+};
+
+export const getMyFollowing = async (username : string) => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_END_POINT}/profile/getmyfollowing/${username}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+        return response.data;
+    }catch(error){
+        console.error(error);
+    }
+}
+
+export const getMyAccount = async () => {
+    try{
+        const token = await getSession();
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_END_POINT}/profile/getmyaccount`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response) {
+            throw new Error('Error');
+        }
+
+        return response.data;
+    }catch(error){
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+            redirect(`/`);
+        }
+        console.error(error);
+    }
+};
+
 export const followAccount = async (targetClerkId : string) => {
     try{
 

@@ -1,17 +1,18 @@
 import { Elysia, t } from "elysia";
 import { clerkPlugin } from "elysia-clerk";
-import { createSubmission , getLanguages } from "@lib/judge0";
-import { getProblemById , updateCountSubmissionByProblemId,updateCountAcceptedByProblemId} from "@/models/problems.model";
+import { createSubmission, getLanguages } from "@lib/judge0";
+import { getProblemById, updateCountSubmissionByProblemId, updateCountAcceptedByProblemId } from "@/models/problems.model";
 import { getTestCasesByProblemId } from "@/models/testcases.model";
-import {min} from "mathjs"
+import { min } from "mathjs"
 import { IJudge0Submission } from "@/interface/judge0.interface";
-import {createSubmissionDB,getIsAcceptedByProblemAndClerkId,getSubmitByProblemIdAndClerkId} from "@/models/submissions.model"
+import { createSubmissionDB, getIsAcceptedByProblemAndClerkId, getSubmitByProblemIdAndClerkId, getSubmitbyProblemId } from "@/models/submissions.model"
+import { getProblemInChallenge } from "@/models/challenges.model";
 
 export const SubmissionRoute = new Elysia({ prefix: "/submission" })
   .use(clerkPlugin())
   .post(
     "/submit",
-    async ({ body, clerk, auth, error }) => {
+    async ({ body, auth, error }) => {
       try {
         if (!auth?.userId) {
           return error(401, "Unauthorized");
@@ -23,6 +24,21 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
         if (!problem) {
           return error(404, "Problem not found");
         }
+
+        const challenge = await getProblemInChallenge(problemId);
+
+        if (challenge) {
+          if (challenge.startTime > Date.now()) {
+            return error(400, "Challenge not started yet");
+          }
+          if (challenge.endTime < Date.now()) {
+            return error(400, "Challenge ended");
+          }
+          if (challenge.status !== "active") {
+            return error(400, "Challenge is not active");
+          }
+        }
+
 
         const updatedProblem = await updateCountSubmissionByProblemId(problemId, { submissions: problem.submissions + 1 });
 
@@ -40,7 +56,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
 
         const testcases = await getTestCasesByProblemId(problemId);
 
-        const submission : IJudge0Submission[] = await Promise.all(testcases.map(async (testcase,idx) => {
+        const submission: IJudge0Submission[] = await Promise.all(testcases.map(async (testcase, idx) => {
           const { input, output } = testcase;
 
           const { token } = await createSubmission({
@@ -56,14 +72,14 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
 
           return await new Promise((resolve, reject) => {
             const worker = new Worker(`${import.meta.dir}/worker.ts`);
-            worker.postMessage({ token, delay: min(cpu_time_limit as number,60) });
+            worker.postMessage({ token, delay: min((cpu_time_limit as number) + 15, 60) });
 
             worker.onmessage = (event) => {
-                resolve({
+              resolve({
                 ...event.data,
                 testcaseId: idx,
-                points: event.data.status.description === "Accepted" ? testcase.points : 0,
-                });
+                points: event.data.status.description != "Accepted" ? 0 : testcase.points,
+              });
               worker.terminate();
             };
 
@@ -75,7 +91,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
 
         const calculatePoints = (submission: IJudge0Submission[]) => {
           let points = 0;
-          submission.forEach((sub : IJudge0Submission) => {
+          submission.forEach((sub: IJudge0Submission) => {
             if (sub.status.description === "Accepted") {
               points += testcases[sub.testcaseId].points;
             }
@@ -83,13 +99,13 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
           return points;
         }
 
-        const isAccepted = submission.every((sub : IJudge0Submission) => sub.status.description === "Accepted");
+        const isAccepted = submission.every((sub: IJudge0Submission) => sub.status.description === "Accepted");
 
-        const isAcceptedDB = await getIsAcceptedByProblemAndClerkId(problemId,auth.userId);
-        
+        const isAcceptedDB = await getIsAcceptedByProblemAndClerkId(problemId, auth.userId);
+
         if (isAccepted && !isAcceptedDB) {
           const lastproblem = await getProblemById(problemId);
-          
+
           if (!lastproblem) {
             return error(404, "Problem not found");
           }
@@ -100,7 +116,7 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
             return error(500, "Failed to update problem accepted count");
           }
         }
-        
+
         const submissionData = {
           clerkId: auth.userId,
           problemId: problemId,
@@ -183,8 +199,8 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
   )
 
   .get(
-    "get/:problemId",
-    async ({ params, error , auth}) => {
+    "gets/:problemId",
+    async ({ params, error, auth, clerk }) => {
       try {
 
         if (!auth?.userId) {
@@ -193,7 +209,67 @@ export const SubmissionRoute = new Elysia({ prefix: "/submission" })
 
         const { problemId } = params;
 
-        const submission = await getSubmitByProblemIdAndClerkId(problemId,auth.userId);
+        const problem = await getProblemById(problemId);
+
+        if (!problem) {
+          return error(404, "Problem not found");
+        }
+
+        if (problem.status !== "active") {
+          return error(400, "Problem is not active");
+        }
+
+        if (auth.userId !== problem.clerkId) {
+          return error(401, "Unauthorized");
+        }
+
+        const submission = await getSubmitbyProblemId(problemId);
+
+        if (!submission) {
+          return error(404, "Submission not found");
+        }
+
+        const listLanguage = await getLanguages();
+
+        const Filtersubmission =await Promise.all(
+          submission.map(async (sub) => {
+            const user = await clerk.users.getUser(sub.clerkId);
+            return {
+              _id: sub._id,
+              username: user.username,
+              avatar: user.imageUrl,
+              problemId: sub.problemId,
+              testcases: sub.testcases,
+              points: sub.points,
+              success: sub.success,
+              source_code: sub.source_code,
+              language_id: sub.language_id,
+              createdAt: sub.createdAt,
+              updatedAt: sub.updatedAt,
+              language_name: listLanguage.find((lang) => lang.id === sub.language_id)?.name,
+            };
+          }));
+
+        return Filtersubmission;
+
+      } catch (e) {
+        return error(500, "Internal Server Error");
+      }
+    }
+  )
+
+  .get(
+    "get/:problemId",
+    async ({ params, error, auth }) => {
+      try {
+
+        if (!auth?.userId) {
+          return error(401, "Unauthorized");
+        }
+
+        const { problemId } = params;
+
+        const submission = await getSubmitByProblemIdAndClerkId(problemId, auth.userId);
 
         if (!submission) {
           return error(404, "Submission not found");

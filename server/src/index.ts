@@ -8,6 +8,9 @@ import { TestCaseRoute } from "@/router/testcases.router";
 import { fileRoute } from "@/router/file.router";
 import { AccountRoute } from "@/router/accounts.router";
 import { ProfileRoute } from "@/router/profile.router";
+import { ChallengeRoute } from "./router/challenges.router";
+import { VerifyRoute } from "./router/verifications.router";
+import { swagger } from '@elysiajs/swagger'
 
 /**
 * @author clerkId Test go
@@ -21,6 +24,15 @@ globalThis.testuserId = "user_2sSBAIPFb76Nu4JujDkYIvy1Mt5";
 * @comment Create a new Elysia app
 */
 const app = new Elysia()
+  .use(swagger({
+    path: '/api/docs',
+    documentation: {
+      info: {
+          title: 'HEXCODE Documentation',
+          version: '1.0.0'
+      }
+    }
+  }))
   .use(logger())
   .use(cors())
   .use(ProblemRoute)
@@ -29,6 +41,8 @@ const app = new Elysia()
   .use(fileRoute)
   .use(AccountRoute)
   .use(ProfileRoute)
+  .use(ChallengeRoute)
+  .use(VerifyRoute)
   .get("/", () =>{
     return {message: "Hello, Elysia! by HEX CODE"};
   })

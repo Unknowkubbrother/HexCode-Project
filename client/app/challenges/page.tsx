@@ -1,9 +1,8 @@
-import Challengs from "./_components/Challengs"
+import Challengs from "./_components/Challengs";
 
-const page = () => {
+export default function page() {
+
   return (
-    <Challengs />
+    <Challengs/>
   )
 }
-
-export default page

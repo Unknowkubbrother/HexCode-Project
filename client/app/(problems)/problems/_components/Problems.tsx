@@ -1,8 +1,8 @@
 import PaginationBar from "./PaginationBar";
 import FilterProblems from "./FilterProblems";
-import { Suspense } from "react";
+// import { Suspense } from "react";
 import ListProblems from "./ListProblems";
-import { SkeletonListProblem } from "@/components/ui/SkeletonTemplate";
+// import { SkeletonListProblem } from "@/components/ui/SkeletonTemplate";
 import { getProblems } from "@/actions/problemAction";
 
 interface Props {
@@ -19,9 +19,9 @@ const Problems = async ({searchParams} : Props) => {
       </header>
       <section className="w-full gap-5 mt-5 flex">
         <div className="w-[75%] h-fit">
-          <Suspense fallback={<SkeletonListProblem/>}>
+          {/* <Suspense fallback={<SkeletonListProblem/>}> */}
              <ListProblems result={result}/>
-          </Suspense>
+          {/* </Suspense> */}
           <div className="mt-5">
             <PaginationBar totalCounts={totalCounts}/>
           </div>

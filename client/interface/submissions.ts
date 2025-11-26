@@ -3,6 +3,8 @@ import {IJudge0Submission} from './judge0';
 export interface ISubmission {
     _id: string;
     clerkId?: string;
+    username?: string;
+    avatar?: string;
     problemId: string;
     testcases: Array<IJudge0Submission>;
     points: Number;
